@@ -1,5 +1,5 @@
 export function HomePage() {
     return <>
-        <h1>HomePage</h1>
+        <h1 className="text-4xl font-bold">Recherchez un séjour</h1>
     </>
 }
