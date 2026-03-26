@@ -1,5 +1,7 @@
 @import "tailwindcss";
+@import '@fontsource/sriracha';
 
 @theme {
-    --background-hero: url('./background.jpg')
+    --background-image-hero: url('./background.jpg');
+    --font-display: 'Sriracha', cursive;
 }
