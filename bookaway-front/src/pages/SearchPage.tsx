@@ -22,12 +22,6 @@ export function SearchPage() {
                 ))}
 
             </ul>
-
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-gray-100 h-64 rounded-2xl flex items-center justify-center border-2 border-dashed border-gray-300">
-                    <p className="text-gray-500">Connexion à Laravel en cours...</p>
-                </div>
-            </section>
         </main>
     );
 }
@@ -35,9 +29,14 @@ export function SearchPage() {
 function PropertyCard({ property }: { property: Property }) {
     return (
         <li key={property.id} className="max-w-lg p-4 rounded-xl shadow border border-gray-300">
-            <Link to={`/property/${property.id}`}>
-                <div className="flex">
-                    <img src="https://loremflickr.com/320/240/camping" />
+            <Link to={`/property/${property.id}`} viewTransition>
+                <div className="flex gap-1">
+                    <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
+                    <div className="flex flex-col gap-1">
+                        <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
+                        <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
+
+                    </div>
                 </div>
                 <h3 className="text-xl font-semibold">{property.title}</h3>
                 <div className="flex flex-col items-end">
@@ -45,6 +44,9 @@ function PropertyCard({ property }: { property: Property }) {
                     <span className="text-sm">total pour 3p.</span>
                 </div>
                 <p className="line-clamp-2">{property.description}</p>
+                <div className="flex justify-end">
+                    <span className="bg-blue-500 rounded-xl p-2 font-medium tracking-wide text-white">Réserver</span>
+                </div>
             </Link>
         </li>
     );
