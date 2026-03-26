@@ -30,14 +30,14 @@ function SearchBar() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         const params = new URLSearchParams({
             travelers: travelers.toString(),
             from: selectedDate?.from ? format(selectedDate.from, "yyyy-MM-dd") : "",
             to: selectedDate?.to ? format(selectedDate.to, "yyyy-MM-dd") : ""
         });
 
-        navigate(`/trips?${params.toString()}`);
+        navigate(`/search?${params.toString()}`);
     };
 
     return (
@@ -46,11 +46,11 @@ function SearchBar() {
             <div>|</div>
             <div className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
                 <span className="font-bold text-sm">Nombre voyageurs</span>
-                <input 
-                    type="number" 
-                    min={1} 
-                    max={16}    
-                    value={travelers} 
+                <input
+                    type="number"
+                    min={1}
+                    max={16}
+                    value={travelers}
                     onChange={(e) => setTravelers(parseInt(e.target.value))}
                     className="bg-transparent outline-none"
                 />
