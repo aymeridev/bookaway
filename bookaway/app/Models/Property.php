@@ -29,4 +29,9 @@ class Property extends Model
         'latitude',
         'longitude'
     ];
+
+    public function bookings() 
+    { 
+        return $this->hasMany(Booking::class); 
+    }
 }

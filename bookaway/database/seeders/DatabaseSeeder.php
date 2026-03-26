@@ -15,15 +15,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call([
             PropertySeeder::class,
         ]);
 
-        User::factory()->create([
+        $testUser = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => bcrypt('password'),
         ]);
+
+        $property = \App\Models\Property::first();
+
+        if ($property) {
+            \App\Models\Booking::factory(3)->create([
+                'user_id' => $testUser->id,
+                'property_id' => $property->id,
+            ]);
+        }
+
+        \App\Models\Booking::factory(10)->create();
     }
 }
