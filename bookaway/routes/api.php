@@ -15,6 +15,6 @@ Route::get('/trips', function () {
 
 
 Route::apiResource('properties', PropertyController::class);
-Route::apiResource('bookings', PropertyController::class);
-Route::apiResource('payments', PropertyController::class);
-Route::apiResource('users', PropertyController::class);
+Route::apiResource('bookings', BookingController::class);
+Route::apiResource('payments', PaymentController::class);
+Route::apiResource('users', UserController::class);
