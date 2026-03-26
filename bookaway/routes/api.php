@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
@@ -12,3 +15,6 @@ Route::get('/trips', function () {
 
 
 Route::apiResource('properties', PropertyController::class);
+Route::apiResource('bookings', PropertyController::class);
+Route::apiResource('payments', PropertyController::class);
+Route::apiResource('users', PropertyController::class);
