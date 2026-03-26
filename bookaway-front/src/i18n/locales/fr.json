@@ -1,5 +1,7 @@
 {
     "home": "Accueil",
     "connexion": "Se connecter",
+    "deconnexion": "Se déconnecter",
+    "profil": "Profil",
     "searchTrip": "Rechercher un séjour"
 }
