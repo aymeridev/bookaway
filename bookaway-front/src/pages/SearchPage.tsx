@@ -1,34 +1,50 @@
 import { Link, useLoaderData } from "react-router";
 import type { Property } from "../types";
+import { List, Map } from "lucide-react";
+import { useState } from "react";
+import { PropertiesMap } from "../PropertiesMap";
 
 export function SearchPage() {
     const properties = useLoaderData();
-
-
+    const [view, setView] = useState<"list" | "map">("list");
 
 
 
     return (
-        <main className="max-w-6xl mx-auto p-6">
-            <header className="mb-8 border-b pb-4">
-                <h1 className="text-3xl font-bold text-gray-900">Résultats de recherche</h1>
+        <main className="max-w-6xl flex flex-col mx-auto p-6">
+            <header className="flex mb-8 border-b pb-4">
+                <h1 className="flex-1 text-3xl font-bold text-gray-900">Résultats de recherche</h1>
+                <button onClick={() => {
+                    setView(view === "list" ? "map" : "list")
+                }} className="flex gap-1">
+                    <div>
+                        <List />
+                    </div>
+                    <div>
+                        <Map />
+                    </div>
+                </button>
                 {/* <p className="text-gray-600 mt-2">
                     📍 Voyage pour <span className="font-semibold text-blue-600">{travelers} voyageur(s)</span> {dateDisplay}.
                 </p> */}
             </header>
-            <ul className="flex flex-col gap-1">
-                {properties.map((property: Property) => (
-                    <PropertyCard property={property} />
-                ))}
+            {view === "list" ? (
+                <ul className="flex flex-col gap-1">
+                    {properties.map((property: Property) => (
+                        <PropertyCard key={property.id} property={property} />
+                    ))}
 
-            </ul>
+                </ul>
+            ) : (
+                <PropertiesMap properties={properties} />
+            )}
         </main>
     );
 }
 
-function PropertyCard({ property }: { property: Property }) {
+export function PropertyCard({ property }: { property: Property }) {
     return (
-        <li key={property.id} className="max-w-lg p-4 rounded-xl shadow border border-gray-300">
+        <li className="max-w-lg p-4 rounded-xl shadow border border-gray-300">
             <Link to={`/property/${property.id}`} viewTransition>
                 <div className="flex gap-1">
                     <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
