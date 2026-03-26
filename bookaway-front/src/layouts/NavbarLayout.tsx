@@ -6,7 +6,6 @@ export function NavbarLayout() {
     return (
         <div className="flex flex-col h-svh">
             <nav className="flex p-4 bg-blue-500 items-center">
-                {/* On entoure le logo avec un Link */}
                 <Link to={"/"} className="block">
                     <div 
                         className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer" 
@@ -17,7 +16,7 @@ export function NavbarLayout() {
 
                 <ul className="flex-1 flex justify-end text-white font-semibold">
                     <li>
-                        <Link to={"/connexion"}>
+                        <Link to={"/login"}>
                             {t('connexion')}
                         </Link>
                     </li>

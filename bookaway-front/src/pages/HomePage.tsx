@@ -74,7 +74,7 @@ function FormDatePart({ selected, onSelect }: { selected: DateRange | undefined,
                     <span>Selectionner une date...</span>}
             </button>
             {openCalendar &&
-                <div className="absolute bg-white shadow-xl rounded-xl top-16 z-50"> {/* Ajout de z-50 pour passer devant le reste */}
+                <div className="absolute bg-white shadow-xl rounded-xl top-16 z-50">
                     <DayPicker
                         animate
                         captionLayout="dropdown"
