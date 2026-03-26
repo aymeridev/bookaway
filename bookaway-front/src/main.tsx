@@ -8,6 +8,8 @@ import './i18n/config'
 import { LoginPage } from './pages/LoginPage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
 import { SearchPage } from './pages/SearchPage.tsx'
+import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
+import type { Property } from './types.ts'
 
 let router = createBrowserRouter([
   {
@@ -23,9 +25,19 @@ let router = createBrowserRouter([
           const url = new URL(request.url);
 
           const res = await fetch(`/api/properties`);
-          return res.json();
+          return res.json() as Promise<Property[]>;
         },
         Component: SearchPage,
+      },
+      {
+        path: "/property/:id",
+        loader: async ({ params }) => {
+
+          const res = await fetch(`/api/properties/${params.id}`);
+          const property = await res.json();
+          return property as Property;
+        },
+        Component: PropertyDetailsPage,
       },
       {
         path: "/login",
