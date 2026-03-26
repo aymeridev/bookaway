@@ -1,25 +1,58 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import { HomePage } from './pages/HomePage.tsx'
 import { NavbarLayout } from './layouts/NavbarLayout.tsx'
-import { TripsPage } from './pages/TripsPage.tsx'
 import './i18n/config'
 import { LoginPage } from './pages/LoginPage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
+import { SearchPage } from './pages/SearchPage.tsx'
+import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
+import type { Property } from './types.ts'
+
+let router = createBrowserRouter([
+  {
+    Component: NavbarLayout,
+    children: [
+      {
+        path: "/",
+        Component: HomePage,
+      },
+      {
+        path: "/search",
+        loader: async ({ request }) => {
+          const url = new URL(request.url);
+
+          const res = await fetch(`/api/properties`);
+          return res.json() as Promise<Property[]>;
+        },
+        Component: SearchPage,
+      },
+      {
+        path: "/property/:id",
+        loader: async ({ params }) => {
+
+          const res = await fetch(`/api/properties/${params.id}`);
+          const property = await res.json();
+          return property as Property;
+        },
+        Component: PropertyDetailsPage,
+      },
+      {
+        path: "/login",
+        Component: LoginPage,
+      },
+      {
+        path: "/register",
+        Component: RegisterPage,
+      },
+    ]
+  }
+])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route element={<NavbarLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="trips" element={<TripsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </StrictMode>,
 )
