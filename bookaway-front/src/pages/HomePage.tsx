@@ -1,5 +1,11 @@
 import { useTranslation } from "react-i18next";
 
+import { DayPicker, type DateRange } from "react-day-picker";
+import "react-day-picker/style.css";
+import { useState } from "react";
+import { fr } from "react-day-picker/locale";
+
+
 export function HomePage() {
     const { t } = useTranslation();
     return <main className="flex flex-col items-center justify-center bg-hero">
@@ -14,10 +20,7 @@ export function HomePage() {
 function SearchBar() {
     return (
         <form className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400">
-            <div className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
-                <span className="font-bold text-sm">Date du voyage</span>
-                <input type="text" value={"du ... au ..."} readOnly />
-            </div>
+            <FormDatePart />
             <div>|</div>
             <div className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
                 <span className="font-bold text-sm">Nombre voyageurs</span>
@@ -26,4 +29,43 @@ function SearchBar() {
             <input type="submit" className="bg-blue-500 text-blue-50 rounded-full py-1 px-4 font-semibold cursor-pointer" />
         </form>
     )
+}
+
+function FormDatePart() {
+    const [selected, setSelected] = useState<DateRange>();
+    const [openCalendar, setOpenCalendar] = useState(false);
+
+    return <>
+        <div className="relative">
+            <button type="button" onClick={() => {
+                setOpenCalendar(!openCalendar);
+            }} className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
+                <span className="font-bold text-sm">Date du voyage</span>
+                <span>Selectionner une date...</span>
+            </button>
+            {openCalendar &&
+                <div className="absolute bg-white shadow-xl rounded-xl top-16">
+
+                    <DayPicker
+                        animate
+                        captionLayout="dropdown"
+                        mode="range"
+                        navLayout="around"
+                        resetOnSelect
+                        showOutsideDays
+                        showWeekNumber
+                        timeZone="Europe/Paris"
+                        weekStartsOn={1}
+                        selected={selected}
+                        onSelect={setSelected}
+                        locale={fr}
+                        footer={
+                            selected ? `Selected: ${selected.from?.toLocaleDateString()}` : "Pick a day."
+                        }
+                    />
+                </div>
+            }
+
+        </div>
+    </>
 }
