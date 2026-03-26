@@ -2,9 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Property extends Model
 {
-    //
+    use HasFactory;
+
+    protected function casts()
+    {
+        return [
+            'images' => 'array',
+            'amenities' => 'array'
+        ];
+    }
+
+    protected $fillable = [
+        'title',
+        'type',
+        'capacity',
+        'images',
+        'description',
+        'base_price',
+        'price_per_night',
+        'amenities',
+        'latitude',
+        'longitude'
+    ];
 }
