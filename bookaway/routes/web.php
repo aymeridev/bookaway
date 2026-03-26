@@ -6,5 +6,3 @@ use App\Http\Controllers\PropertyController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::resource('properties', PropertyController::class);

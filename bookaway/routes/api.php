@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
@@ -8,3 +9,6 @@ Route::get('/trips', function () {
         ['id' => 2, 'destination' => 'Lyon - Marseille', 'price' => 30],
     ]);
 });
+
+
+Route::apiResource('properties', PropertyController::class);

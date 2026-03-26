@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Property;
 
 class PropertyController extends Controller
 {
@@ -11,15 +12,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json(Property::all());
     }
 
     /**
@@ -27,7 +20,22 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+            'images' => 'nullable|array',
+            'description' => 'nullable|string',
+            'base_price' => 'nullable|numeric',
+            'price_per_night' => 'required|numeric|min:0',
+            'amenities' => 'nullable|array',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $property = Property::create($validated);
+
+        return response()->json($property, 201);
     }
 
     /**
@@ -35,15 +43,9 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
+        $property = Property::findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response()->json($property);
     }
 
     /**
@@ -51,7 +53,24 @@ class PropertyController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $property = Property::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'type' => 'sometimes|string|max:255',
+            'capacity' => 'sometimes|integer|min:1',
+            'images' => 'nullable|array',
+            'description' => 'nullable|string',
+            'base_price' => 'nullable|numeric',
+            'price_per_night' => 'sometimes|numeric|min:0',
+            'amenities' => 'nullable|array',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+        ]);
+
+        $property->update($validated);
+
+        return response()->json($property);
     }
 
     /**
@@ -59,6 +78,9 @@ class PropertyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $property = Property::findOrFail($id);
+        $property->delete();
+
+        return response()->json(null, 204);
     }
 }
