@@ -4,6 +4,7 @@ import { useState } from "react";
 import { fr } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { fr as fnsFR } from "date-fns/locale";
+import { useNavigate } from "react-router";
 
 
 export function HomePage() {
@@ -23,21 +24,43 @@ export function HomePage() {
 
 
 function SearchBar() {
+    const [travelers, setTravelers] = useState(1);
+    const [selectedDate, setSelectedDate] = useState<DateRange>();
+    const navigate = useNavigate();
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        const params = new URLSearchParams({
+            travelers: travelers.toString(),
+            from: selectedDate?.from ? format(selectedDate.from, "yyyy-MM-dd") : "",
+            to: selectedDate?.to ? format(selectedDate.to, "yyyy-MM-dd") : ""
+        });
+
+        navigate(`/trips?${params.toString()}`);
+    };
+
     return (
-        <form className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900">
-            <FormDatePart />
+        <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900">
+            <FormDatePart selected={selectedDate} onSelect={setSelectedDate} />
             <div>|</div>
             <div className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
                 <span className="font-bold text-sm">Nombre voyageurs</span>
-                <input type="number" min={1} max={16} value={1} />
+                <input 
+                    type="number" 
+                    min={1} 
+                    max={16}    
+                    value={travelers} 
+                    onChange={(e) => setTravelers(parseInt(e.target.value))}
+                    className="bg-transparent outline-none"
+                />
             </div>
             <input type="submit" value={"Rechercher"} className="bg-blue-500 text-blue-50 rounded-full py-1 px-4 font-semibold cursor-pointer" />
         </form>
     )
 }
 
-function FormDatePart() {
-    const [selected, setSelected] = useState<DateRange>();
+function FormDatePart({ selected, onSelect }: { selected: DateRange | undefined, onSelect: (d: DateRange | undefined) => void }) {
     const [openCalendar, setOpenCalendar] = useState(false);
 
     return <>
@@ -51,8 +74,7 @@ function FormDatePart() {
                     <span>Selectionner une date...</span>}
             </button>
             {openCalendar &&
-                <div className="absolute bg-white shadow-xl rounded-xl top-16">
-
+                <div className="absolute bg-white shadow-xl rounded-xl top-16 z-50"> {/* Ajout de z-50 pour passer devant le reste */}
                     <DayPicker
                         animate
                         captionLayout="dropdown"
@@ -63,11 +85,11 @@ function FormDatePart() {
                         showWeekNumber
                         timeZone="Europe/Paris"
                         selected={selected}
-                        onSelect={setSelected}
+                        onSelect={onSelect}
                         locale={fr}
                     />
                 </div>
             }
-
         </div>
     </>
+}
