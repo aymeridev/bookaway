@@ -1,5 +1,7 @@
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
-import { useLoaderData, useSearchParams } from "react-router"
+import { useLoaderData } from "react-router"
 
 export function PropertyDetailsPage() {
     const property = useLoaderData();
@@ -20,10 +22,27 @@ export function PropertyDetailsPage() {
                     <span className="text-2xl font-medium">{property.base_price + property.price_per_night * 3}€</span>
                     <span className="text-sm">total pour 3p.</span>
                 </div>
+                <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
             </div>
             <div className="p-4">
                 <DayPicker />
             </div>
         </div>
     )
+}
+
+function PropertyLocation({ longitude, latitude }: { longitude: number, latitude: number }) {
+    return <div className='h-80 w-full'>
+        <MapContainer
+            center={[latitude, longitude]}
+            zoom={16}
+            style={{ height: "100%", width: "100%" }}>
+
+            <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={[latitude, longitude]}>
+            </Marker>
+        </MapContainer>
+    </div>
 }
