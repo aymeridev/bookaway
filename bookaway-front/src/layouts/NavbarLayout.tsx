@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Link, Outlet, useNavigate } from "react-router";
-import { LogIn, LogOut, User } from "lucide-react";
+import { Link, NavLink, Outlet, useNavigate } from "react-router";
+import { Calendar, LandPlot, LogIn, LogOut, User } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
 
 export function NavbarLayout() {
@@ -23,6 +23,18 @@ export function NavbarLayout() {
                         aria-label="Retour à l'accueil"
                     ></div>
                 </Link>
+                <ul className="flex">
+                    <ListNavLink
+                        to={"/bookings"}>
+                        <Calendar />
+                        Mes réservations
+                    </ListNavLink>
+                    <ListNavLink
+                        to={"/my-properties"}>
+                        <LandPlot />
+                        Mes logements
+                    </ListNavLink>
+                </ul>
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
                     {user ? (
                         <>
@@ -55,6 +67,16 @@ export function NavbarLayout() {
             <main className="flex-1 overflow-y-auto">
                 <Outlet />
             </main>
-        </div>
+        </div >
     );
+}
+
+function ListNavLink({ to, children }: { to: string, children: React.ReactNode }) {
+    return <li>
+        <NavLink
+            className={({ isActive }) => `${isActive ? "bg-white text-blue-500" : "text-white"} p-2 rounded-lg font-semibold flex gap-2 items-center justify-center`}
+            to={to} viewTransition>
+            {children}
+        </NavLink>
+    </li>
 }

@@ -6,6 +6,7 @@ import makeAnimated from 'react-select/animated';
 import { amenities } from "../amenities";
 import { useForm, type SubmitHandler, useFieldArray, type UseFormReturn, Controller } from "react-hook-form";
 import { Card } from "../components/Card";
+import { Banner } from "../components/Banner";
 
 type PropertyForm = {
     title: string,
@@ -38,7 +39,7 @@ export function CreateProperyPage() {
     }
 
     return <>
-        <Banner />
+        <Banner title="Ajouter un logement" description="Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme." />
         <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-4 m-4 max-w-md">
             <label className="block">
                 <span className="text-gray-700">Titre</span>
@@ -223,17 +224,4 @@ function LocationInput({ form }: { form: UseFormReturn<PropertyForm, any, Proper
         </Card>
     )
 
-}
-
-function Banner() {
-    return (
-        <div className="relative flex bg-no-repeat bg-hero p-16 bg-center bg-cover">
-            <div className="absolute inset-0 bg-black/65 pointer-events-none"></div>
-
-            <div className="z-10 flex flex-col gap-2 text-white">
-                <h2 className="text-3xl font-semibold font-display">Ajouter un logement</h2>
-                <p>Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme.</p>
-            </div>
-        </div>
-    )
 }

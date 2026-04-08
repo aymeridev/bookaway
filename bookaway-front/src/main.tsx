@@ -12,6 +12,7 @@ import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
 import type { Property } from './types.ts'
 import { CreateProperyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilPage } from './pages/ProfilPage.tsx'
+import { BookingsPage } from './pages/BookingsPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ let router = createBrowserRouter([
           return res.json() as Promise<Property[]>;
         },
         Component: SearchPage,
+      },
+      {
+        path: "bookings",
+        Component: BookingsPage
       },
       {
         path: "/new-property",
