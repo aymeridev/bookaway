@@ -3,10 +3,11 @@ import { Search, X } from "lucide-react";
 import { useState } from "react"
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
-import { amenities } from "../amenities";
+import { amenitiesIcon } from "../amenities";
 import { useForm, type SubmitHandler, useFieldArray, type UseFormReturn, Controller } from "react-hook-form";
 import { Card } from "../components/Card";
 import { Banner } from "../components/Banner";
+import { t } from "i18next";
 
 type PropertyForm = {
     title: string,
@@ -136,11 +137,11 @@ function AmenitiesInput({ form }: { form: UseFormReturn<PropertyForm, any, Prope
     const animatedComponents = makeAnimated();
     const { control } = form;
 
-    const amenitiesOptions = amenities.map(a => {
+    const amenitiesOptions = Object.keys(amenitiesIcon).map((a: string) => {
         return {
-            icon: a[0],
-            value: a[1],
-            label: a[1],
+            icon: amenitiesIcon[a],
+            value: a,
+            label: t(`amenities.${a}` as any),
         }
     });
     return <label className="block">

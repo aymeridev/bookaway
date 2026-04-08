@@ -4,6 +4,8 @@ import { List, Map } from "lucide-react";
 import { useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
+import { amenitiesIcon } from "../amenities";
+import { t } from "i18next";
 
 export function SearchPage() {
     const properties: any = useLoaderData();
@@ -41,7 +43,7 @@ export function SearchPage() {
             <SearchBar />
             <header className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
                 <div>
-                    <h1 id="page-title" className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                    <h1 id="page-title" className="text-3xl font-semibold text-gray-900 tracking-tight">
                         Nos meilleurs logements
                     </h1>
                     <p className="text-gray-500 mt-1">{properties.length} hébergements trouvés</p>
@@ -50,17 +52,17 @@ export function SearchPage() {
                 <div className="inline-flex p-1 bg-gray-100 rounded-xl border border-gray-200">
                     <button
                         onClick={() => setView("list")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "list" ? "bg-white shadow-sm text-blue-600" : "text-gray-500 hover:text-gray-700"
+                        className={`flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "list" ? "bg-white shadow-sm text-blue-600" : "text-gray-500 hover:text-gray-700"
                             }`}
                     >
-                        <List size={18} /> Liste
+                        <List /> Liste
                     </button>
                     <button
                         onClick={() => setView("map")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "map" ? "bg-white shadow-sm text-blue-600" : "text-gray-500 hover:text-gray-700"
+                        className={`flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "map" ? "bg-white shadow-sm text-blue-600" : "text-gray-500 hover:text-gray-700"
                             }`}
                     >
-                        <Map size={18} /> Carte
+                        <Map /> Carte
                     </button>
                 </div>
             </header>
@@ -120,7 +122,7 @@ export function PropertyCard({ property }: { property: Property }) {
         <Link to={`/property/${property.id}`} className="group block">
             <article className="flex flex-col h-full rounded-2xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
 
-                <div className="relative w-full aspect-video flex-shrink-0 overflow-hidden">
+                <div className="relative w-full aspect-video shrink-0 overflow-hidden">
                     <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         src={`https://loremflickr.com/600/400/house,cabin?lock=${property.id}`}
@@ -137,6 +139,19 @@ export function PropertyCard({ property }: { property: Property }) {
                         <p className="text-gray-600 line-clamp-2 text-sm leading-relaxed">
                             {property.description}
                         </p>
+
+                        <div className="flex flex-wrap gap-2">
+                            {property.amenities.map((amenity) => {
+                                const Icon = amenitiesIcon[amenity];
+                                return (
+                                    <span key={amenity} className="flex items-center gap-1 px-2 py-1">
+                                        {Icon && <Icon />}
+                                        {t(`amenities.${amenity}` as any)}
+                                    </span>
+                                )
+                            })}
+
+                        </div>
                     </div>
 
                     <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-50">

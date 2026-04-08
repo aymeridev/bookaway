@@ -3,5 +3,29 @@
     "connexion": "Se connecter",
     "deconnexion": "Se déconnecter",
     "profil": "Profil",
-    "searchTrip": "Rechercher un séjour"
+    "searchTrip": "Rechercher un séjour",
+    "amenities": {
+        "bathub": "Baignoire",
+        "cleaning-products": "Produits d'entretien",
+        "hot-water": "Eau chaude",
+        "washer": "Lave-linge",
+        "essentials": "Produits de base",
+        "bed-linens": "Linge de lit",
+        "books": "Livres",
+        "board-games": "Jeux de société",
+        "central-heating": "Chauffage central",
+        "smoke-alarm": "Détecteur de fumée",
+        "wifi": "Wi-Fi",
+        "kitchen": "Cuisine",
+        "refrigerator": "Réfrigérateur",
+        "microwave": "Micro-ondes",
+        "cooking-basics": "Ustensiles de cuisine de base",
+        "coffee": "Machine à café",
+        "dining-table": "Table à manger",
+        "climatisation": "Climatisation",
+        "television": "Télévision",
+        "camera": "Caméra de surveillance",
+        "pool": "Piscine",
+        "parking": "Parking"
+    }
 }
