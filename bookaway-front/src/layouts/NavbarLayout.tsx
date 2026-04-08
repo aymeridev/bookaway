@@ -13,10 +13,15 @@ export function NavbarLayout() {
                     ></div>
                 </Link>
 
-                <ul className="flex-1 flex justify-end text-white font-semibold">
+                <ul className="flex-1 gap-5 flex justify-end text-white font-semibold">
                     <li>
-                        <Link to={"/login"}>
+                        <Link to={"/login"} viewTransition>
                             {t('connexion')}
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to={"/new-property"} viewTransition>
+                            Ajouter un logement
                         </Link>
                     </li>
                 </ul>
