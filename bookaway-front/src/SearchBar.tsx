@@ -1,6 +1,6 @@
 import { DayPicker, type DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { fr } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { fr as fnsFR } from "date-fns/locale";
@@ -12,7 +12,7 @@ export function SearchBar() {
     const [selectedDate, setSelectedDate] = useState<DateRange>();
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: SubmitEvent) => {
         e.preventDefault();
 
         const params = new URLSearchParams({

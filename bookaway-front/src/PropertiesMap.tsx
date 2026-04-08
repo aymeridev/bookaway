@@ -5,7 +5,7 @@ import { Link } from "react-router";
 
 export function PropertiesMap({ properties }: { properties: Property[] }) {
     // On centre sur la première propriété si elle existe, sinon Paris
-    const center: [number, number] = properties.length > 0 
+    const center: [number, number] = properties.length > 0
         ? [parseFloat(properties[0].latitude), parseFloat(properties[0].longitude)]
         : [48.8566, 2.3522];
 
@@ -16,10 +16,10 @@ export function PropertiesMap({ properties }: { properties: Property[] }) {
                 zoom={10}
                 style={{ height: "100%", width: "100%" }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                
+
                 {properties.map((property) => (
-                    <Marker 
-                        key={property.id} 
+                    <Marker
+                        key={property.id}
                         position={[parseFloat(property.latitude), parseFloat(property.longitude)]}
                     >
                         {/* On définit une largeur max pour que le popup ne s'étale pas */}
@@ -38,10 +38,10 @@ function PropertyMiniCard({ property }: { property: Property }) {
     return (
         <Link to={`/property/${property.id}`} className="block no-underline text-inherit group">
             <div className="flex flex-col gap-2">
-                <img 
-                    className="w-full h-32 object-cover rounded-lg" 
-                    src={`https://loremflickr.com/300/200/house?lock=${property.id}`} 
-                    alt={property.title} 
+                <img
+                    className="w-full h-32 object-cover rounded-lg"
+                    src={`https://loremflickr.com/300/200/house?lock=${property.id}`}
+                    alt={property.title}
                 />
                 <div className="px-1">
                     <h3 className="font-bold text-sm line-clamp-1 group-hover:text-blue-600 transition-colors">

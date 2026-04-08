@@ -190,6 +190,7 @@ function LocationInput({ form }: { form: UseFormReturn<PropertyForm, any, Proper
                     <input
                         value={search}
                         type="search"
+                        autoComplete="street-address"
                         onChange={(e) => {
                             setSearch((e.target as any).value);
                         }} className="mt-1 block w-full" />
