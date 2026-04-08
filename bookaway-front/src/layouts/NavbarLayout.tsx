@@ -22,7 +22,6 @@ export function NavbarLayout() {
                         aria-label="Retour à l'accueil"
                     ></div>
                 </Link>
-
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
                     {!isAuthenticated ? (
                         <li>

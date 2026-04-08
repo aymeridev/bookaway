@@ -14,8 +14,6 @@ i18n.use(initReactI18next).init({
     resources,
 });
 
-console.log("iii")
-
 declare module 'i18next' {
     interface CustomTypeOptions {
         defaultNS: 'translation';
