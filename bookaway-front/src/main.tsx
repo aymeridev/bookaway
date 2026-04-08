@@ -13,10 +13,12 @@ import type { Property } from './types.ts'
 import { CreateProperyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilPage } from './pages/ProfilPage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
+import { ErrorPage } from './pages/ErrorPage.tsx'
 
 let router = createBrowserRouter([
   {
     Component: NavbarLayout,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
