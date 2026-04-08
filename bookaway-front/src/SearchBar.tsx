@@ -43,9 +43,14 @@ export function SearchBar() {
                 <div className="flex flex-col">
                     <span className="font-bold text-sm">Voyageurs</span>
                     <div className="flex gap-4 items-center justify-center">
-                        <button className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"><Minus /></button>
+                        <button onClick={() => {
+                            setTravelers(Math.max(travelers - 1, 1))
+
+                        }} className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full" type="button"><Minus /></button>
                         <span>{travelers}</span>
-                        <button className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"><Plus /></button>
+                        <button onClick={() => {
+                            setTravelers(travelers + 1)
+                        }} className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full" type="button"><Plus /></button>
                     </div>
                 </div>
             </div>
