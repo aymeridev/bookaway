@@ -11,7 +11,6 @@ import { SearchPage } from './pages/SearchPage.tsx'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
 import type { Property } from './types.ts'
 import { CreateProperyPage } from './pages/CreatePropertyPage.tsx'
-import { AuthProvider } from './context/AuthContext.tsx'
 import { ProfilPage } from './pages/ProfilPage.tsx'
 
 let router = createBrowserRouter([
@@ -64,8 +63,6 @@ let router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <RouterProvider router={router} />
   </StrictMode>,
 )
