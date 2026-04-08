@@ -1,18 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
-import { Calendar, LandPlot, LogIn, LogOut, User } from "lucide-react";
+import { Calendar, ChevronDown, CirclePlus, LandPlot, LogIn, LogOut, User } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
+import { useState } from "react";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
-    const navigate = useNavigate();
 
-    const user = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
-    };
 
     return (
         <div className="flex flex-col h-svh">
@@ -23,7 +19,7 @@ export function NavbarLayout() {
                         aria-label="Retour à l'accueil"
                     ></div>
                 </Link>
-                <ul className="flex">
+                <ul className="flex gap-1">
                     <ListNavLink
                         to={"/bookings"}>
                         <Calendar />
@@ -36,30 +32,16 @@ export function NavbarLayout() {
                     </ListNavLink>
                 </ul>
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
-                    {user ? (
+                    {isAuthenticated ? (
                         <>
-                            <li>
-                                <Link to={"/profil"} className="flex items-center gap-2 transition" viewTransition>
-                                    <User />
-                                    <span>{t('profil')}</span>
-                                </Link>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 hover:text-blue-200 rounded-lg"
-                                >
-                                    <LogOut />
-                                    <span>{t('deconnexion')}</span>
-                                </button>
-                            </li>
+                            <ProfileButton />
                         </>
                     ) : (
                         <li>
-                            <Link to={"/login"} className="flex items-center gap-2 transition" viewTransition>
+                            <ListNavLink to={"/login"}>
                                 <LogIn />
                                 <span>{t('connexion')}</span>
-                            </Link>
+                            </ListNavLink>
                         </li>
                     )}
                 </ul>
@@ -71,10 +53,67 @@ export function NavbarLayout() {
     );
 }
 
+function ProfileButton() {
+
+    const { t } = useTranslation();
+    let [showDetails, setShowDetails] = useState(false);
+    const navigate = useNavigate();
+    const user = useAuthStore((state) => state.user);
+
+    const handleLogout = () => {
+        setShowDetails(false);
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+    return (
+        <>
+            <li className="relative">
+                <button onClick={() => {
+                    setShowDetails(!showDetails);
+                }} className="flex border border-transparent hover:border-blue-100 p-2 rounded-lg">
+                    <User />
+                    <span>{user?.name}</span>
+                    <ChevronDown className={showDetails ? "rotate-180" : ""} />
+                </button>
+                {showDetails && <div className="bg-white text-black rounded-xl shadow-xl absolute top-10 right-0 min-w-xs z-20">
+                    <ul className="flex flex-col">
+                        <li>
+                            <Link className="p-2 flex items-center justify-center" to={"/profile"} viewTransition>
+                                <User />
+                                <span className="flex-1">Mon profil</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="p-2 flex items-center justify-center" to={"/new-property"} viewTransition>
+                                <CirclePlus />
+                                <span className="flex-1">Ajouter un logement</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <button className="p-2 flex items-center justify-center" onClick={handleLogout}>
+                                <LogOut />
+                                <span className="flex-1">{t('deconnexion')}</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>}
+            </li>
+            <li>
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 hover:text-blue-200 rounded-lg"
+                >
+
+                </button>
+            </li>
+        </>
+    )
+}
+
 function ListNavLink({ to, children }: { to: string, children: React.ReactNode }) {
     return <li>
         <NavLink
-            className={({ isActive }) => `${isActive ? "bg-white text-blue-500" : "text-white"} p-2 rounded-lg font-semibold flex gap-2 items-center justify-center`}
+            className={({ isActive }) => `${isActive ? "bg-white text-blue-500" : "text-white hover:bg-blue-600 active:bg-blue-700"} py-2 px-4 rounded-lg font-semibold flex gap-2 items-center justify-center transition-colors`}
             to={to} viewTransition>
             {children}
         </NavLink>

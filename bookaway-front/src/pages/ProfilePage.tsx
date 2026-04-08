@@ -4,19 +4,20 @@ import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Banner } from "../components/Banner";
 
-export function ProfilPage() {
+export function ProfilePage() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const user = useAuthStore((state) => state.user);
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
         if (user?.id) {
-            fetchMyProfil();
+            fetchMyProfile();
         }
     }, [user?.id]); // Se déclenchera dès que user est récupéré
 
-    const fetchMyProfil = async () => {
+    const fetchMyProfile = async () => {
         try {
             const response = await api.get(`/users/${user?.id}`);
             setBookings(response.data.bookings || []);
@@ -33,9 +34,9 @@ export function ProfilPage() {
         return <p>Veuillez vous connecter pour accéder à cette page.</p>;
     }
 
-    return (
+    return <>
+        <Banner title="Mon Profil" />
         <div className="max-w-4xl mx-auto p-8">
-            <h1 className="text-3xl font-bold mb-8">Mon Profil</h1>
 
             {user && <Card>
                 <h2 className="text-xl font-semibold mb-4 border-b border-b-gray-230 pb-2">Informations personnelles</h2>
@@ -76,5 +77,5 @@ export function ProfilPage() {
                 )}
             </div>
         </div>
-    );
+    </>;
 }

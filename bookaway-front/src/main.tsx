@@ -11,7 +11,7 @@ import { SearchPage } from './pages/SearchPage.tsx'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
 import type { Property } from './types.ts'
 import { CreateProperyPage } from './pages/CreatePropertyPage.tsx'
-import { ProfilPage } from './pages/ProfilPage.tsx'
+import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
 import { ErrorPage } from './pages/ErrorPage.tsx'
 
@@ -61,8 +61,8 @@ let router = createBrowserRouter([
         Component: RegisterPage,
       },
       {
-        path: "/profil",
-        Component: ProfilPage,
+        path: "/profile",
+        Component: ProfilePage,
       },
     ]
   }
