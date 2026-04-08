@@ -1,25 +1,27 @@
 import { useState } from "react";
 import api from "../api/axios"; // Ton instance axios créée précédemment
 import { Link, useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
 
         try {
-            // 1. Appel à Laravel (Route Sanctum ou personnalisée)
             const response = await api.post("/login", { email, password });
             
-            // 2. On stocke le token reçu (si tu utilises les tokens)
-            localStorage.setItem("token", response.data.token);
+            const token = response.data.token;
+            const userData = response.data.user;
+
+            login(token, userData); 
             
-            // 3. Redirection vers l'accueil
             navigate("/");
         } catch (err: any) {
             setError("Identifiants incorrects. Veuillez réessayer.");

@@ -13,6 +13,6 @@ class PropertySeeder extends Seeder
      */
     public function run(): void
     {
-        Property::factory(15)->create();
+        Property::factory(25)->create();
     }
 }
