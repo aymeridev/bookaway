@@ -49,7 +49,7 @@ export function ProfilPage() {
                             <div>
                                 <h3 className="font-bold text-blue-600">{booking.property?.title}</h3>
                                 <p className="text-sm text-gray-600">
-                                    Du {new Date(booking.start_date).toLocaleDateString()} au {new Date(booking.end_date).toLocaleDateString()}
+                                    Du {new Date(booking.start_date).toLocaleDateString('fr-FR')} au {new Date(booking.end_date).toLocaleDateString('fr-FR')}
                                 </p>
                             </div>
                             <div className="text-right">
