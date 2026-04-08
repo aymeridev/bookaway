@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { Link, Outlet, useNavigate } from "react-router";
 import { LogIn, LogOut, User } from "lucide-react";
+import useAuthStore from "../context/AuthStore";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const isAuthenticated = !!localStorage.getItem("token");
+    const user = useAuthStore((state) => state.user);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -16,21 +17,14 @@ export function NavbarLayout() {
     return (
         <div className="flex flex-col h-svh">
             <nav className="flex p-4 bg-blue-500 items-center shadow-md">
-                <Link to={"/"} className="block">
+                <Link to={"/"} className="block" viewTransition>
                     <div
                         className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
                         aria-label="Retour à l'accueil"
                     ></div>
                 </Link>
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
-                    {!isAuthenticated ? (
-                        <li>
-                            <Link to={"/login"} className="flex items-center gap-2 transition" viewTransition>
-                                <LogIn />
-                                <span>{t('connexion')}</span>
-                            </Link>
-                        </li>
-                    ) : (
+                    {user ? (
                         <>
                             <li>
                                 <Link to={"/profil"} className="flex items-center gap-2 transition" viewTransition>
@@ -48,6 +42,13 @@ export function NavbarLayout() {
                                 </button>
                             </li>
                         </>
+                    ) : (
+                        <li>
+                            <Link to={"/login"} className="flex items-center gap-2 transition" viewTransition>
+                                <LogIn />
+                                <span>{t('connexion')}</span>
+                            </Link>
+                        </li>
                     )}
                 </ul>
             </nav>

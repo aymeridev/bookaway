@@ -28,7 +28,7 @@ export function SearchBar() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900">
+        <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center rounded-full border shadow py-2 px-2 bg-gray-100 border-gray-300 text-gray-900 [view-transition-name:search-bar]">
             <FormDestinationPart />
             <div className="select-none text-gray-400 font-extralight">|</div>
             <FormDatePart selected={selectedDate} onSelect={setSelectedDate} />
@@ -80,7 +80,7 @@ function FormDestinationPart() {
     return <div className="relative">
         <input type="hidden" defaultValue={location[0]} readOnly name="latitude" />
         <input type="hidden" defaultValue={location[1]} readOnly name="longitude" />
-        <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
+        <div className="flex items-center justify-center gap-2  px-4 py-2 rounded-xl">
             <Map className="text-gray-600" />
             <div className="flex flex-col">
                 <span className="font-bold text-sm">Destination</span>

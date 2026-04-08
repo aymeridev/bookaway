@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
+import { Card } from "../components/Card";
+import useAuthStore from "../context/AuthStore";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export function ProfilPage() {
-    const { user, isAuthenticated } = useAuth();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const user = useAuthStore((state) => state.user);
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
@@ -32,14 +36,21 @@ export function ProfilPage() {
     return (
         <div className="max-w-4xl mx-auto p-8">
             <h1 className="text-3xl font-bold mb-8">Mon Profil</h1>
-            
-            <div className="bg-white shadow rounded-lg p-6 mb-8 border">
-                <h2 className="text-xl font-semibold mb-4 border-b pb-2">Informations personnelles</h2>
+
+            {user && <Card>
+                <h2 className="text-xl font-semibold mb-4 border-b border-b-gray-230 pb-2">Informations personnelles</h2>
                 <div className="space-y-2">
-                    <p><span className="font-bold">Nom :</span> {user?.name}</p>
-                    <p><span className="font-bold">Email :</span> {user?.email}</p>
+                    <p><span className="font-bold">Nom :</span> {user.name}</p>
+                    <p><span className="font-bold">Email :</span> {user.email}</p>
+                    <p>
+                        <span className="font-bold">
+                            Membre depuis {format(user.created_at, "PPP", {
+                                locale: fr
+                            })}
+                        </span>
+                    </p>
                 </div>
-            </div>
+            </Card>}
 
             <h2 className="text-2xl font-bold mb-4">Mes Réservations</h2>
             <div className="grid gap-4">

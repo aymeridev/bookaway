@@ -1,17 +1,18 @@
 import { useState } from "react";
-import api from "../api/axios"; // Ton instance axios créée précédemment
+import api from "../api/axios";
 import { Link, useNavigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
 import { Card } from "../components/Card";
+import useAuthStore from "../context/AuthStore";
+import { LogIn } from "lucide-react";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const login = useAuthStore((state) => state.login)
 
-    const handleLogin = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError("");
 
@@ -21,9 +22,9 @@ export function LoginPage() {
             const token = response.data.token;
             const userData = response.data.user;
 
-            login(token, userData);
+            login(userData, token);
 
-            navigate("/");
+            navigate("/", { viewTransition: true });
         } catch (err: any) {
             setError("Identifiants incorrects. Veuillez réessayer.");
         }
@@ -34,7 +35,7 @@ export function LoginPage() {
             <div className="absolute inset-0 bg-black/65 pointer-events-none"></div>
 
             <Card className="z-10">
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSubmit}>
                     <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Connexion à BookAway</h2>
 
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
@@ -62,7 +63,8 @@ export function LoginPage() {
                             />
                         </div>
 
-                        <button type="submit" className="bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition mt-2">
+                        <button type="submit" className="bg-blue-600 flex items-center justify-center gap-1 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition mt-2">
+                            <LogIn />
                             Se connecter
                         </button>
                         <div className="mt-6 text-center text-sm text-gray-600">
