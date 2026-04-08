@@ -7,9 +7,8 @@ export function NavbarLayout() {
         <div className="flex flex-col h-svh">
             <nav className="flex p-4 bg-blue-500 items-center">
                 <Link to={"/"} className="block">
-                    <div 
-                        className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer" 
-                        style={{ backgroundImage: "url('bookaway_logo.png')" }}
+                    <div
+                        className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
                         aria-label="Retour à l'accueil"
                     ></div>
                 </Link>

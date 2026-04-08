@@ -5,6 +5,7 @@ import { fr } from "react-day-picker/locale";
 import { format } from "date-fns";
 import { fr as fnsFR } from "date-fns/locale";
 import { useNavigate } from "react-router";
+import { Map, Minus, Plus, Search, Users } from "lucide-react";
 
 export function SearchBar() {
     const [travelers, setTravelers] = useState(1);
@@ -27,20 +28,30 @@ export function SearchBar() {
 
     return (
         <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900">
-            <FormDatePart selected={selectedDate} onSelect={setSelectedDate} />
-            <div>|</div>
-            <div className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
-                <span className="font-bold text-sm">Nombre voyageurs</span>
-                <input
-                    type="number"
-                    min={1}
-                    max={16}
-                    value={travelers}
-                    onChange={(e) => setTravelers(parseInt(e.target.value))}
-                    className="bg-transparent outline-none"
-                />
+            <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
+                <Map />
+                <div className="flex flex-col">
+                    <span className="font-bold text-sm">Destination</span>
+                    <input type="text" placeholder="Rechercher une destination" />
+                </div>
             </div>
-            <input type="submit" value={"Rechercher"} className="bg-blue-500 text-blue-50 rounded-full py-1 px-4 font-semibold cursor-pointer" />
+            <div className="select-none text-gray-400 font-extralight">|</div>
+            <FormDatePart selected={selectedDate} onSelect={setSelectedDate} />
+            <div className="select-none text-gray-400 font-extralight">|</div>
+            <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
+                <Users />
+                <div className="flex flex-col">
+                    <span className="font-bold text-sm">Voyageurs</span>
+                    <div className="flex gap-4 items-center justify-center">
+                        <button className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"><Minus /></button>
+                        <span>{travelers}</span>
+                        <button className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"><Plus /></button>
+                    </div>
+                </div>
+            </div>
+            <button className="bg-blue-500 text-blue-50 rounded-full p-4 font-semibold cursor-pointer">
+                <Search />
+            </button>
         </form>
     )
 }
@@ -52,11 +63,11 @@ function FormDatePart({ selected, onSelect }: { selected: DateRange | undefined,
         <div className="relative">
             <button type="button" onClick={() => {
                 setOpenCalendar(!openCalendar);
-            }} className="flex flex-col bg-gray-50 px-4 py-2 rounded-xl">
-                <span className="font-bold text-sm">Date du voyage</span>
+            }} className="flex items-start flex-col bg-gray-50 px-4 py-2 rounded-xl">
+                <span className="font-bold text-sm">Dates</span>
                 {selected?.from && selected.to ?
-                    <span>du {format(selected.from, "d MMM", { locale: fnsFR })} au {format(selected.to, "d MMM", { locale: fnsFR })}</span> :
-                    <span>Selectionner une date...</span>}
+                    <span>{format(selected.from, "d MMM", { locale: fnsFR })} - {format(selected.to, "d MMM", { locale: fnsFR })}</span> :
+                    <span>Quand ?</span>}
             </button>
             {openCalendar &&
                 <div className="absolute bg-white shadow-xl rounded-xl top-16 z-50">

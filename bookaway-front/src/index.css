@@ -2,6 +2,7 @@
 @import '@fontsource/sriracha';
 
 @theme {
-    --background-image-hero: url('./background.jpg');
+    --background-image-logo: url('/bookaway_logo.png');
+    --background-image-hero: url('/background.jpg');
     --font-display: 'Sriracha', cursive;
 }

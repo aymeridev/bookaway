@@ -1,14 +1,14 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
-import { useLoaderData } from "react-router"
+import { Link, useLoaderData } from "react-router"
 
 export function PropertyDetailsPage() {
     const property = useLoaderData();
     return (
         <div className="flex gap-1 p-4">
-            <div className="flex flex-col">
-                <div className="flex gap-1">
+            <div className="flex flex-1 flex-col">
+                <div className="flex max-h-64 gap-1">
                     <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
                     <div className="flex flex-col gap-1">
                         <img className="flex-1 rounded-xl" src="https://loremflickr.com/320/240/camping" />
@@ -18,14 +18,15 @@ export function PropertyDetailsPage() {
                 </div>
                 <h3 className="text-3xl font-semibold">{property.title}</h3>
                 <p className="text-xl line-clamp-2">{property.description}</p>
+                <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
+            </div>
+            <div className="p-4 border border-gray-300 rounded-xl">
                 <div className="flex flex-col items-end">
                     <span className="text-2xl font-medium">{property.base_price + property.price_per_night * 3}€</span>
                     <span className="text-sm">total pour 3p.</span>
                 </div>
-                <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
-            </div>
-            <div className="p-4">
                 <DayPicker />
+                <Link to={"/"} className='bg-blue-500 p-4 text-2xl w-full text-white tracking-wide font-semibold rounded-xl'>Réserver</Link>
             </div>
         </div>
     )
