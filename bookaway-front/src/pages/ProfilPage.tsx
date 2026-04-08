@@ -3,28 +3,31 @@ import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 
 export function ProfilPage() {
-    const { user } = useAuth();
+    const { user, isAuthenticated } = useAuth();
     const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
-        const fetchMyProfil = async () => {
-            if (!user?.id) return;
+        if (user?.id) {
+            fetchMyProfil();
+        }
+    }, [user?.id]); // Se déclenchera dès que user est récupéré
 
-            try {
-                // On appelle la route show de l'utilisateur
-                const response = await api.get(`/users/${user.id}`); 
-                
-                // ATTENTION : Les bookings sont DANS l'objet user retourné
-                // structure : response.data = { id: 1, name: "...", bookings: [...] }
-                setBookings(response.data.bookings || []);
-                
-            } catch (err) {
-                console.error("Erreur lors de la récupération du profil", err);
-            }
-        };
+    const fetchMyProfil = async () => {
+        try {
+            const response = await api.get(`/users/${user?.id}`);
+            setBookings(response.data.bookings || []);
+        } catch (err) {
+            console.error("Erreur profil", err);
+        }
+    };
 
-        fetchMyProfil();
-    }, [user?.id]);
+    if (isAuthenticated && !user) {
+        return <p>Chargement des données utilisateur...</p>;
+    }
+
+    if (!isAuthenticated) {
+        return <p>Veuillez vous connecter pour accéder à cette page.</p>;
+    }
 
     return (
         <div className="max-w-4xl mx-auto p-8">
