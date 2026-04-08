@@ -1,7 +1,3 @@
-// 'images',
-// 'amenities',
-// 'latitude',
-// 'longitude'
 
 import { X } from "lucide-react";
 import { useState } from "react"
@@ -11,7 +7,7 @@ import { amenities } from "../amenities";
 
 export function CreateProperyPage() {
     return <>
-        <form action="" className="max-w-md">
+        <form action="" className="flex flex-col gap-1 max-w-md">
             <label className="block">
                 <span className="text-gray-700">Titre</span>
                 <input className="mt-1 block w-full" type="text" />
@@ -32,6 +28,7 @@ export function CreateProperyPage() {
 
             <label className="block">
                 <span className="text-gray-700">Capacité</span>
+                <p>Nombre de voyageurs maximum</p>
                 <input className="mt-1 block w-full" type="number" min={1} max={99} />
             </label>
             <label className="block">
@@ -44,30 +41,7 @@ export function CreateProperyPage() {
             </label>
             <ImagesInput />
             <AmenitiesInput />
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input className="mt-1 block w-full" type="text" />
-            </label>
+            <LocationInput />
             <input type="submit" />
         </form >
     </>
@@ -115,7 +89,20 @@ function AmenitiesInput() {
             options={amenitiesOptions}
             closeMenuOnSelect={false}
             components={animatedComponents}
+            formatOptionLabel={(data: any) => {
+                const Icon = data.icon;
+                return (
+                    <div className="flex items-center gap-2">
+                        {Icon && <Icon size={18} className="text-gray-500" />}
+                        <span>{data.label}</span>
+                    </div>
+                )
+            }}
             isMulti
         />
     </label>
+}
+
+function LocationInput() {
+
 }
