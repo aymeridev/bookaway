@@ -1,26 +1,45 @@
 
-import { Search, X } from "lucide-react";
 import { useState } from "react"
-import Select from 'react-select'
-import makeAnimated from 'react-select/animated';
-import { amenitiesIcon } from "../amenities";
-import { useForm, type SubmitHandler, useFieldArray, type UseFormReturn, Controller } from "react-hook-form";
-import { Card } from "../components/Card";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Banner } from "../components/Banner";
-import { t } from "i18next";
+import { BasicInfoStep } from "../components/create_property/steps/BasicInfoStep";
+import type { PropertyForm } from "../components/create_property/form";
+import { Stepper } from "../components/create_property/Stepper";
+import Button from "../components/ui/Button";
+import { PropertyTypeStep } from "../components/create_property/steps/PropertyTypeStep";
+import { ImagesStep } from "../components/create_property/steps/ImagesStep";
+import { AmenitiesStep } from "../components/create_property/steps/AmenitiesStep";
+import { PriceStep } from "../components/create_property/steps/PriceStep";
 
-type PropertyForm = {
-    title: string,
-    type: string,
-    capacity: string,
-    images: { url: string }[],
-    amenities: { value: string }[],
-    description: string,
-    base_price: string,
-    price_per_night: string,
-    latitude: string,
-    longitude: string
-}
+
+
+const STEPS = [
+    {
+        name: "Type de logement",
+        description: "",
+        Step: PropertyTypeStep,
+    },
+    {
+        name: "Informations de bases",
+        description: "contenu",
+        Step: BasicInfoStep
+    },
+    {
+        name: "Prix du logement",
+        description: "contenu",
+        Step: PriceStep,
+    },
+    {
+        name: "Photo du logement",
+        description: "contenu",
+        Step: ImagesStep
+    },
+    {
+        name: "Équipements",
+        description: "contenu",
+        Step: AmenitiesStep
+    },
+] as const;
 
 export function CreateProperyPage() {
     const form = useForm<PropertyForm>({
@@ -29,200 +48,42 @@ export function CreateProperyPage() {
             images: []
         }
     });
-    const { register, handleSubmit, formState: { errors } } = form;
+    const { handleSubmit } = form;
+
 
     const onSubmit: SubmitHandler<PropertyForm> = (data) => {
         const formData = {
             ...data,
             images: data.images.map(img => img.url)
         };
-        console.log(formData);
     }
+    const [getStep, setStep] = useState(0);
+
+    const Component = STEPS[getStep].Step
 
     return <>
         <Banner title="Ajouter un logement" description="Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme." />
-        <form onSubmit={handleSubmit(onSubmit)} action="" className="flex flex-col gap-4 m-4 max-w-md">
-            <label className="block">
-                <span className="text-gray-700">Titre</span>
-                <input
-                    {...register('title', { required: "Le titre est requis" })}
-                    className="mt-1 block w-full"
-                    type="text" />
-            </label>
+        <form onSubmit={handleSubmit(onSubmit)} action="" className="flex-1 flex gap-8 m-4 max-w-md">
 
-            <label className="block">
-                <span className="text-gray-700">Type de logement</span>
-                <select className="mt-1 block w-full">
-                    <option selected disabled>Selectionner un type de logement</option>
-                    <option value="camping">Camping</option>
-                    <option value="hotel">Hôtel</option>
-                </select>
-            </label>
+            <Stepper steps={STEPS} currentStep={getStep} />
+            <div className="flex-1 rounded-lg shadow-xl p-8 w-full flex-col flex">
+                <Component form={form} onNext={() => setStep(getStep + 1)} />
+                {getStep > 0 && <div className="flex items-center justify-center">
+                    <Button onClick={() => {
+                        setStep(getStep - 1)
+                    }} type="button" variant="outline">Précedent</Button>
+                    <span className="flex-1 text-center">Étape {getStep + 1}/{STEPS.length}</span>
 
-            <label className="block">
-                <span className="text-gray-700">Description</span>
-                <textarea {...register('description')} className="mt-1 block w-full"></textarea>
-            </label>
-
-            <label className="block">
-                <span className="text-gray-700">Capacité</span>
-                <p>Nombre de voyageurs maximum</p>
-                <input
-                    {...register('capacity', { required: "Le nombre de voyageurs est requis" })}
-                    className="mt-1 block w-full" type="number" min={1} max={99} />
-                {errors.capacity && <p style={{ color: 'red' }}>{errors.capacity.message}</p>}
-            </label>
-            <Card>
-                <label className="block">
-                    <span className="text-gray-700">Prix de base</span>
-                    <input
-                        {...register('base_price', { required: "Le prix de base est requis" })}
-                        className="mt-1 block w-full"
-                        placeholder="Prix en €"
-                        type="number"
-                        min={1} max={999} />
-                </label>
-                <label className="block">
-                    <span className="text-gray-700">Prix par nuit</span>
-                    <input
-                        {...register('price_per_night', { required: "Le prix par nuit est requis" })}
-                        className="mt-1 block w-full"
-                        placeholder="Prix en €"
-                        type="number"
-                        min={1} max={999} />
-                </label>
-            </Card>
-            <ImagesInput form={form} />
-            <AmenitiesInput form={form} />
-            <LocationInput form={form} />
-            <input className="bg-blue-500 p-2 text-blue-50 cursor-pointer rounded text-lg font-medium" value={"Créer la propriété"} type="submit" />
+                    {getStep === STEPS.length - 1 ?
+                        <Button>
+                            Créer le logement
+                        </Button> :
+                        <Button onClick={() => {
+                            setStep(getStep + 1)
+                        }} type="button" variant="primary">Suivant</Button>}
+                </div>}
+            </div>
         </form >
     </>
 }
 
-function ImagesInput({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
-    const { register, control } = form;
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "images"
-    });
-
-    return <Card>
-        <label className="block">
-            <span className="text-gray-700">Images</span>
-            <ul>
-                {fields.map((field, index) => (
-                    <li key={field.id}>
-                        <input type="url" placeholder="https://..."
-                            {...register(`images.${index}.url` as const)}
-                        />
-                        <button type="button" onClick={() => remove(index)}>
-                            <X className="size-5" />
-                        </button>
-                    </li>
-                ))}
-            </ul>
-            <div className="flex gap-1">
-                <button onClick={() => append({ url: "" })}
-                    type="button"
-                    className="bg-blue-500 p-2 rounded text-blue-50 cursor-pointer w-full">
-                    Ajouter
-                </button>
-            </div>
-        </label>
-    </Card>;
-}
-
-function AmenitiesInput({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
-    const animatedComponents = makeAnimated();
-    const { control } = form;
-
-    const amenitiesOptions = Object.keys(amenitiesIcon).map((a: string) => {
-        return {
-            icon: amenitiesIcon[a],
-            value: a,
-            label: t(`amenities.${a}` as any),
-        }
-    });
-    return <label className="block">
-        <span className="text-gray-700">Équipements</span>
-        <Controller
-            name="amenities"
-            defaultValue={[]}
-            rules={{ required: "Séléctionne au moins un équipement" }}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-                <div>
-                    <Select
-                        options={amenitiesOptions}
-                        {...field}
-                        placeholder="Sélectionner..."
-                        closeMenuOnSelect={false}
-                        components={animatedComponents}
-                        formatOptionLabel={(data: any) => {
-                            const Icon = data.icon;
-                            return (
-                                <div className="flex items-center gap-2">
-                                    {Icon && <Icon size={18} className="text-gray-500" />}
-                                    <span>{data.label}</span>
-                                </div>
-                            )
-                        }}
-                        isMulti
-                    />
-                    {error && <p className="text-red-500">{error.message}</p>}
-                </div>
-            )}
-        />
-    </label>
-}
-
-function LocationInput({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
-    const { register } = form;
-    const [location, setLocation] = useState<[string, string]>(["", ""]);
-    const [search, setSearch] = useState("");
-    const [results, setResults] = useState([]);
-    return (
-        <Card>
-            <input type="hidden" defaultValue={location[0]} readOnly {...register("latitude")} />
-            <input type="hidden" defaultValue={location[1]} readOnly {...register("longitude")} />
-            <label className="block">
-                <span className="text-gray-700">Adresse du logement</span>
-                <div className="flex gap-1">
-                    <input
-                        value={search}
-                        type="search"
-                        autoComplete="street-address"
-                        onChange={(e) => {
-                            setSearch((e.target as any).value);
-                        }} className="mt-1 block w-full" />
-                    {search.length > 0 &&
-                        <button onClick={async () => {
-
-                            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&email=ulco@ulco.fr`);
-
-                            const data = await res.json();
-                            console.log(data);
-                            setResults(data);
-
-                        }} type="button" className="bg-blue-500 cursor-pointer p-2 text-white rounded">
-                            <Search />
-                        </button>
-                    }
-                </div>
-            </label>
-            {results.length > 0 && <ul>
-                {results.map((result: any) => (
-                    <li key={result.place_id}>
-                        <button type="button" onClick={() => {
-                            setLocation([result.lat, result.lon]);
-                            setResults([]);
-                            setSearch(result.display_name);
-                        }}>{result.display_name}</button>
-                    </li>
-                ))}
-            </ul>}
-        </Card>
-    )
-
-}

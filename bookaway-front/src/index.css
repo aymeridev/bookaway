@@ -7,3 +7,5 @@
     --background-image-hero: url('/background.jpg');
     --font-display: 'Sriracha', cursive;
 }
+
+@variant primary (&[data-primary="true"]);
