@@ -28,8 +28,22 @@ let router = createBrowserRouter([
         path: "/search",
         loader: async ({ request }) => {
           const url = new URL(request.url);
+          
+          // On récupère tous les paramètres de recherche
+          const params = new URLSearchParams({
+            lat: url.searchParams.get("lat") || "",
+            lon: url.searchParams.get("lon") || "",
+            travelers: url.searchParams.get("travelers") || "",
+            from: url.searchParams.get("from") || "",
+            to: url.searchParams.get("to") || "",
+          });
 
-          const res = await fetch(`/api/properties`);
+          // On envoie ces paramètres à l'API Laravel
+          // Exemple d'URL générée : /api/properties?lat=45.2&lon=2.3&travelers=2...
+          const res = await fetch(`/api/properties?${params.toString()}`);
+          
+          if (!res.ok) throw new Error("Erreur lors de la récupération des logements");
+          
           return res.json() as Promise<Property[]>;
         },
         Component: SearchPage,
