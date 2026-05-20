@@ -6,12 +6,32 @@ import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
 import { amenitiesIcon } from "../amenities";
 import { t } from "i18next";
+import { useSearchParams } from "react-router";
+import { differenceInDays, parseISO } from "date-fns";
+import { useNavigation } from "react-router";
 
 export function SearchPage() {
     const properties: Property[] = useLoaderData();
 
     const [view, setView] = useState<"list" | "map">("list");
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchParams] = useSearchParams();
+    const navigation = useNavigation();
+    const loading = navigation.state === "loading";
+
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
+
+    const numberOfNights =
+        from && to
+            ? Math.max(
+                differenceInDays(
+                    parseISO(to),
+                    parseISO(from)
+                ),
+                1
+            )
+            : 1;
 
     const itemsPerPage = 18;
 
@@ -103,13 +123,21 @@ export function SearchPage() {
                 </div>
             </header>
 
-            {view === "list" ? (
+            {loading ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="mt-4 text-gray-500">
+                            Recherche des logements...
+                        </p>
+                    </div>
+                ) :view === "list" ? (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {currentProperties.map((property) => (
                             <PropertyCard
                                 key={property.id}
                                 property={property}
+                                numberOfNights={numberOfNights}
                             />
                         ))}
                     </div>
@@ -167,12 +195,13 @@ export function SearchPage() {
 }
 
 export function PropertyCard({
-    property,
+    property, numberOfNights
 }: {
     property: Property;
+    numberOfNights: number;
 }) {
     const totalPrice =
-        property.base_price + property.price_per_night * 3;
+        property.base_price + property.price_per_night * numberOfNights;
 
     return (
         <Link
@@ -226,7 +255,8 @@ export function PropertyCard({
                                 </span>
 
                                 <span className="text-gray-500 text-xs">
-                                    / 3 nuits
+                                    / {numberOfNights} nuit
+                                    {numberOfNights > 1 ? "s" : ""}
                                 </span>
                             </div>
                         </div>
