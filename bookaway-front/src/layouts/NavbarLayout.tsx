@@ -20,16 +20,20 @@ export function NavbarLayout() {
                     ></div>
                 </Link>
                 <ul className="flex gap-1">
-                    <ListNavLink
-                        to={"/bookings"}>
-                        <Calendar />
-                        Mes réservations
-                    </ListNavLink>
-                    <ListNavLink
-                        to={"/my-properties"}>
-                        <LandPlot />
-                        Mes logements
-                    </ListNavLink>
+                    {isAuthenticated ? (
+                        <>
+                            <ListNavLink
+                                to={"/bookings"}>
+                                <Calendar />
+                                Mes réservations
+                            </ListNavLink>
+                            <ListNavLink
+                                to={"/my-properties"}>
+                                <LandPlot />
+                                Mes logements
+                            </ListNavLink>
+                        </>
+                    ) : (<></>)}
                 </ul>
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
                     {isAuthenticated ? (
@@ -59,11 +63,13 @@ function ProfileButton() {
     let [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
     const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout)
 
     const handleLogout = () => {
         setShowDetails(false);
         localStorage.removeItem("token");
         navigate("/login");
+        logout();
     };
     return (
         <>
