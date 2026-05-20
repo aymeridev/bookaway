@@ -11,4 +11,5 @@ export type Property = {
     price_per_night: number;
     created_at: string;
     updated_at: string;
+    distance?: number;
 }

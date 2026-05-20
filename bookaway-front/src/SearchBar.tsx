@@ -11,6 +11,8 @@ import { useDebounce } from "./hooks/useDebounce";
 export function SearchBar() {
     const [travelers, setTravelers] = useState(1);
     const [selectedDate, setSelectedDate] = useState<DateRange>();
+    const [coords, setCoords] = useState<{lat: string, lon: string} | null>(null);
+    
     const navigate = useNavigate();
 
     const handleSubmit = (e: SubmitEvent) => {
@@ -19,17 +21,18 @@ export function SearchBar() {
         const params = new URLSearchParams({
             travelers: travelers.toString(),
             from: selectedDate?.from ? format(selectedDate.from, "yyyy-MM-dd") : "",
-            to: selectedDate?.to ? format(selectedDate.to, "yyyy-MM-dd") : ""
+            to: selectedDate?.to ? format(selectedDate.to, "yyyy-MM-dd") : "",
+            // 2. On ajoute les coordonnées à l'URL
+            lat: coords?.lat || "",
+            lon: coords?.lon || ""
         });
 
-        navigate(`/search?${params.toString()}`, {
-            viewTransition: true
-        });
+        navigate(`/search?${params.toString()}`, { viewTransition: true });
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center rounded-full border shadow py-2 px-2 bg-gray-100 border-gray-300 text-gray-900 [view-transition-name:search-bar]">
-            <FormDestinationPart />
+        <form onSubmit={handleSubmit} className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900">
+            <FormDestinationPart onLocationSelect={setCoords} />
             <div className="select-none text-gray-400 font-extralight">|</div>
             <FormDatePart selected={selectedDate} onSelect={setSelectedDate} />
             <div className="select-none text-gray-400 font-extralight">|</div>
@@ -56,8 +59,11 @@ export function SearchBar() {
     )
 }
 
-function FormDestinationPart() {
-    const [location, setLocation] = useState<[string, string]>(["", ""]);
+interface FormDestinationProps {
+    onLocationSelect: (coords: { lat: string; lon: string } | null) => void;
+}
+
+function FormDestinationPart({ onLocationSelect }: FormDestinationProps) {
     const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
 
@@ -66,53 +72,64 @@ function FormDestinationPart() {
     useEffect(() => {
         async function load() {
             const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&email=ulco@ulco.fr`);
-
             const data = await res.json();
-            console.log(data);
             setResults(data);
         }
         if (debouncedSearch) {
-            console.log(debouncedSearch);
-            load()
+            load();
         }
     }, [debouncedSearch]);
 
-    return <div className="relative">
-        <input type="hidden" defaultValue={location[0]} readOnly name="latitude" />
-        <input type="hidden" defaultValue={location[1]} readOnly name="longitude" />
-        <div className="flex items-center justify-center gap-2  px-4 py-2 rounded-xl">
-            <Map className="text-gray-600" />
-            <div className="flex flex-col">
-                <span className="font-bold text-sm">Destination</span>
-                <input className="border-none" value={search} onChange={(e) => {
-                    setSearch(e.target.value);
-                }} type="text" placeholder="Rechercher une destination" />
+    return (
+        <div className="relative">
+            <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
+                <Map className="text-gray-600" />
+                <div className="flex flex-col">
+                    <span className="font-bold text-sm">Destination</span>
+                    <input 
+                        className="border-none focus:ring-0" 
+                        value={search} 
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            if (e.target.value === "") onLocationSelect(null); // Reset si input vide
+                        }} 
+                        type="text" 
+                        placeholder="Rechercher une destination" 
+                    />
+                </div>
             </div>
-        </div>
-        {results.length > 0 && <div className="absolute bg-white rounded-xl min-w-lg shadow-2xl p-4">
-            <span className="text-sm text-gray-600">Résultats de recherches</span>
-            <ul className="flex w-full flex-col gap-1">
-                {results.map((result: any) => (
-                    <li key={result.place_id} className="w-full">
-                        <button onClick={() => {
-                            setLocation([result.lat, result.lon]);
-                            setSearch(result.name)
-                            setResults([]);
-                        }} className="cursor-pointer w-full flex items-center gap-1 hover:bg-gray-100 rounded-xl p-2" type="button">
-                            <div className="size-16 flex items-center justify-center text-red-600 bg-red-100 rounded-xl">
-                                <MapPin className="size-8" strokeWidth={1} />
-                            </div>
-                            <div className="flex flex-col items-start">
-                                {result.name}
-                                <span className="text-gray-700 text-xs text-left">{result.display_name}</span>
-                            </div>
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        </div>}
-    </div>
 
+            {results.length > 0 && (
+                <div className="absolute bg-white rounded-xl min-w-lg shadow-2xl p-4 top-16 z-50">
+                    <span className="text-sm text-gray-600">Résultats de recherches</span>
+                    <ul className="flex w-full flex-col gap-1">
+                        {results.map((result: any) => (
+                            <li key={result.place_id} className="w-full">
+                                <button 
+                                    onClick={() => {
+                                        // On appelle la fonction passée par le parent
+                                        onLocationSelect({ lat: result.lat, lon: result.lon });
+                                        setSearch(result.name);
+                                        setResults([]);
+                                    }} 
+                                    className="cursor-pointer w-full flex items-center gap-1 hover:bg-gray-100 rounded-xl p-2" 
+                                    type="button"
+                                >
+                                    <div className="size-16 flex items-center justify-center text-red-600 bg-red-100 rounded-xl">
+                                        <MapPin className="size-8" strokeWidth={1} />
+                                    </div>
+                                    <div className="flex flex-col items-start text-gray-900">
+                                        <span className="font-medium">{result.name}</span>
+                                        <span className="text-gray-700 text-xs text-left line-clamp-1">{result.display_name}</span>
+                                    </div>
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
 }
 
 function FormDatePart({ selected, onSelect }: { selected: DateRange | undefined, onSelect: (d: DateRange | undefined) => void }) {
