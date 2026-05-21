@@ -1,4 +1,8 @@
 *
 !private/
 !public/
+!public/properties/
+!public/properties/examples/
+!public/properties/examples/**
 !.gitignore
+

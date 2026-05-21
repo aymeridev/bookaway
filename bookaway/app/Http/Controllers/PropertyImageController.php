@@ -6,6 +6,7 @@ use App\Http\Requests\StoreImageRequest;
 use App\Http\Requests\UpdateImageRequest;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
@@ -14,19 +15,6 @@ class PropertyImageController extends Controller
 {
     public function store(StoreImageRequest $request, Property $property)
     {
-        $request->validate([
-            'image' => [
-                'required',
-                'image',
-                'mimes:jpeg,png,webp',
-                'max:10240', // 10MO
-            ]
-        ]);
-
-
-
-
-
         try {
             $file = $request->file('image');
             $filename = Str::uuid() . '.webp';
@@ -35,16 +23,18 @@ class PropertyImageController extends Controller
             $fullPath = "{$folderPath}/{$filename}";
 
 
-            $image = Image::read($file);
+            $image = file_get_contents($file);
 
-            Storage::disk('public')->put($fullPath, (string) $image);
+            Storage::disk('public')->put($fullPath, $image);
 
             $nextSortOrder = $property->images()->max('sort_order') + 1;
 
+            $userId = Auth::id();
 
             $propertyImage = $property->images()->create([
                 'path' => $fullPath,
                 'sort_order' => $nextSortOrder,
+                'user_id' => $userId,
             ]);
 
             return response()->json([
@@ -52,7 +42,6 @@ class PropertyImageController extends Controller
                 'image' => [
                     'id' => $propertyImage->id,
                     'url' => Storage::url($propertyImage->path),
-                    'is_primary' => $propertyImage->is_primary,
                     'sort_order' => $propertyImage->sort_order,
                 ]
             ], 201);
@@ -67,7 +56,7 @@ class PropertyImageController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Image $image)
+    public function show(PropertyImage $image)
     {
         //
     }
@@ -76,7 +65,7 @@ class PropertyImageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateImageRequest $request, Image $image)
+    public function update(UpdateImageRequest $request, PropertyImage $image)
     {
         //
     }
@@ -84,7 +73,7 @@ class PropertyImageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Image $image)
+    public function destroy(PropertyImage $image)
     {
         //
     }

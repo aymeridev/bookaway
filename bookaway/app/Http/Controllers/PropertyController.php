@@ -31,11 +31,11 @@ class PropertyController extends Controller
         if ($request->filled(['lat', 'lon'])) {
             $lat = (float) $request->lat;
             $lon = (float) $request->lon;
-            
+
             $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
             $query->selectRaw("*, $haversine AS distance", [$lat, $lon, $lat])
-                    ->orderBy('distance');
+                ->orderBy('distance');
         }
 
         return response()->json($query->get());
