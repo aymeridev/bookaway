@@ -202,10 +202,12 @@ export function PropertyCard({
 }) {
     const totalPrice =
         property.base_price + property.price_per_night * numberOfNights;
-
+    const [searchParams] = useSearchParams();
+    const from = searchParams.get("from");
+    const to = searchParams.get("to");
     return (
         <Link
-            to={`/property/${property.id}`}
+            to={`/property/${property.id}?from=${from}&to=${to}`}
             className="group block"
         >
             <article className="flex flex-col h-full rounded-2xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden">

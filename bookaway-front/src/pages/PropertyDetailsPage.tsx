@@ -1,13 +1,64 @@
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
-import { Link, useLoaderData } from "react-router";
+import type { DateRange } from "react-day-picker";
+import { Link, useLoaderData, useSearchParams, useNavigate} from "react-router";
+import { differenceInDays, parseISO } from "date-fns"; // Optionnel mais recommandé pour calculer les nuits
 
 export function PropertyDetailsPage() {
     const property: any = useLoaderData();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    const urlFrom = searchParams.get("from");
+    const urlTo = searchParams.get("to");
+
+    console.log(urlFrom)
+    
+    // Gestion de l'état des dates sélectionnées (3 nuits par défaut pour l'affichage initial)
+    const [range, setRange] = useState<DateRange | undefined>(() => {
+        if (urlFrom && urlTo) {
+            return {
+                from: parseISO(urlFrom),
+                to: parseISO(urlTo)
+            };
+        }
+        return {
+            from: new Date(),
+            to: new Date(new Date().setDate(new Date().getDate() + 3))
+        };
+    });
+    const [month, setMonth] = useState<Date>(range?.from || new Date());
+
+    // Calcul du nombre de nuits basé sur la sélection
+    const numberOfNights = range?.from && range?.to 
+        ? differenceInDays(range.to, range.from) 
+        : 0;
+
+    const basePrice = parseFloat(property.base_price) || 0;
+    const pricePerNight = parseFloat(property.price_per_night) || 0;
+    const nightsTotal = pricePerNight * numberOfNights;
+    const grandTotal = basePrice + nightsTotal;
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <button 
+                onClick={() => navigate(-1)} 
+                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors group cursor-pointer"
+            >
+                <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    strokeWidth={2.5} 
+                    stroke="currentColor" 
+                    className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7M3 12h18" />
+                </svg>
+                Retour aux résultats
+            </button>
             {/* 1. Header & Title */}
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
@@ -57,30 +108,50 @@ export function PropertyDetailsPage() {
                         </div>
 
                         <div className="flex justify-center bg-gray-50 rounded-xl p-2 border border-gray-100">
-                            <DayPicker mode="range" className="m-0" />
+                            <DayPicker 
+                                mode="range" 
+                                selected={range} 
+                                onSelect={setRange} 
+                                month={month}
+                                onMonthChange={setMonth}
+                                className="m-0" 
+                            />
                         </div>
 
                         <div className="space-y-3 pt-2">
                             <div className="flex justify-between text-gray-600">
-                                <span className="underline">{property.price_per_night}€ x 3 nuits</span>
-                                <span>{property.price_per_night * 3}€</span>
+                                <span className="underline">{property.price_per_night}€ x {numberOfNights} nuits</span>
+                                <span>{nightsTotal}€</span>
                             </div>
                             <div className="flex justify-between text-gray-600">
                                 <span className="underline">Frais de service</span>
-                                <span>{property.base_price}€</span>
+                                <span>{basePrice}€</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total</span>
-                                <span>{property.base_price + property.price_per_night * 3}€</span>
+                                <span>{grandTotal}€</span>
                             </div>
                         </div>
 
+                        {/* Redirection configurée avec passage de données */}
                         <Link 
-                            to={"/"} 
-                            className='block w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-center py-4 text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all'
+                            to="/reservation" 
+                            state={{ 
+                                property, 
+                                dateRange: { 
+                                    from: range?.from?.toISOString(), 
+                                    to: range?.to?.toISOString() 
+                                },
+                                totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
+                            }}
+                            className={`block w-full text-center py-4 text-white font-bold rounded-xl transition-all ${
+                                numberOfNights > 0 
+                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer' 
+                                : 'bg-gray-400 cursor-not-allowed pointer-events-none'
+                            }`}
                         >
-                            Réserver maintenant
+                            {numberOfNights > 0 ? 'Réserver maintenant' : 'Sélectionnez vos dates'}
                         </Link>
                         
                         <p className="text-center text-xs text-gray-400">Aucun montant ne vous sera débité pour le moment</p>
@@ -88,7 +159,7 @@ export function PropertyDetailsPage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 function PropertyLocation({ longitude, latitude }: { longitude: number, latitude: number }) {
