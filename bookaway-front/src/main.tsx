@@ -19,6 +19,7 @@ import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
 import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
+import api from './api/axios.ts'
 
 let router = createBrowserRouter([
   {
@@ -68,26 +69,20 @@ let router = createBrowserRouter([
         middleware: [authMiddleware],
         Component: MyPropertiesPage,
         loader: async () => {
-          const res = await fetch(`/api/properties?owner=1`)
+          return (await api.get<Property[]>(`/my-properties`)).data;
         }
       },
       {
         path: "/property/:id",
         loader: async ({ params }) => {
-
-          const res = await fetch(`/api/properties/${params.id}`);
-          const property = await res.json();
-          return property as Property;
+          return (await api.get<Property>(`/properties/${params.id}`)).data;
         },
         Component: PropertyDetailsPage,
       },
       {
         path: "/property/:id/edit",
         loader: async ({ params }) => {
-
-          const res = await fetch(`/api/properties/${params.id}`);
-          const property = await res.json();
-          return property as Property;
+          return (await api.get<Property>(`/properties/${params.id}`)).data;
         },
         Component: EditPropertyPage,
       },

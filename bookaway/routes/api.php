@@ -16,7 +16,8 @@ Route::get('/trips', function () {
 });
 
 
-Route::apiResource('properties', PropertyController::class);
+Route::apiResource('properties', PropertyController::class)->only(['index', 'show']);
+Route::apiResource('properties', PropertyController::class)->only(['store', 'update', 'destroy'])->middleware('auth:sanctum');
 Route::apiResource('bookings', BookingController::class);
 Route::apiResource('payments', PaymentController::class);
 Route::apiResource('users', UserController::class);
@@ -26,3 +27,4 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::post('/properties/{property}/images', [PropertyImageController::class, 'store'])->middleware("auth:sanctum");
+Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');

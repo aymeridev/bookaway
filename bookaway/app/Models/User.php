@@ -50,13 +50,18 @@ class User extends Authenticatable
         ];
     }
 
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class);
+    }
+
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
-    public function bookings() 
-    { 
-        return $this->hasMany(Booking::class); 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

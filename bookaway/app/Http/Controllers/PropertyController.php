@@ -38,7 +38,7 @@ class PropertyController extends Controller
                 ->orderBy('distance');
         }
 
-        $query = Property::with(['images' => function ($q) {
+        $query->with(['images' => function ($q) {
             $q->orderBy('sort_order', 'asc');
         }]);
 
@@ -62,6 +62,8 @@ class PropertyController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
         ]);
+
+        $validated['user_id'] = $request->user()->id;
 
         $property = Property::create($validated);
 
@@ -103,6 +105,15 @@ class PropertyController extends Controller
         $property->update($validated);
 
         return response()->json($property);
+    }
+    public function userProperties(Request $request)
+    {
+        $properties = $request->user()->properties()
+            ->with(['images' => function ($q) {
+                $q->orderBy('sort_order', 'asc');
+            }])
+            ->get();
+        return response()->json($properties);
     }
 
     /**

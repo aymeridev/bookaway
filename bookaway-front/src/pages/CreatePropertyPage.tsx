@@ -10,6 +10,7 @@ import { PropertyTypeStep } from "../components/create_property/steps/PropertyTy
 import { type Property } from "../types";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 
 
@@ -44,6 +45,7 @@ export function CreatePropertyPage() {
         };
         console.log(formData);
     }
+    const navigate = useNavigate();
     const [step, setStep] = useState(0);
 
     const [isLoading, setLoading] = useState(false);
@@ -65,7 +67,10 @@ export function CreatePropertyPage() {
                         <span className="flex-1 text-center">Étape {step + 1}/{STEPS.length}</span>
 
                         {step === STEPS.length - 1 ?
-                            <Button>
+                            <Button onClick={() => {
+                                navigate(`/property/${property?.id}`);
+                                toast.success("Votre logement a été créé avec succès!")
+                            }}>
                                 Créer le logement
                             </Button> :
                             <Button isLoading={isLoading} onClick={async () => {
