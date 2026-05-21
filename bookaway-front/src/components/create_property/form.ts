@@ -1,4 +1,5 @@
 import type { UseFormReturn } from "react-hook-form";
+import type { Property } from "../../types";
 
 export type PropertyForm = {
     title: string,
@@ -15,5 +16,6 @@ export type PropertyForm = {
 
 export interface PropertyFormStepProps {
     onNext?: () => void;
+    property?: Property;
     form: UseFormReturn<PropertyForm, any, PropertyForm>
 }

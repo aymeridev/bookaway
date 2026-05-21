@@ -41,12 +41,11 @@ export function NavbarLayout() {
                             <ProfileButton />
                         </>
                     ) : (
-                        <li>
-                            <ListNavLink to={"/login"}>
-                                <LogIn />
-                                <span>{t('connexion')}</span>
-                            </ListNavLink>
-                        </li>
+                        <ListNavLink to={"/login"}>
+                            <LogIn />
+                            <span>{t('connexion')}</span>
+                        </ListNavLink>
+
                     )}
                 </ul>
             </nav>

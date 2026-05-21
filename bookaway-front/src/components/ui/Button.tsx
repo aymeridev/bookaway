@@ -33,7 +33,7 @@ export default function Button({
     ...props
 }: ButtonProps) {
 
-    const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 select-none';
+    const baseStyles = 'inline-flex gap-2 cursor-pointer items-center justify-center font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 select-none';
 
     const isButtonDisabled = disabled || isLoading;
     const disabledStyles = 'opacity-50 cursor-not-allowed pointer-events-none';

@@ -14,6 +14,7 @@ import { CreatePropertyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
 import { ErrorPage } from './pages/ErrorPage.tsx'
+import { Toaster } from 'react-hot-toast';
 
 let router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ let router = createBrowserRouter([
         path: "/search",
         loader: async ({ request }) => {
           const url = new URL(request.url);
-          
+
           // On récupère tous les paramètres de recherche
           const params = new URLSearchParams({
             lat: url.searchParams.get("lat") || "",
@@ -41,9 +42,9 @@ let router = createBrowserRouter([
           // On envoie ces paramètres à l'API Laravel
           // Exemple d'URL générée : /api/properties?lat=45.2&lon=2.3&travelers=2...
           const res = await fetch(`/api/properties?${params.toString()}`);
-          
+
           if (!res.ok) throw new Error("Erreur lors de la récupération des logements");
-          
+
           return res.json() as Promise<Property[]>;
         },
         Component: SearchPage,
@@ -85,5 +86,6 @@ let router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <Toaster />
   </StrictMode>,
 )

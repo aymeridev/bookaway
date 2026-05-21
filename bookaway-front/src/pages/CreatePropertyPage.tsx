@@ -13,6 +13,7 @@ import { AmenitiesStep } from "../components/create_property/steps/AmenitiesStep
 import { PriceStep } from "../components/create_property/steps/PriceStep";
 import { type Property } from "../types";
 import api from "../api/axios";
+import toast from "react-hot-toast";
 
 
 
@@ -34,12 +35,12 @@ const STEPS = [
         Step: PriceStep,
     },
     {
-        id: "photos",
-        Step: ImagesStep
-    },
-    {
         id: "amenities",
         Step: AmenitiesStep
+    },
+    {
+        id: "photos",
+        Step: ImagesStep
     },
 ] as const;
 
@@ -52,7 +53,7 @@ export function CreatePropertyPage() {
     });
     const { handleSubmit } = form;
 
-    const [getProperty, setProperty] = useState<Property>();
+    const [property, setProperty] = useState<Property>();
 
 
     const onSubmit: SubmitHandler<PropertyForm> = (data) => {
@@ -62,39 +63,54 @@ export function CreatePropertyPage() {
         };
         console.log(formData);
     }
-    const [getStep, setStep] = useState(0);
+    const [step, setStep] = useState(0);
 
-    const Component = STEPS[getStep].Step
+    const [isLoading, setLoading] = useState(false);
+
+    const Component = STEPS[step].Step
 
     return <>
         <Banner title="Ajouter un logement" description="Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme." />
 
         <main className="flex p-8 gap-4">
-            <Stepper steps={STEPS} currentStep={getStep} />
+            <Stepper steps={STEPS} currentStep={step} />
             <div className="flex-1 rounded-lg shadow-xl p-8 w-full flex-col flex">
                 <form onSubmit={handleSubmit(onSubmit)} action="" className="flex-1 flex flex-col gap-8 m-4 max-w-md">
-                    <Component form={form} onNext={() => setStep(getStep + 1)} />
-                    {getStep > 0 && <div className="flex items-center justify-center">
+                    <Component property={property!} form={form} onNext={() => setStep(step + 1)} />
+                    {step > 0 && <div className="flex items-center justify-center">
                         <Button onClick={() => {
-                            setStep(getStep - 1)
+                            setStep(step - 1)
                         }} type="button" variant="outline">Précedent</Button>
-                        <span className="flex-1 text-center">Étape {getStep + 1}/{STEPS.length}</span>
+                        <span className="flex-1 text-center">Étape {step + 1}/{STEPS.length}</span>
 
-                        {getStep === STEPS.length - 1 ?
+                        {step === STEPS.length - 1 ?
                             <Button>
                                 Créer le logement
                             </Button> :
-                            <Button onClick={async () => {
-                                const stepId = STEPS[getStep].id;
+                            <Button isLoading={isLoading} onClick={async () => {
+                                const stepId = STEPS[step].id;
                                 switch (stepId) {
-                                    case "basic-info":
-                                        const values = form.getValues();
-                                        console.log(values);
-                                        await api.post("/properties", values);
-                                        setStep(getStep + 1);
+                                    case "amenities":
+                                        if (property === undefined) {
+                                            const values = form.getValues();
+                                            console.log(values);
+                                            try {
+                                                setLoading(true);
+                                                const res = await api.post<Property>("/properties", values);
+
+                                                setProperty(res.data)
+                                                setStep(step + 1);
+                                            } catch (err) {
+                                                console.error(err);
+                                                toast.error("Erreur lors de la création du logement");
+                                            }
+                                            setLoading(false);
+                                        } else {
+                                            setStep(step + 1)
+                                        }
                                         break;
-                                        _:
-                                        setStep(getStep + 1)
+                                    default:
+                                        setStep(step + 1)
                                         break;
                                 }
                             }} type="button" variant="primary">Suivant</Button>}

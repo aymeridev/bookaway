@@ -70,6 +70,7 @@ export function LoginPage() {
                             <Link
                                 to="/register"
                                 className="text-blue-600 font-bold hover:underline"
+                                viewTransition
                             >
                                 Inscrivez-vous gratuitement
                             </Link>
