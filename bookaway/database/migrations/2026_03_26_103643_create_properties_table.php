@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum("type", ['camping', 'hotel']);
             $table->integer("capacity");
             $table->json('images');
-            $table->string("description");
+            $table->text("description");
             $table->integer("base_price");
             $table->integer("price_per_night");
             $table->json('amenities');
