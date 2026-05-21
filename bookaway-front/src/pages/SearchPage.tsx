@@ -1,6 +1,6 @@
 import { Link, useLoaderData } from "react-router";
 import type { Property } from "../types";
-import { List, Map } from "lucide-react";
+import { ArrowRight, List, Map } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
@@ -9,6 +9,7 @@ import { t } from "i18next";
 import { useSearchParams } from "react-router";
 import { differenceInDays, parseISO } from "date-fns";
 import { useNavigation } from "react-router";
+import Button from "../components/ui/Button";
 
 export function SearchPage() {
     const properties: Property[] = useLoaderData();
@@ -99,11 +100,10 @@ export function SearchPage() {
                 <div className="inline-flex p-1 bg-gray-100 rounded-xl border border-gray-200">
                     <button
                         onClick={() => setView("list")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                            view === "list"
-                                ? "bg-white shadow-sm text-blue-600"
-                                : "text-gray-500 hover:text-gray-700"
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "list"
+                            ? "bg-white shadow-sm text-blue-600"
+                            : "text-gray-500 hover:text-gray-700"
+                            }`}
                     >
                         <List size={18} />
                         Liste
@@ -111,11 +111,10 @@ export function SearchPage() {
 
                     <button
                         onClick={() => setView("map")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                            view === "map"
-                                ? "bg-white shadow-sm text-blue-600"
-                                : "text-gray-500 hover:text-gray-700"
-                        }`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "map"
+                            ? "bg-white shadow-sm text-blue-600"
+                            : "text-gray-500 hover:text-gray-700"
+                            }`}
                     >
                         <Map size={18} />
                         Carte
@@ -124,13 +123,13 @@ export function SearchPage() {
             </header>
 
             {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p className="mt-4 text-gray-500">
-                            Recherche des logements...
-                        </p>
-                    </div>
-                ) :view === "list" ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="mt-4 text-gray-500">
+                        Recherche des logements...
+                    </p>
+                </div>
+            ) : view === "list" ? (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {currentProperties.map((property) => (
@@ -144,43 +143,40 @@ export function SearchPage() {
 
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
-                            <button
+                            <Button
+                                variant="outline"
                                 onClick={() =>
                                     paginate(currentPage - 1)
                                 }
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-colors"
                             >
                                 Précédent
-                            </button>
+                            </Button>
 
                             {[...Array(totalPages)].map((_, i) => (
-                                <button
+                                <Button
                                     key={i + 1}
                                     onClick={() =>
                                         paginate(i + 1)
                                     }
-                                    className={`w-10 h-10 rounded-lg font-bold transition-all ${
-                                        currentPage === i + 1
-                                            ? "bg-blue-600 text-white shadow-md"
-                                            : "hover:bg-gray-100 text-gray-600"
-                                    }`}
+                                    variant={currentPage === i + 1 ? "primary" : "secondary"}
                                 >
                                     {i + 1}
-                                </button>
+                                </Button>
                             ))}
 
-                            <button
+                            <Button
+                                variant="outline"
+
                                 onClick={() =>
                                     paginate(currentPage + 1)
                                 }
                                 disabled={
                                     currentPage === totalPages
                                 }
-                                className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-gray-50 transition-colors"
                             >
                                 Suivant
-                            </button>
+                            </Button>
                         </div>
                     )}
                 </>
@@ -264,8 +260,8 @@ export function PropertyCard({
                         </div>
 
 
-                        <span className="text-blue-600 font-bold text-sm group-hover:translate-x-1 transition-transform">
-                            Voir l'offre →
+                        <span className="text-blue-600 font-bold text-sm flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                            Voir l'offre <ArrowRight />
                         </span>
                     </div>
                 </div>

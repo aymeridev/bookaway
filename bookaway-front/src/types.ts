@@ -17,7 +17,7 @@ export type Property = {
 export type PropertyImage = {
     id: number;
     path: string;
-    sort_order: number;
+    sort_order: number
 }
 
 export type ApiResponse<T> = {

@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
-import { Link, useLoaderData, useSearchParams, useNavigate} from "react-router";
+import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO } from "date-fns"; // Optionnel mais recommandé pour calculer les nuits
+import Button from '../components/ui/Button';
+import { ArrowLeft } from 'lucide-react';
+import { fr } from 'react-day-picker/locale';
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/image-gallery.css";
+import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
+import type { Property } from '../types';
 
 export function PropertyDetailsPage() {
-    const property: any = useLoaderData();
+    const property: Property = useLoaderData();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -15,7 +22,7 @@ export function PropertyDetailsPage() {
     const urlTo = searchParams.get("to");
 
     console.log(urlFrom)
-    
+
     // Gestion de l'état des dates sélectionnées (3 nuits par défaut pour l'affichage initial)
     const [range, setRange] = useState<DateRange | undefined>(() => {
         if (urlFrom && urlTo) {
@@ -32,50 +39,43 @@ export function PropertyDetailsPage() {
     const [month, setMonth] = useState<Date>(range?.from || new Date());
 
     // Calcul du nombre de nuits basé sur la sélection
-    const numberOfNights = range?.from && range?.to 
-        ? differenceInDays(range.to, range.from) 
+    const numberOfNights = range?.from && range?.to
+        ? differenceInDays(range.to, range.from)
         : 0;
 
-    const basePrice = parseFloat(property.base_price) || 0;
-    const pricePerNight = parseFloat(property.price_per_night) || 0;
+    const basePrice = property.base_price || 0;
+    const pricePerNight = property.price_per_night || 0;
     const nightsTotal = pricePerNight * numberOfNights;
     const grandTotal = basePrice + nightsTotal;
 
+    const images: GalleryItem[] = property.images.map(img => ({
+        original: img,
+        thumbnail: img
+    }));
+    const galleryRef = useRef<ImageGalleryRef>(null);
+
+
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
-            <button 
-                onClick={() => navigate(-1)} 
-                className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors group cursor-pointer"
+            <Button
+                variant="flat"
+                onClick={() => navigate(-1)}
             >
-                <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    strokeWidth={2.5} 
-                    stroke="currentColor" 
-                    className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7M3 12h18" />
-                </svg>
+                <ArrowLeft />
                 Retour aux résultats
-            </button>
-            {/* 1. Header & Title */}
+            </Button>
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
             </div>
 
-            {/* 2. Galerie Photos Style "Bento" */}
             <div className="grid grid-cols-1 md:grid-cols-4 h-[450px] gap-3 overflow-hidden rounded-2xl">
-                <div className="md:col-span-2 h-full">
-                    <img className="w-full h-full object-cover hover:opacity-95 transition cursor-pointer" src="https://loremflickr.com/640/480/camping" alt="Main" />
-                </div>
-                <div className="hidden md:flex flex-col col-span-1 gap-3 h-full">
-                    <img className="flex-1 object-cover hover:opacity-95 transition cursor-pointer" src="https://loremflickr.com/320/240/camping?random=1" alt="Side 1" />
-                    <img className="flex-1 object-cover hover:opacity-95 transition cursor-pointer" src="https://loremflickr.com/320/240/camping?random=2" alt="Side 2" />
-                </div>
-                <div className="hidden md:flex flex-col col-span-1 gap-3 h-full">
-                    <img className="flex-1 object-cover hover:opacity-95 transition cursor-pointer" src="https://loremflickr.com/320/240/forest" alt="Side 3" />
-                    <img className="flex-1 object-cover hover:opacity-95 transition cursor-pointer" src="https://loremflickr.com/320/240/cabin" alt="Side 4" />
+                <div className="w-full h-full">
+
+                    <ImageGallery
+                        ref={galleryRef}
+                        items={images}
+                        onSlide={(index) => console.log("Slid to", index)}
+                    />
                 </div>
             </div>
 
@@ -108,13 +108,14 @@ export function PropertyDetailsPage() {
                         </div>
 
                         <div className="flex justify-center bg-gray-50 rounded-xl p-2 border border-gray-100">
-                            <DayPicker 
-                                mode="range" 
-                                selected={range} 
-                                onSelect={setRange} 
+                            <DayPicker
+                                mode="range"
+                                selected={range}
+                                onSelect={setRange}
                                 month={month}
+                                locale={fr}
                                 onMonthChange={setMonth}
-                                className="m-0" 
+                                className="m-0"
                             />
                         </div>
 
@@ -135,25 +136,24 @@ export function PropertyDetailsPage() {
                         </div>
 
                         {/* Redirection configurée avec passage de données */}
-                        <Link 
-                            to="/reservation" 
-                            state={{ 
-                                property, 
-                                dateRange: { 
-                                    from: range?.from?.toISOString(), 
-                                    to: range?.to?.toISOString() 
+                        <Link
+                            to="/reservation"
+                            state={{
+                                property,
+                                dateRange: {
+                                    from: range?.from?.toISOString(),
+                                    to: range?.to?.toISOString()
                                 },
                                 totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
                             }}
-                            className={`block w-full text-center py-4 text-white font-bold rounded-xl transition-all ${
-                                numberOfNights > 0 
-                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer' 
+                            className={`block w-full text-center py-4 text-white font-bold rounded-xl transition-all ${numberOfNights > 0
+                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
                                 : 'bg-gray-400 cursor-not-allowed pointer-events-none'
-                            }`}
+                                }`}
                         >
                             {numberOfNights > 0 ? 'Réserver maintenant' : 'Sélectionnez vos dates'}
                         </Link>
-                        
+
                         <p className="text-center text-xs text-gray-400">Aucun montant ne vous sera débité pour le moment</p>
                     </div>
                 </div>

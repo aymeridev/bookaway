@@ -4,12 +4,15 @@ import { fr } from "date-fns/locale";
 import { useState } from "react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import { Card } from "../components/Card";
 
 export function PropertyReservationPage() {
     const location = useLocation();
     const navigate = useNavigate();
     const user = useAuthStore((state) => state.user);
-    
+
     // Récupération des données passées dans le State
     const { property, dateRange, totals } = location.state || {};
 
@@ -58,7 +61,7 @@ export function PropertyReservationPage() {
             start_date: format(fromDate, "yyyy-MM-dd"),
             end_date: format(toDate, "yyyy-MM-dd"),
             total_price: totals.grandTotal,
-            
+
             card_holder_name: cardHolderName,
             card_number: cardNumber,
             expiration_date: expirationDate,
@@ -85,7 +88,7 @@ export function PropertyReservationPage() {
             const data = await response.json();
             alert("Paiement et réservation enregistrés avec succès !");
             navigate("/"); // Redirection vers l'accueil
-            
+
         } catch (error: any) {
             alert(`Échec : ${error.message}`);
         } finally {
@@ -106,8 +109,8 @@ export function PropertyReservationPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 {/* Section gauche : Détails du séjour & Paiement */}
                 <div className="lg:col-span-7 space-y-8">
-                    
-                    <div className="bg-white p-6 border border-gray-100 rounded-2xl shadow-sm space-y-4">
+
+                    <Card>
                         <h2 className="text-xl font-semibold text-gray-800">Votre séjour</h2>
                         <div className="flex justify-between items-center py-2">
                             <div>
@@ -120,73 +123,65 @@ export function PropertyReservationPage() {
                                 Modifier
                             </Link>
                         </div>
-                    </div>
+                    </Card>
 
                     {/* Formulaire de paiement connecté */}
-                    <div className="bg-white p-6 border border-gray-100 rounded-2xl shadow-sm space-y-6">
+                    <Card>
                         <h2 className="text-xl font-semibold text-gray-800">Paiement</h2>
-                        
+
                         <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Nom sur la carte</label>
-                                <input 
-                                    required 
-                                    type="text" 
-                                    value={cardHolderName}
-                                    onChange={(e) => setCardHolderName(e.target.value)}
-                                    placeholder="John Doe" 
-                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition" 
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Numéro de carte</label>
-                                <input 
-                                    required 
-                                    type="text" 
-                                    maxLength={16} 
-                                    value={cardNumber}
-                                    onChange={(e) => setCardNumber(e.target.value)}
-                                    placeholder="0000 0000 0000 0000" 
-                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition" 
-                                />
-                            </div>
+                            <Input
+                                label="Nom sur la carte"
+                                required
+                                type="text"
+                                value={cardHolderName}
+                                onChange={(e) => setCardHolderName(e.target.value)}
+                                placeholder="John Doe"
+                                className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
+                            />
+
+                            <Input
+                                required
+                                label="Numéro de carte"
+                                type="text"
+                                maxLength={16}
+                                value={cardNumber}
+                                onChange={(e) => setCardNumber(e.target.value)}
+                                placeholder="0000 0000 0000 0000"
+                                className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
+                            />
 
                             <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiration</label>
-                                    <input 
-                                        required 
-                                        type="text" 
-                                        value={expirationDate}
-                                        onChange={(e) => setExpirationDate(e.target.value)}
-                                        placeholder="MM/AA" 
-                                        className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition" 
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Code CVC</label>
-                                    <input 
-                                        required 
-                                        type="text" 
-                                        maxLength={3} 
-                                        value={cvv}
-                                        onChange={(e) => setCvv(e.target.value)}
-                                        placeholder="123" 
-                                        className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition" 
-                                    />
-                                </div>
+                                <Input
+                                    label="Expiration"
+                                    required
+                                    type="text"
+                                    value={expirationDate}
+                                    onChange={(e) => setExpirationDate(e.target.value)}
+                                    placeholder="MM/AA"
+                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
+                                />
+                                <Input
+                                    required
+                                    label="Code CVC"
+                                    type="text"
+                                    maxLength={3}
+                                    value={cvv}
+                                    onChange={(e) => setCvv(e.target.value)}
+                                    placeholder="123"
+                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
+                                />
                             </div>
 
-                            <button 
-                                type="submit"
+                            <Button
                                 disabled={isSubmitting}
+                                isLoading={isSubmitting}
                                 className={`w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-4 font-bold rounded-xl hover:shadow-lg hover:opacity-95 transition-all cursor-pointer ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {isSubmitting ? "Traitement en cours..." : `Confirmer et payer ${totals.grandTotal}€`}
-                            </button>
+                                Confirmer et payer {totals.grandTotal}€
+                            </Button>
                         </form>
-                    </div>
+                    </Card>
                 </div>
 
                 {/* Section droite : Facturation Sticky */}
@@ -216,7 +211,7 @@ export function PropertyReservationPage() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
