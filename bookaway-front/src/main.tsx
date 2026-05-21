@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction } from 'react-router'
 import { HomePage } from './pages/HomePage.tsx'
 import { NavbarLayout } from './layouts/NavbarLayout.tsx'
 import './i18n/config'
@@ -14,8 +14,10 @@ import { CreatePropertyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
 import { ErrorPage } from './pages/ErrorPage.tsx'
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
+import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
+import useAuthStore from './context/AuthStore.tsx'
 
 let router = createBrowserRouter([
   {
@@ -52,11 +54,21 @@ let router = createBrowserRouter([
       },
       {
         path: "bookings",
+        middleware: [authMiddleware],
         Component: BookingsPage
       },
       {
         path: "/new-property",
+        middleware: [authMiddleware],
         Component: CreatePropertyPage
+      },
+      {
+        path: "my-properties",
+        middleware: [authMiddleware],
+        Component: MyPropertiesPage,
+        loader: async () => {
+          const res = await fetch(`/api/properties?owner=1`)
+        }
       },
       {
         path: "/property/:id",
@@ -82,6 +94,7 @@ let router = createBrowserRouter([
       },
       {
         path: "/profile",
+        middleware: [authMiddleware],
         Component: ProfilePage,
       },
     ]
@@ -94,3 +107,12 @@ createRoot(document.getElementById('root')!).render(
     <Toaster />
   </StrictMode>,
 )
+
+
+export function authMiddleware() {
+  const user = useAuthStore.getState().user;
+  if (!user) {
+    toast.error("Vous devez être connecté pour accéder à cette page");
+    throw redirect("/login");
+  }
+}
