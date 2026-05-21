@@ -75,9 +75,12 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        $property = Property::with(['images' => function ($query) {
-            $query->orderBy('sort_order', 'asc');
-        }])->findOrFail($id);
+        $property = Property::with([
+            'images' => function ($query) {
+                $query->orderBy('sort_order', 'asc');
+            },
+            'bookings'
+        ])->findOrFail($id);
 
         return response()->json($property);
     }
