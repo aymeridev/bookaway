@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
-import { differenceInDays, parseISO } from "date-fns"; // Optionnel mais recommandé pour calculer les nuits
+import { differenceInDays, parseISO, eachDayOfInterval } from "date-fns"; 
 import Button from '../components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
@@ -21,9 +21,16 @@ export function PropertyDetailsPage() {
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
 
-    console.log(urlFrom)
+    // Extraction et formatage des dates bloquées pour l'affichage visuel (grisé)
+    const disabledDays = [
+        { before: new Date() },
+        ...(property.bookings || []).map((booking: any) => ({
+            from: parseISO(booking.start_date),
+            to: parseISO(booking.end_date)
+        }))
+    ];
 
-    // Gestion de l'état des dates sélectionnées (3 nuits par défaut pour l'affichage initial)
+    // Gestion de l'état des dates sélectionnées
     const [range, setRange] = useState<DateRange | undefined>(() => {
         if (urlFrom && urlTo) {
             return {
@@ -31,14 +38,50 @@ export function PropertyDetailsPage() {
                 to: parseISO(urlTo)
             };
         }
-        return {
-            from: new Date(),
-            to: new Date(new Date().setDate(new Date().getDate() + 3))
-        };
+        return undefined; 
     });
     const [month, setMonth] = useState<Date>(range?.from || new Date());
 
-    // Calcul du nombre de nuits basé sur la sélection
+    // Fonction de sécurité pour empêcher de sélectionner une plage qui englobe des dates réservées
+    const handleSelectRange = (newRange: DateRange | undefined) => {
+        // Si la plage est incomplète (uniquement la date de début sélectionnée)
+        if (!newRange?.from || !newRange?.to) {
+            setRange(newRange);
+            return;
+        }
+
+        // 1. Génère la liste de tous les jours inclus dans la sélection demandée
+        const selectedDays = eachDayOfInterval({
+            start: newRange.from,
+            end: newRange.to
+        });
+
+        // 2. Vérifie si l'un de ces jours entre en conflit avec une réservation existante
+        const hasBlockedDay = selectedDays.some(day => {
+            return (property.bookings || []).some((booking: any) => {
+                const start = parseISO(booking.start_date);
+                const end = parseISO(booking.end_date);
+                
+                // Remise à zéro des heures pour comparer uniquement la date pure
+                const d = new Date(day).setHours(0,0,0,0);
+                const s = new Date(start).setHours(0,0,0,0);
+                const e = new Date(end).setHours(0,0,0,0);
+
+                return d >= s && d <= e;
+            });
+        });
+
+        if (hasBlockedDay) {
+            alert("Désolé, cette plage de dates contient des jours déjà réservés.");
+            // On réinitialise la sélection en gardant uniquement le premier clic comme point de départ
+            setRange({ from: newRange.from, to: undefined });
+        } else {
+            // Tout est valide, on enregistre la plage
+            setRange(newRange);
+        }
+    };
+
+    // Calcul du nombre de nuits basé sur la sélection réelle
     const numberOfNights = range?.from && range?.to
         ? differenceInDays(range.to, range.from)
         : 0;
@@ -53,7 +96,6 @@ export function PropertyDetailsPage() {
         thumbnail: img
     }));
     const galleryRef = useRef<ImageGalleryRef>(null);
-
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
@@ -70,7 +112,6 @@ export function PropertyDetailsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 h-[450px] gap-3 overflow-hidden rounded-2xl">
                 <div className="w-full h-full">
-
                     <ImageGallery
                         ref={galleryRef}
                         items={images}
@@ -80,7 +121,7 @@ export function PropertyDetailsPage() {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-12">
-                {/* 3. Colonne de gauche : Infos & Map */}
+                {/* Colonne de gauche : Infos & Map */}
                 <div className="flex-[2] space-y-8">
                     <div className="border-b pb-8">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">À propos de ce logement</h2>
@@ -97,7 +138,7 @@ export function PropertyDetailsPage() {
                     </div>
                 </div>
 
-                {/* 4. Colonne de droite : Widget Réservation (Sticky) */}
+                {/* Colonne de droite : Widget Réservation (Sticky) */}
                 <div className="flex-1">
                     <div className="sticky top-8 p-6 bg-white border border-gray-200 rounded-2xl shadow-xl space-y-6">
                         <div className="flex justify-between items-baseline">
@@ -111,7 +152,8 @@ export function PropertyDetailsPage() {
                             <DayPicker
                                 mode="range"
                                 selected={range}
-                                onSelect={setRange}
+                                onSelect={handleSelectRange}
+                                disabled={disabledDays}
                                 month={month}
                                 locale={fr}
                                 onMonthChange={setMonth}
@@ -135,7 +177,6 @@ export function PropertyDetailsPage() {
                             </div>
                         </div>
 
-                        {/* Redirection configurée avec passage de données */}
                         <Link
                             to="/reservation"
                             state={{

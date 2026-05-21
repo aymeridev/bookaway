@@ -69,7 +69,8 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        $property = Property::findOrFail($id);
+        $property = Property::with(['bookings' => function ($query) {
+        }])->findOrFail($id);
 
         return response()->json($property);
     }
