@@ -2,7 +2,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { PropertyForm } from "../form";
 
 export function PriceStep({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
-    const { register, control } = form;
+    const { register } = form;
 
     return (
         <>

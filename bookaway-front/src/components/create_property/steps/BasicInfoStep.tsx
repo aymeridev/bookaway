@@ -21,9 +21,10 @@ export function BasicInfoStep({ form }: { form: UseFormReturn<PropertyForm, any,
             <label className="block">
                 <span className="text-gray-700">Capacité</span>
                 <p>Nombre de voyageurs maximum</p>
-                <input
+                <Input
                     {...register('capacity', { required: "Le nombre de voyageurs est requis" })}
-                    className="mt-1 block w-full" type="number" min={1} max={99} />
+                    className="mt-1 block w-full"
+                    type="number" min={1} max={99} />
                 {errors.capacity && <p style={{ color: 'red' }}>{errors.capacity.message}</p>}
             </label>
         </>

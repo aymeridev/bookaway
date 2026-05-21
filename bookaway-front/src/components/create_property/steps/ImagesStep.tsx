@@ -1,8 +1,8 @@
-import { useFieldArray, type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import type { PropertyForm } from "../form";
 import { useDropzone } from 'react-dropzone';
 
-export function ImagesStep({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
+export function ImagesStep({ form: _form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
     // const { register, control } = form;
     // const { fields, append, remove } = useFieldArray({
     //     control,

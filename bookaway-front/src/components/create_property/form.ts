@@ -1,3 +1,5 @@
+import type { UseFormReturn } from "react-hook-form";
+
 export type PropertyForm = {
     title: string,
     type: string,
@@ -9,4 +11,9 @@ export type PropertyForm = {
     price_per_night: string,
     latitude: string,
     longitude: string
+}
+
+export interface PropertyFormStepProps {
+    onNext?: () => void;
+    form: UseFormReturn<PropertyForm, any, PropertyForm>
 }

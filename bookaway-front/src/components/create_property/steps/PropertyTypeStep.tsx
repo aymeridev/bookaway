@@ -1,5 +1,4 @@
-import type { UseFormReturn } from "react-hook-form";
-import type { PropertyForm } from "../form";
+import type { PropertyFormStepProps } from "../form";
 import CampingIllustration from "../../../assets/illustrations/camping.svg";
 import HotelIllustration from "../../../assets/illustrations/hotel.svg";
 import { t } from "i18next";
@@ -17,25 +16,19 @@ const PROPERTIES_TYPES = [
     },
 ] as const;
 
-
-interface PropertyTypeStepProps {
-    onNext?: () => void;
-    form: UseFormReturn<PropertyForm, any, PropertyForm>
-}
-
-export function PropertyTypeStep({ form, onNext }: PropertyTypeStepProps) {
+export function PropertyTypeStep({ form, onNext }: PropertyFormStepProps) {
     let [getType, setType] = useState("")
     return (
         <div>
             <h2>Type de logement</h2>
             <p>Quel type de logement souhaitez-vous ajouter ?</p>
-            <input type="hidden" name="type" value={getType} />
             <ul className="flex flex-col gap-4">
-                {PROPERTIES_TYPES.map((type, index) => (
-                    <li>
+                {PROPERTIES_TYPES.map((type) => (
+                    <li key={type.name}>
                         <Button
                             onClick={() => {
                                 setType(type.name);
+                                form.setValue("type", type.name);
                                 onNext?.();
                             }}
                             type="button" className="w-full flex-col gap-4" variant="outline">

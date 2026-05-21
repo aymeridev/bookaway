@@ -6,6 +6,14 @@
     "searchTrip": "Rechercher un séjour",
     "hotel": "Hotel",
     "camping": "Camping",
+    "properties-edit": {
+        "location": "Localisation du logement",
+        "type": "Type du logement",
+        "basic-info": "Informations de bases",
+        "price": "Prix du séjour",
+        "photos": "Photos du logement",
+        "amenities": "Équipements"
+    },
     "amenities": {
         "bathub": "Baignoire",
         "cleaning-products": "Produits d'entretien",

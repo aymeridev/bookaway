@@ -10,7 +10,7 @@ import { RegisterPage } from './pages/RegisterPage.tsx'
 import { SearchPage } from './pages/SearchPage.tsx'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
 import type { Property } from './types.ts'
-import { CreateProperyPage } from './pages/CreatePropertyPage.tsx'
+import { CreatePropertyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
 import { ErrorPage } from './pages/ErrorPage.tsx'
@@ -54,7 +54,7 @@ let router = createBrowserRouter([
       },
       {
         path: "/new-property",
-        Component: CreateProperyPage
+        Component: CreatePropertyPage
       },
       {
         path: "/property/:id",
