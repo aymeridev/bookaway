@@ -41,7 +41,7 @@ class PropertyImageController extends Controller
                 'message' => 'Image uploadée avec succès !',
                 'image' => [
                     'id' => $propertyImage->id,
-                    'url' => Storage::url($propertyImage->path),
+                    'url' => $propertyImage->url,
                     'sort_order' => $propertyImage->sort_order,
                 ]
             ], 201);

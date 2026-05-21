@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->string("title", 100);
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum("type", ['camping', 'hotel']);
             $table->integer("capacity");
-            $table->json('images');
             $table->text("description");
             $table->integer("base_price");
             $table->integer("price_per_night");

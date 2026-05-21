@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyImage extends Model
 {
@@ -11,6 +12,8 @@ class PropertyImage extends Model
     use HasFactory;
 
     protected $table = 'images';
+
+    protected $appends = ['url'];
 
     protected $fillable = [
         'path',
@@ -27,5 +30,10 @@ class PropertyImage extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getUrlAttribute()
+    {
+        return Storage::disk('public')->url($this->path);
     }
 }

@@ -38,6 +38,10 @@ class PropertyController extends Controller
                 ->orderBy('distance');
         }
 
+        $query = Property::with(['images' => function ($q) {
+            $q->orderBy('sort_order', 'asc');
+        }]);
+
         return response()->json($query->get());
     }
 
@@ -47,8 +51,8 @@ class PropertyController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
+            'title' => 'required|string|max:100',
+            'type' => 'required|string|in:camping,hotel',
             'capacity' => 'required|integer|min:1',
             'images' => 'nullable|array',
             'description' => 'nullable|string',
@@ -69,7 +73,9 @@ class PropertyController extends Controller
      */
     public function show(string $id)
     {
-        $property = Property::findOrFail($id);
+        $property = Property::with(['images' => function ($query) {
+            $query->orderBy('sort_order', 'asc');
+        }])->findOrFail($id);
 
         return response()->json($property);
     }
@@ -82,8 +88,8 @@ class PropertyController extends Controller
         $property = Property::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'type' => 'sometimes|string|max:255',
+            'title' => 'sometimes|string|max:100',
+            'type' => 'sometimes|string|in:camping,hotel',
             'capacity' => 'sometimes|integer|min:1',
             'images' => 'nullable|array',
             'description' => 'nullable|string',

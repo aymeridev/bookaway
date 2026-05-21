@@ -12,7 +12,6 @@ class Property extends Model
     protected function casts()
     {
         return [
-            'images' => 'array',
             'amenities' => 'array'
         ];
     }
@@ -21,7 +20,6 @@ class Property extends Model
         'title',
         'type',
         'capacity',
-        'images',
         'description',
         'base_price',
         'price_per_night',
@@ -30,9 +28,9 @@ class Property extends Model
         'longitude'
     ];
 
-    public function bookings() 
-    { 
-        return $this->hasMany(Booking::class); 
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 
     public function images()
@@ -40,4 +38,3 @@ class Property extends Model
         return $this->hasMany(PropertyImage::class, 'property_id');
     }
 }
-
