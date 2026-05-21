@@ -4,19 +4,24 @@ import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
-import { differenceInDays, parseISO, eachDayOfInterval } from "date-fns"; 
+import { differenceInDays, parseISO, eachDayOfInterval } from "date-fns";
 import Button from '../components/ui/Button';
-import { ArrowLeft, Map } from 'lucide-react';
+import { ArrowLeft, Map, SquarePen } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
 import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
 import type { Property } from '../types';
+import { Card } from '../components/Card';
+import useAuthStore from '../context/AuthStore';
 
 export function PropertyDetailsPage() {
     const property: Property = useLoaderData();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+
+    const user = useAuthStore((state) => state.user);
+    const isOwner = user?.id === property.user_id;
 
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
@@ -38,7 +43,7 @@ export function PropertyDetailsPage() {
                 to: parseISO(urlTo)
             };
         }
-        return undefined; 
+        return undefined;
     });
     const [month, setMonth] = useState<Date>(range?.from || new Date());
 
@@ -61,11 +66,11 @@ export function PropertyDetailsPage() {
             return (property.bookings || []).some((booking: any) => {
                 const start = parseISO(booking.start_date);
                 const end = parseISO(booking.end_date);
-                
+
                 // Remise à zéro des heures pour comparer uniquement la date pure
-                const d = new Date(day).setHours(0,0,0,0);
-                const s = new Date(start).setHours(0,0,0,0);
-                const e = new Date(end).setHours(0,0,0,0);
+                const d = new Date(day).setHours(0, 0, 0, 0);
+                const s = new Date(start).setHours(0, 0, 0, 0);
+                const e = new Date(end).setHours(0, 0, 0, 0);
 
                 return d >= s && d <= e;
             });
@@ -106,6 +111,11 @@ export function PropertyDetailsPage() {
                 <ArrowLeft />
                 Retour aux résultats
             </Button>
+            {isOwner && <Button onClick={() => {
+                navigate(`/property/${property.id}/edit`);
+            }}>
+                <SquarePen />
+                Modifier le logement</Button>}
             <div>
                 <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
             </div>
@@ -142,9 +152,8 @@ export function PropertyDetailsPage() {
                     </div>
                 </div>
 
-                {/* Colonne de droite : Widget Réservation (Sticky) */}
-                <div className="flex-1">
-                    <div className="sticky top-8 p-6 bg-white border border-gray-200 rounded-2xl shadow-xl space-y-6">
+                {!isOwner && <div className="flex-1">
+                    <Card className="sticky top-8 p-6 space-y-6">
                         <div className="flex justify-between items-baseline">
                             <div>
                                 <span className="text-2xl font-bold">{property.price_per_night}€</span>
@@ -200,8 +209,8 @@ export function PropertyDetailsPage() {
                         </Link>
 
                         <p className="text-center text-xs text-gray-400">Aucun montant ne vous sera débité pour le moment</p>
-                    </div>
-                </div>
+                    </Card>
+                </div>}
             </div>
         </div>
     );

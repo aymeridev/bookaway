@@ -1,23 +1,20 @@
-import { type UseFormReturn } from "react-hook-form";
+import { useFieldArray, type UseFormReturn } from "react-hook-form";
 import type { PropertyForm } from "../form";
 import { useDropzone } from 'react-dropzone';
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
-import type { ApiResponse, PropertyImage, Property } from "../../../types";
-import { useState } from "react";
-import { GripHorizontal } from "lucide-react";
+import type { Property } from "../../../types";
+import { GripHorizontal, ImageDown, X } from "lucide-react";
+import Button from "../../ui/Button";
 
-export function ImagesStep({ form: _form, property }: { form: UseFormReturn<PropertyForm, any, PropertyForm>, property: Property }) {
-    // const { register, control } = form;
-    // const { fields, append, remove } = useFieldArray({
-    //     control,
-    //     name: "images"
-    // });
-
-    const [images, setImages] = useState<PropertyImage[]>([]);
+export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyForm, any, PropertyForm>, property: Property }) {
+    const { control } = form;
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "images"
+    });
 
     const {
-        acceptedFiles,
         getRootProps,
         getInputProps
     } = useDropzone({
@@ -36,10 +33,7 @@ export function ImagesStep({ form: _form, property }: { form: UseFormReturn<Prop
                     },
                 })
                 console.log(res);
-                setImages([
-                    ...images,
-                    res.data.image
-                ])
+                append(res.data.image);
 
                 toast.success(res.data.message);
             } catch (err) {
@@ -53,30 +47,35 @@ export function ImagesStep({ form: _form, property }: { form: UseFormReturn<Prop
         }
     });
 
-    const acceptedFileItems = acceptedFiles.map(file => (
-        <li key={file.path}>
-            {file.path} - {file.size} bytes
-        </li>
-    ));
-
 
     return (
         <>
-            <section className="bg-gray-200 border-4 border-dashed rounded-xl border-gray-600 p-4">
-                <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
-                    <em>(Only *.jpeg and *.png images will be accepted)</em>
-                </div>
-            </section>
-            {images &&
+            <div {...getRootProps({ className: 'bg-gray-200 border-4 border-dashed rounded-xl border-gray-600 p-4 dropzone aspect-video max-w-sm flex items-center justify-center flex-col' })}>
+                <input {...getInputProps()} />
+                <ImageDown className="animate-pulse size-12" />
+                <p className="text-lg font-semibold">Glisser-déposer des images ou cliquer pour les sélectionner</p>
+                <em className="text-sm font-medium text-gray-700">(Seuls les fichiers *.jpeg et *.png sont acceptés)</em>
+            </div>
+            <h2>Images mises en ligne</h2>
+            {fields.length > 0 &&
                 <ul>
-                    {images.sort((a, b) => a.sort_order - b.sort_order).map(({ id, path }) => (
-                        <li key={id}>
-                            <GripHorizontal />
-                            {path}
-                        </li>
-                    ))}
+                    {[...fields].sort((a, b) => a.sort_order - b.sort_order).map((field) => {
+                        const originalIndex = fields.findIndex((f) => f.id === field.id);
+                        const dbId = form.getValues("images")[originalIndex]?.id;
+
+                        return (
+                            <li className="flex gap-2 items-center justify-center" draggable key={field.id}>
+                                <GripHorizontal />
+                                <div className="aspect-video bg-center bg-cover rounded w-32" style={{ backgroundImage: `url(${field.url})` }} />
+                                <Button onClick={async () => {
+                                    if (dbId) {
+                                        await api.delete(`/properties/${property.id}/images/${dbId}`);
+                                    }
+                                    remove(originalIndex);
+                                }} variant="flat"><X /></Button>
+                            </li>
+                        );
+                    })}
                 </ul>
             }
         </>

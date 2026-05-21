@@ -27,4 +27,5 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::post('/properties/{property}/images', [PropertyImageController::class, 'store'])->middleware("auth:sanctum");
+Route::delete('/properties/{property}/images/{image}', [PropertyImageController::class, 'destroy'])->middleware("auth:sanctum");
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');

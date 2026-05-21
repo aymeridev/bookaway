@@ -2,6 +2,7 @@ export type Property = {
     id: number;
     title: string;
     type: string;
+    capacity: number;
     description: string;
     amenities: string[];
     base_price: number;
@@ -12,6 +13,8 @@ export type Property = {
     created_at: string;
     updated_at: string;
     distance?: number;
+    bookings?: any[];
+    user_id?: number;
 }
 
 export type PropertyImage = {

@@ -1,15 +1,65 @@
 import { useState } from "react";
 import { Banner } from "../components/Banner";
-import { PROPERTY_STEPS } from "../components/create_property/form";
-import { Stepper } from "../components/create_property/Stepper";
+import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
+import { useForm } from "react-hook-form";
+import type { Property } from "../types";
+import { useLoaderData, useNavigate } from "react-router";
+import { Card } from "../components/Card";
+import Button from "../components/ui/Button";
+import { Save } from "lucide-react";
+import { StepperList } from "../components/create_property/StepperList";
+import api from "../api/axios";
 
 export function EditPropertyPage() {
+    const property = useLoaderData() as Property;
+    const form = useForm<PropertyForm>({
+        defaultValues: {
+            title: property.title || "",
+            type: property.type || "",
+            description: property.description || "",
+            capacity: String(property.capacity ?? ""),
+            base_price: String(property.base_price ?? ""),
+            price_per_night: String(property.price_per_night ?? ""),
+            latitude: String(property.latitude ?? ""),
+            longitude: String(property.longitude ?? ""),
+            images: (property.images || []).map(img => ({
+                id: String(img.id),
+                sort_order: img.sort_order,
+                url: img.url
+            })),
+            amenities: (property.amenities || []).map(a => ({ value: a })),
+        }
+    });
+
+
     const [step, setStep] = useState(0);
 
+    const CurrentStep = PROPERTY_STEPS[step].Step;
+
+    const navigate = useNavigate();
     return (
         <>
-            <Banner title="Ajouter un logement" description="Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme." />
-            <Stepper steps={PROPERTY_STEPS} currentStep={step} onChange={() => { }} />
+            <Banner title="Modifier le logement" />
+            <main className="flex p-8">
+                <StepperList steps={PROPERTY_STEPS} currentStep={step} onChange={(stepIndex) => {
+                    setStep(stepIndex)
+                }} />
+                <Card className="flex-1">
+                    <CurrentStep form={form} property={property} />
+                    <Button>
+                        <Save />
+                        Sauvegarder les modifications
+                    </Button>
+                    <Button onClick={() => {
+                        if (confirm("Êtes-vous sûr de vouloir supprimer ce logement ?")) {
+                            api.delete(`/properties/${property.id}`);
+                            navigate("/my-properties");
+
+                        }
+                    }} variant="danger">Supprimer</Button>
+                </Card>
+            </main>
+
 
         </>
     )

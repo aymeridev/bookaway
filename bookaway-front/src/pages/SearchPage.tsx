@@ -246,7 +246,7 @@ export function PropertyCard({
                     </div>
 
                     <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-50">
-                        <div className="flex flex-col">
+                        {numberOfNights > 0 && <div className="flex flex-col">
                             <div className="flex items-baseline gap-1">
                                 <span className="text-xl font-extrabold text-gray-900">
                                     {totalPrice}€
@@ -257,7 +257,7 @@ export function PropertyCard({
                                     {numberOfNights > 1 ? "s" : ""}
                                 </span>
                             </div>
-                        </div>
+                        </div>}
 
 
                         <span className="text-blue-600 font-bold text-sm flex items-center gap-2 group-hover:translate-x-1 transition-transform">

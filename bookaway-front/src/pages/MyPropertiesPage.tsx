@@ -3,6 +3,7 @@ import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
 import { useLoaderData, useNavigate } from "react-router";
 import type { Property } from "../types";
+import { PropertyCard } from "./SearchPage";
 
 export function MyPropertiesPage() {
     const properties: Property[] = useLoaderData();
@@ -20,9 +21,11 @@ export function MyPropertiesPage() {
 
             <hr />
 
-            <ul>
+            <ul className="grid grid-cols-4 gap-2">
                 {properties.map((property) => (
-                    <li key={property.id}>{property.title}</li>
+                    <li key={property.id}>
+                        <PropertyCard property={property} numberOfNights={0} />
+                    </li>
                 ))}
             </ul>
         </main>

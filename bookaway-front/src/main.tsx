@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction } from 'react-router'
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router'
 import { HomePage } from './pages/HomePage.tsx'
 import { NavbarLayout } from './layouts/NavbarLayout.tsx'
 import './i18n/config'

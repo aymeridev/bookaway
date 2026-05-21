@@ -17,7 +17,7 @@ const PROPERTIES_TYPES = [
 ] as const;
 
 export function PropertyTypeStep({ form, onNext }: PropertyFormStepProps) {
-    let [getType, setType] = useState("")
+    const [, setType] = useState("")
     return (
         <div>
             <h2>Type de logement</h2>

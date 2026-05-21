@@ -9,7 +9,7 @@ export type PropertyForm = {
     title: string,
     type: string,
     capacity: string,
-    images: { url: string }[],
+    images: { id: string; sort_order: number; url: string }[],
     amenities: { value: string }[],
     description: string,
     base_price: string,

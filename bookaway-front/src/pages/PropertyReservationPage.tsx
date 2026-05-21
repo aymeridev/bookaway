@@ -2,7 +2,6 @@ import { useLocation, Link, useNavigate } from "react-router";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
-import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
@@ -85,7 +84,7 @@ export function PropertyReservationPage() {
                 throw new Error(errorData.message || "Erreur lors de la réservation");
             }
 
-            const data = await response.json();
+            await response.json();
             alert("Paiement et réservation enregistrés avec succès !");
             navigate("/"); // Redirection vers l'accueil
 
