@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -21,20 +23,62 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
+        // 1. On valide TOUTES les données (Réservation + Carte bancaire)
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'property_id' => 'required|exists:properties,id',
-            'payment_id' => 'nullable|exists:payments,id',
-            'number_persons' => 'required|integer|min:1',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after:start_date',
-            'total_price' => 'required|numeric|min:0',
-            'status' => 'string|in:confirmed,pending,cancelled',
+            // Infos Réservation
+            'user_id'          => 'required|exists:users,id',
+            'property_id'      => 'required|exists:properties,id',
+            'number_persons'   => 'required|integer|min:1',
+            'start_date'       => 'required|date|after_or_equal:today',
+            'end_date'         => 'required|date|after:start_date',
+            'total_price'      => 'required|numeric|min:0',
+            
+            // Infos Paiement requis pour le traitement
+            'card_holder_name' => 'required|string|max:255',
+            'card_number'      => 'required|string',
+            'expiration_date'  => 'required|string',
+            'cvv'              => 'required|string|max:4',
         ]);
 
-        $booking = Booking::create($validated);
+        // 2. On utilise une transaction DB pour s'assurer que si l'un échoue, rien n'est enregistré
+        try {
+            $booking = DB::transaction(function () use ($validated) {
+                
+                // [Optionnel] C'est ici que tu brancheras ton vrai SDK de paiement (ex: Stripe)
+                // Dans l'immédiat, on simule que la banque répond "success"
 
-        return response()->json($booking->load(['property', 'payment']), 201);
+                // 3. Création du paiement en base de données
+                $payment = Payment::create([
+                    'user_id'           => $validated['user_id'],
+                    'card_holder_name'  => $validated['card_holder_name'],
+                    'card_number'       => bcrypt($validated['card_number']),
+                    'expiration_date'   => $validated['expiration_date'],
+                    'cvv'               => bcrypt($validated['cvv']),
+                    'amount'            => $validated['total_price'],
+                    'status'            => 'success',
+                ]);
+
+                // 4. Création de la réservation liée au paiement
+                return Booking::create([
+                    'user_id'        => $validated['user_id'],
+                    'property_id'    => $validated['property_id'],
+                    'payment_id'     => $payment->id, // On lie le paiement fraîchement créé
+                    'number_persons' => $validated['number_persons'],
+                    'start_date'     => $validated['start_date'],
+                    'end_date'       => $validated['end_date'],
+                    'total_price'    => $validated['total_price'],
+                    'status'         => 'confirmed', // Confirmé directement car le paiement a réussi
+                ]);
+            });
+
+            return response()->json($booking->load(['property', 'payment']), 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors du traitement de la réservation.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

@@ -15,6 +15,7 @@ import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
 import { ErrorPage } from './pages/ErrorPage.tsx'
 import { Toaster } from 'react-hot-toast';
+import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ let router = createBrowserRouter([
           return property as Property;
         },
         Component: PropertyDetailsPage,
+      },
+      {
+        path: "/reservation",
+        Component: PropertyReservationPage,
       },
       {
         path: "/login",
