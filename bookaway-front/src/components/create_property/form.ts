@@ -1,5 +1,9 @@
 import type { UseFormReturn } from "react-hook-form";
 import type { Property } from "../../types";
+import { BasicInfoStep } from "./steps/BasicInfoStep";
+import { PriceStep } from "./steps/PriceStep";
+import { AmenitiesStep } from "./steps/AmenitiesStep";
+import { ImagesStep } from "./steps/ImagesStep";
 
 export type PropertyForm = {
     title: string,
@@ -19,3 +23,22 @@ export interface PropertyFormStepProps {
     property?: Property;
     form: UseFormReturn<PropertyForm, any, PropertyForm>
 }
+
+export const PROPERTY_STEPS = [
+    {
+        id: "basic-info",
+        Step: BasicInfoStep
+    },
+    {
+        id: "price",
+        Step: PriceStep,
+    },
+    {
+        id: "amenities",
+        Step: AmenitiesStep
+    },
+    {
+        id: "photos",
+        Step: ImagesStep
+    }
+] as const

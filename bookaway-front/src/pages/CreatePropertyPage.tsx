@@ -2,15 +2,11 @@
 import { useState } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Banner } from "../components/Banner";
-import { BasicInfoStep } from "../components/create_property/steps/BasicInfoStep";
-import type { PropertyForm } from "../components/create_property/form";
+import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
 import { Stepper } from "../components/create_property/Stepper";
 import Button from "../components/ui/Button";
 import { PropertyLocationStep } from "../components/create_property/steps/PropertyLocationStep";
 import { PropertyTypeStep } from "../components/create_property/steps/PropertyTypeStep";
-import { ImagesStep } from "../components/create_property/steps/ImagesStep";
-import { AmenitiesStep } from "../components/create_property/steps/AmenitiesStep";
-import { PriceStep } from "../components/create_property/steps/PriceStep";
 import { type Property } from "../types";
 import api from "../api/axios";
 import toast from "react-hot-toast";
@@ -26,22 +22,7 @@ const STEPS = [
         id: "type",
         Step: PropertyTypeStep,
     },
-    {
-        id: "basic-info",
-        Step: BasicInfoStep
-    },
-    {
-        id: "price",
-        Step: PriceStep,
-    },
-    {
-        id: "amenities",
-        Step: AmenitiesStep
-    },
-    {
-        id: "photos",
-        Step: ImagesStep
-    },
+    ...PROPERTY_STEPS
 ] as const;
 
 export function CreatePropertyPage() {
@@ -96,7 +77,10 @@ export function CreatePropertyPage() {
                                             console.log(values);
                                             try {
                                                 setLoading(true);
-                                                const res = await api.post<Property>("/properties", values);
+                                                const res = await api.post<Property>("/properties", {
+                                                    ...values,
+                                                    amenities: values.amenities.map((a) => a.value)
+                                                });
 
                                                 setProperty(res.data)
                                                 setStep(step + 1);

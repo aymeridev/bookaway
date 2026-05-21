@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO } from "date-fns"; // Optionnel mais recommandé pour calculer les nuits
 import Button from '../components/ui/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Map } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
@@ -21,9 +21,7 @@ export function PropertyDetailsPage() {
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
 
-    console.log(urlFrom)
 
-    // Gestion de l'état des dates sélectionnées (3 nuits par défaut pour l'affichage initial)
     const [range, setRange] = useState<DateRange | undefined>(() => {
         if (urlFrom && urlTo) {
             return {
@@ -38,7 +36,6 @@ export function PropertyDetailsPage() {
     });
     const [month, setMonth] = useState<Date>(range?.from || new Date());
 
-    // Calcul du nombre de nuits basé sur la sélection
     const numberOfNights = range?.from && range?.to
         ? differenceInDays(range.to, range.from)
         : 0;
@@ -48,10 +45,10 @@ export function PropertyDetailsPage() {
     const nightsTotal = pricePerNight * numberOfNights;
     const grandTotal = basePrice + nightsTotal;
 
-    const images: GalleryItem[] = property.images.map(img => ({
-        original: img,
-        thumbnail: img
-    }));
+    const images: GalleryItem[] = property.images ? property.images.map(img => ({
+        original: img.url,
+        thumbnail: img.url
+    })) : [];
     const galleryRef = useRef<ImageGalleryRef>(null);
 
 
@@ -68,16 +65,15 @@ export function PropertyDetailsPage() {
                 <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 h-[450px] gap-3 overflow-hidden rounded-2xl">
+            {images.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-4 h-[450px] gap-3 overflow-hidden rounded-2xl">
                 <div className="w-full h-full">
-
                     <ImageGallery
                         ref={galleryRef}
                         items={images}
                         onSlide={(index) => console.log("Slid to", index)}
                     />
                 </div>
-            </div>
+            </div> : <p>Aucune image</p>}
 
             <div className="flex flex-col lg:flex-row gap-12">
                 {/* 3. Colonne de gauche : Infos & Map */}
@@ -90,7 +86,11 @@ export function PropertyDetailsPage() {
                     </div>
 
                     <div>
-                        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Où se situe le logement</h2>
+                        <h2 className="flex gap-2 items-center text-2xl font-semibold mb-4 text-gray-800">
+                            <Map />
+                            Où se situe le logement
+                        </h2>
+                        <p>La localisation précise sera donnée une fois la réservation terminé.</p>
                         <div className="rounded-2xl overflow-hidden shadow-md border border-gray-100">
                             <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
                         </div>
@@ -170,7 +170,16 @@ function PropertyLocation({ longitude, latitude }: { longitude: number, latitude
             scrollWheelZoom={false}
             style={{ height: "100%", width: "100%" }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={[latitude, longitude]} />
+            <CircleMarker
+                center={[latitude, longitude]}
+                radius={25}
+                pathOptions={{
+                    color: '#4f46e5',
+                    fillColor: '#818cf8',
+                    fillOpacity: 0.25,
+                    weight: 2,
+                }}
+            />
         </MapContainer>
     </div>
 }

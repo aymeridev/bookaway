@@ -210,7 +210,7 @@ export function PropertyCard({
                 <div className="relative w-full aspect-video flex-shrink-0 overflow-hidden">
                     <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        src={`https://loremflickr.com/600/400/house,cabin?lock=${property.id}`}
+                        src={property.images[0].url}
                         alt={property.title}
                     />
                 </div>

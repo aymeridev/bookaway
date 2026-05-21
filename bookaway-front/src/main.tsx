@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
 import useAuthStore from './context/AuthStore.tsx'
+import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -79,6 +80,16 @@ let router = createBrowserRouter([
           return property as Property;
         },
         Component: PropertyDetailsPage,
+      },
+      {
+        path: "/property/:id/edit",
+        loader: async ({ params }) => {
+
+          const res = await fetch(`/api/properties/${params.id}`);
+          const property = await res.json();
+          return property as Property;
+        },
+        Component: EditPropertyPage,
       },
       {
         path: "/reservation",

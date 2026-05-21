@@ -5,7 +5,7 @@ export type Property = {
     description: string;
     amenities: string[];
     base_price: number;
-    images: string[];
+    images: PropertyImage[];
     latitude: string;
     longitude: string;
     price_per_night: number;
@@ -17,6 +17,7 @@ export type Property = {
 export type PropertyImage = {
     id: number;
     path: string;
+    url: string;
     sort_order: number
 }
 
