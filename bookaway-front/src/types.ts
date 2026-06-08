@@ -1,3 +1,13 @@
+export type User = {
+    id: string;
+    email: string;
+    name: string;
+    owner: boolean;
+    email_verified_at: string;
+    updated_at: string;
+    created_at: string;
+}
+
 export type Property = {
     id: number;
     title: string;
@@ -15,6 +25,7 @@ export type Property = {
     distance?: number;
     bookings?: any[];
     user_id?: number;
+    user?: User;
 }
 
 export type PropertyImage = {

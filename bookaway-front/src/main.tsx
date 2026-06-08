@@ -9,7 +9,7 @@ import { LoginPage } from './pages/LoginPage.tsx'
 import { RegisterPage } from './pages/RegisterPage.tsx'
 import { SearchPage } from './pages/SearchPage.tsx'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
-import type { Property } from './types.ts'
+import type { Property, User } from './types.ts'
 import { CreatePropertyPage } from './pages/CreatePropertyPage.tsx'
 import { ProfilePage } from './pages/ProfilePage.tsx'
 import { BookingsPage } from './pages/BookingsPage.tsx'
@@ -21,6 +21,7 @@ import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 import api from './api/axios.ts'
 import { SettingsPage } from './pages/SettingsPage.tsx'
+import { UserPage } from './pages/UserPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -91,6 +92,18 @@ let router = createBrowserRouter([
           return (await api.get<Property>(`/properties/${params.id}`)).data;
         },
         Component: EditPropertyPage,
+      },
+      {
+        path: "/user/:id",
+        loader: async ({ params }) => {
+          const user = (await api.get<User>(`/users/${params.id}`)).data;
+          const properties = (await api.get<Property[]>(`/users/${params.id}/properties`)).data;
+          return {
+            user,
+            properties
+          };
+        },
+        Component: UserPage,
       },
       {
         path: "/reservation",

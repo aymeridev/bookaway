@@ -201,13 +201,15 @@ export function PropertyCard({
     const [searchParams] = useSearchParams();
     const from = searchParams.get("from");
     const to = searchParams.get("to");
+
+    const url = (from && to) ? `/property/${property.id}?from=${from}&to=${to}` : `/property/${property.id}`;
     return (
         <Link
-            to={`/property/${property.id}?from=${from}&to=${to}`}
-            className="group block"
+            to={url}
+            className="group max-w-xl block"
         >
             <article className="flex flex-col h-full rounded-2xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="relative w-full aspect-video flex-shrink-0 overflow-hidden">
+                <div className="relative w-full aspect-video shrink-0 overflow-hidden">
                     <img
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         src={property.images[0].url}
@@ -260,9 +262,10 @@ export function PropertyCard({
                         </div>}
 
 
-                        <span className="text-blue-600 font-bold text-sm flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-                            Voir l'offre <ArrowRight />
-                        </span>
+                        <Button variant="flat" className="text-blue-600">
+                            <ArrowRight />
+                            Voir le logement
+                        </Button>
                     </div>
                 </div>
             </article>

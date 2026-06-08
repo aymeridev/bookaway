@@ -1,16 +1,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-
-export type User = {
-    id: string;
-    email: string;
-    name: string;
-    owner: boolean;
-    email_verified_at: string;
-    updated_at: string;
-    created_at: string;
-}
+import type { User } from '../types';
 
 type AuthState = {
     user: User | null;

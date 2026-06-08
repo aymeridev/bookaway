@@ -132,13 +132,28 @@ export function PropertyDetailsPage() {
 
             <div className="flex flex-col lg:flex-row gap-12">
                 {/* Colonne de gauche : Infos & Map */}
-                <div className="flex-[2] space-y-8">
+                <div className="flex-2 space-y-8">
                     <div className="border-b pb-8">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">À propos de ce logement</h2>
                         <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-line">
                             {property.description}
                         </p>
                     </div>
+
+                    {property.user && (
+                        <Card className="p-6">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg font-semibold text-gray-800">
+                                    Logement proposé par {property.user.name}
+                                </h3>
+                                <Link to={`/user/${property.user.id}`} viewTransition>
+                                    <Button variant="outline" size="sm">
+                                        Voir le profil
+                                    </Button>
+                                </Link>
+                            </div>
+                        </Card>
+                    )}
 
                     <div>
                         <h2 className="flex gap-2 items-center text-2xl font-semibold mb-4 text-gray-800">
@@ -201,7 +216,7 @@ export function PropertyDetailsPage() {
                                 totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
                             }}
                             className={`block w-full text-center py-4 text-white font-bold rounded-xl transition-all ${numberOfNights > 0
-                                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
+                                ? 'bg-linear-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
                                 : 'bg-gray-400 cursor-not-allowed pointer-events-none'
                                 }`}
                         >

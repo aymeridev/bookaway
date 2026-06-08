@@ -79,7 +79,8 @@ class PropertyController extends Controller
             'images' => function ($query) {
                 $query->orderBy('sort_order', 'asc');
             },
-            'bookings'
+            'bookings',
+            'user'
         ])->findOrFail($id);
 
         return response()->json($property);
