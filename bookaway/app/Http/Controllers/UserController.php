@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name'  => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         $user->update($validated);
@@ -72,5 +72,17 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function properties(string $id)
+    {
+        $user = User::findOrFail($id);
+        $properties = $user->properties()
+            ->with(['images' => function ($q) {
+                $q->orderBy('sort_order', 'asc');
+            }])
+            ->get();
+
+        return response()->json($properties);
     }
 }

@@ -21,6 +21,8 @@ Route::apiResource('properties', PropertyController::class)->only(['store', 'upd
 Route::apiResource('bookings', BookingController::class);
 Route::apiResource('payments', PaymentController::class);
 Route::apiResource('users', UserController::class);
+Route::get('/users/{id}/properties', [UserController::class, 'properties']);
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
