@@ -160,6 +160,12 @@ class PropertyFactory extends Factory
             'amenities' => fake()->randomElements(['wifi', 'kitchen', 'parking', 'pool'], 3),
             'latitude' => fake()->randomFloat(8, 41, 51),
             'longitude' => fake()->randomFloat(8, 5, 9),
+            'user_id' => function () {
+                if (User::count() >= 5 && fake()->boolean(80)) {
+                    return User::inRandomOrder()->first()->id;
+                }
+                return User::factory()->create()->id;
+            },
         ];
     }
 
@@ -181,7 +187,7 @@ class PropertyFactory extends Factory
                 $property->description = $item['description'];
             }
         })->afterCreating(function (Property $property) {
-            $user = User::first() ?: User::factory()->create();
+            $user = User::find($property->user_id) ?: (User::first() ?: User::factory()->create());
             $type = $property->type;
             $images = [];
             try {
