@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Link, NavLink, Outlet, useNavigate } from "react-router";
+import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
 import { Calendar, ChevronDown, CirclePlus, LandPlot, LogIn, LogOut, User } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
@@ -61,8 +61,29 @@ function ProfileButton() {
     const { t } = useTranslation();
     let [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const user = useAuthStore((state) => state.user);
-    const logout = useAuthStore((state) => state.logout)
+    const logout = useAuthStore((state) => state.logout);
+    const menuRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (!showDetails) return;
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowDetails(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showDetails]);
+
+    useEffect(() => {
+        setShowDetails(false);
+    }, [location]);
 
     const handleLogout = () => {
         setShowDetails(false);
@@ -72,7 +93,7 @@ function ProfileButton() {
     };
     return (
         <>
-            <li className="relative">
+            <li ref={menuRef} className="relative">
                 <button onClick={() => {
                     setShowDetails(!showDetails);
                 }} className="flex border border-transparent hover:border-blue-100 p-2 rounded-lg">
