@@ -20,6 +20,7 @@ import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
 import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 import api from './api/axios.ts'
+import { SettingsPage } from './pages/SettingsPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -58,6 +59,11 @@ let router = createBrowserRouter([
         path: "bookings",
         middleware: [authMiddleware],
         Component: BookingsPage
+      },
+      {
+        path: "settings",
+        middleware: [authMiddleware],
+        Component: SettingsPage
       },
       {
         path: "/new-property",

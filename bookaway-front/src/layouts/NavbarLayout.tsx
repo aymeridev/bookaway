@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
-import { Calendar, ChevronDown, CirclePlus, LandPlot, LogIn, LogOut, User } from "lucide-react";
+import { Calendar, ChevronDown, LandPlot, LogIn, LogOut, Settings, User } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 
@@ -110,9 +110,9 @@ function ProfileButton() {
                             </Link>
                         </li>
                         <li>
-                            <Link className="p-2 flex items-center justify-center" to={"/new-property"} viewTransition>
-                                <CirclePlus />
-                                <span className="flex-1">Ajouter un logement</span>
+                            <Link className="p-2 flex items-center justify-center" to={"/settings"} viewTransition>
+                                <Settings />
+                                <span className="flex-1">Paramètres</span>
                             </Link>
                         </li>
                         <li>

@@ -9,3 +9,20 @@
 }
 
 @variant primary (&[data-primary="true"]);
+
+
+.text-title-large {
+    @apply mt-6 mb-4 text-4xl font-extrabold tracking-tight text-balance;
+}
+
+.text-title-medium {
+    @apply mt-4 mb-2 flex items-center gap-2 text-3xl font-bold tracking-tight;
+}
+
+.text-title-small {
+    @apply mt-2 mb-1 text-2xl font-semibold tracking-tight;
+}
+
+.text-title-xsmall {
+    @apply text-xl font-semibold tracking-tight;
+}
