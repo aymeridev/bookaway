@@ -120,4 +120,21 @@ class BookingController extends Controller
 
         return response()->json(null, 204);
     }
+
+    /**
+     * Récupérer uniquement les réservations de l'utilisateur connecté.
+     */
+    public function myReservations(Request $request)
+    {
+        // On récupère l'utilisateur connecté via le Token
+        $bookings = $request->user()->bookings()
+            ->with([
+                'property:id,title', // On ne sélectionne que les vraies colonnes existantes
+                'property.images'    // On charge la RELATION des images (imbriquée)
+            ])
+            ->orderBy('start_date', 'desc')
+            ->get();
+
+        return response()->json($bookings);
+    }
 }

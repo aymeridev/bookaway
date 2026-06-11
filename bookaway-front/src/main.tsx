@@ -17,6 +17,7 @@ import { ErrorPage } from './pages/ErrorPage.tsx'
 import toast, { Toaster } from 'react-hot-toast';
 import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
+import { MyReservationsPage } from './pages/MyReservationPage.tsx'
 import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 import api from './api/axios.ts'
@@ -60,6 +61,14 @@ let router = createBrowserRouter([
         path: "bookings",
         middleware: [authMiddleware],
         Component: BookingsPage
+      },
+      {
+        path: "my-reservations",
+        middleware: [authMiddleware],
+        Component: MyReservationsPage,
+        loader: async () => {
+          return (await api.get('/my-reservations')).data;
+        }
       },
       {
         path: "settings",

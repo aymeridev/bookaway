@@ -23,7 +23,7 @@ export function NavbarLayout() {
                     {isAuthenticated ? (
                         <>
                             <ListNavLink
-                                to={"/bookings"}>
+                                to={"/my-reservations"}>
                                 <Calendar />
                                 Mes réservations
                             </ListNavLink>

@@ -9,7 +9,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
-    return response()->json([
+    return response()->json([   
         ['id' => 1, 'destination' => 'Paris - Londres', 'price' => 45],
         ['id' => 2, 'destination' => 'Lyon - Marseille', 'price' => 30],
     ]);
@@ -31,3 +31,5 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/properties/{property}/images', [PropertyImageController::class, 'store'])->middleware("auth:sanctum");
 Route::delete('/properties/{property}/images/{image}', [PropertyImageController::class, 'destroy'])->middleware("auth:sanctum");
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');
+
+Route::get('/my-reservations', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
