@@ -80,7 +80,8 @@ class PropertyController extends Controller
                 $query->orderBy('sort_order', 'asc');
             },
             'bookings',
-            'user'
+            'user',
+            'ratings.author'
         ])->findOrFail($id);
 
         return response()->json($property);

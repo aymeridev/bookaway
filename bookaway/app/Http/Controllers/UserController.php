@@ -37,18 +37,12 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    /**
-     * Voir un utilisateur avec ses réservations et ses paiements.
-     */
     public function show(string $id)
     {
-        $user = User::with(['bookings.property', 'payments'])->findOrFail($id);
+        $user = User::with(['bookings.property', 'payments', 'ratingsReceived.author'])->findOrFail($id);
         return response()->json($user);
     }
 
-    /**
-     * Mettre à jour les infos (nom, email).
-     */
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);

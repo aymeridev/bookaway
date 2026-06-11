@@ -64,4 +64,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function ratingsReceived()
+    {
+        return $this->morphMany(Rating::class, 'ratable');
+    }
+
+    public function ratingsWritten()
+    {
+        return $this->hasMany(Rating::class, 'user_id');
+    }
 }

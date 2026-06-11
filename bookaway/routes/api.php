@@ -6,6 +6,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyImageController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
@@ -33,3 +34,7 @@ Route::delete('/properties/{property}/images/{image}', [PropertyImageController:
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');
 
 Route::get('/my-reservations', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
+
+Route::get('/ratings', [RatingController::class, 'index']);
+Route::post('/ratings', [RatingController::class, 'store'])->middleware('auth:sanctum');
+Route::delete('/ratings/{id}', [RatingController::class, 'destroy'])->middleware('auth:sanctum');
