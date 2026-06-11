@@ -1,9 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
-import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Moon, Settings, Sun, User, MessageSquare } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
+import api from "../api/axios";
+
+interface ConversationNotification {
+    id: number;
+    unread_count: number;
+}
 
 export function NavbarLayout() {
     const { t } = useTranslation();
@@ -11,6 +17,30 @@ export function NavbarLayout() {
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
+    const [unreadCount, setUnreadCount] = useState<number>(0);
+    const location = useLocation();
+
+    useEffect(() => {
+        if (!isAuthenticated) return;
+
+        const fetchNotifications = async () => {
+            try {
+                const res = await api.get('/conversations');
+                const conversations: ConversationNotification[] = res.data;
+                // Calcule la somme de tous les unread_count
+                const total = conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0);
+                setUnreadCount(total);
+            } catch (error) {
+                console.error("Impossible de charger les notifications de messages", error);
+            }
+        };
+
+        fetchNotifications();
+        
+        const interval = setInterval(fetchNotifications, 30000);
+        return () => clearInterval(interval);
+
+    }, [isAuthenticated, location]); 
 
     return (
         <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh">
@@ -33,6 +63,17 @@ export function NavbarLayout() {
                                 to={"/my-properties"}>
                                 <LandPlot />
                                 Mes logements
+                            </ListNavLink>
+                            <ListNavLink to={"/messages"}>
+                                <div className="relative flex items-center gap-2">
+                                    <MessageSquare />
+                                    <span>Messagerie</span>
+                                    {unreadCount > 0 && (
+                                        <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                                            {unreadCount}
+                                        </span>
+                                    )}
+                                </div>
                             </ListNavLink>
                         </>
                     ) : (<></>)}

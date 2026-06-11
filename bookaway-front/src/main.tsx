@@ -24,6 +24,7 @@ import api from './api/axios.ts'
 import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
 import { RateProperyPage } from './pages/RatePropertyPage.tsx'
+import { MessagesPage } from './pages/MessagesPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -110,6 +111,14 @@ let router = createBrowserRouter([
           return (await api.get<Property>(`/properties/${params.id}`)).data;
         },
         Component: EditPropertyPage,
+      },
+      {
+        path: "messages",
+        middleware: [authMiddleware],
+        Component: MessagesPage,
+        loader: async () => {
+          return (await api.get('/conversations')).data;
+        }
       },
       {
         path: "/user/:id",

@@ -6,11 +6,12 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyImageController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
-    return response()->json([   
+    return response()->json([
         ['id' => 1, 'destination' => 'Paris - Londres', 'price' => 45],
         ['id' => 2, 'destination' => 'Lyon - Marseille', 'price' => 30],
     ]);
@@ -34,6 +35,11 @@ Route::delete('/properties/{property}/images/{image}', [PropertyImageController:
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');
 
 Route::get('/my-reservations', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
+
+Route::get('/conversations', [ConversationController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/conversations', [ConversationController::class, 'startConversation'])->middleware('auth:sanctum');
+Route::post('/conversations/{id}/messages', [ConversationController::class, 'sendMessage'])->middleware('auth:sanctum');
+Route::post('/conversations/{id}/read', [ConversationController::class, 'markAsRead'])->middleware('auth:sanctum');
 
 Route::get('/ratings', [RatingController::class, 'index']);
 Route::post('/ratings', [RatingController::class, 'store'])->middleware('auth:sanctum');

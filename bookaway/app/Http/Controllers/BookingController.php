@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\Property;     // Ajouté pour récupérer l'owner_id du logement
+use App\Models\Conversation; // Ajouté pour l'automatisation du chat
+use App\Models\Message;      // Ajouté pour l'envoi du message de bienvenue
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,8 +47,8 @@ class BookingController extends Controller
         try {
             $booking = DB::transaction(function () use ($validated) {
                 
-                // [Optionnel] C'est ici que tu brancheras ton vrai SDK de paiement (ex: Stripe)
-                // Dans l'immédiat, on simule que la banque répond "success"
+                // Récupération du logement pour identifier le propriétaire (owner_id)
+                $property = Property::findOrFail($validated['property_id']);
 
                 // 3. Création du paiement en base de données
                 $payment = Payment::create([
@@ -59,7 +62,7 @@ class BookingController extends Controller
                 ]);
 
                 // 4. Création de la réservation liée au paiement
-                return Booking::create([
+                $newBooking = Booking::create([
                     'user_id'        => $validated['user_id'],
                     'property_id'    => $validated['property_id'],
                     'payment_id'     => $payment->id, // On lie le paiement fraîchement créé
@@ -69,6 +72,28 @@ class BookingController extends Controller
                     'total_price'    => $validated['total_price'],
                     'status'         => 'confirmed', // Confirmé directement car le paiement a réussi
                 ]);
+
+                // 5. Initialisation ou récupération de la conversation
+                $conversation = Conversation::firstOrCreate([
+                    'user_id'     => $validated['user_id'],
+                    'owner_id'    => $property->user_id,
+                    'property_id' => $property->id,
+                ]);
+
+                // 6. Envoi du message automatique de remerciement au nom du propriétaire
+                $welcomeMessage = "Bonjour ! Merci pour votre réservation pour le logement \"{$property->title}\". Votre paiement a bien été validé. N'hésitez pas à me contacter ici si vous avez des questions concernant votre arrivée !";
+
+                Message::create([
+                    'conversation_id' => $conversation->id,
+                    'sender_id'       => $property->user_id, // L'expéditeur est le bailleur
+                    'content'         => $welcomeMessage,
+                    'is_read'         => false,
+                ]);
+
+                // On force la mise à jour du timestamp de la conversation pour qu'elle remonte en premier
+                $conversation->touch();
+
+                return $newBooking;
             });
 
             return response()->json($booking->load(['property', 'payment']), 201);
