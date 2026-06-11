@@ -6,6 +6,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PropertyImageController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ConversationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/trips', function () {
@@ -33,3 +34,8 @@ Route::delete('/properties/{property}/images/{image}', [PropertyImageController:
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');
 
 Route::get('/my-reservations', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
+
+Route::get('/conversations', [ConversationController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/conversations', [ConversationController::class, 'startConversation'])->middleware('auth:sanctum');
+Route::post('/conversations/{id}/messages', [ConversationController::class, 'sendMessage'])->middleware('auth:sanctum');
+Route::post('/conversations/{id}/read', [ConversationController::class, 'markAsRead'])->middleware('auth:sanctum');
