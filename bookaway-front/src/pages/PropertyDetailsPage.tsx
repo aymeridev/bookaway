@@ -6,7 +6,7 @@ import type { DateRange } from "react-day-picker";
 import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO, eachDayOfInterval } from "date-fns";
 import Button from '../components/ui/Button';
-import { ArrowLeft, Map, SquarePen } from 'lucide-react';
+import { ArrowLeft, Map, SquarePen, Star } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
@@ -26,7 +26,6 @@ export function PropertyDetailsPage() {
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
 
-    // Extraction et formatage des dates bloquées pour l'affichage visuel (grisé)
     const disabledDays = [
         { before: new Date() },
         ...(property.bookings || []).map((booking: any) => ({
@@ -35,7 +34,6 @@ export function PropertyDetailsPage() {
         }))
     ];
 
-    // Gestion de l'état des dates sélectionnées
     const [range, setRange] = useState<DateRange | undefined>(() => {
         if (urlFrom && urlTo) {
             return {
@@ -47,27 +45,22 @@ export function PropertyDetailsPage() {
     });
     const [month, setMonth] = useState<Date>(range?.from || new Date());
 
-    // Fonction de sécurité pour empêcher de sélectionner une plage qui englobe des dates réservées
     const handleSelectRange = (newRange: DateRange | undefined) => {
-        // Si la plage est incomplète (uniquement la date de début sélectionnée)
         if (!newRange?.from || !newRange?.to) {
             setRange(newRange);
             return;
         }
 
-        // 1. Génère la liste de tous les jours inclus dans la sélection demandée
         const selectedDays = eachDayOfInterval({
             start: newRange.from,
             end: newRange.to
         });
 
-        // 2. Vérifie si l'un de ces jours entre en conflit avec une réservation existante
         const hasBlockedDay = selectedDays.some(day => {
             return (property.bookings || []).some((booking: any) => {
                 const start = parseISO(booking.start_date);
                 const end = parseISO(booking.end_date);
 
-                // Remise à zéro des heures pour comparer uniquement la date pure
                 const d = new Date(day).setHours(0, 0, 0, 0);
                 const s = new Date(start).setHours(0, 0, 0, 0);
                 const e = new Date(end).setHours(0, 0, 0, 0);
@@ -78,15 +71,12 @@ export function PropertyDetailsPage() {
 
         if (hasBlockedDay) {
             alert("Désolé, cette plage de dates contient des jours déjà réservés.");
-            // On réinitialise la sélection en gardant uniquement le premier clic comme point de départ
             setRange({ from: newRange.from, to: undefined });
         } else {
-            // Tout est valide, on enregistre la plage
             setRange(newRange);
         }
     };
 
-    // Calcul du nombre de nuits basé sur la sélection réelle
     const numberOfNights = range?.from && range?.to
         ? differenceInDays(range.to, range.from)
         : 0;
@@ -116,23 +106,20 @@ export function PropertyDetailsPage() {
             }}>
                 <SquarePen />
                 Modifier le logement</Button>}
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
-            </div>
 
-            {images.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-4 h-[450px] gap-3 overflow-hidden rounded-2xl">
-                <div className="w-full h-full">
-                    <ImageGallery
-                        ref={galleryRef}
-                        items={images}
-                        onSlide={(index) => console.log("Slid to", index)}
-                    />
-                </div>
-            </div> : <p>Aucune image</p>}
+            <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
 
             <div className="flex flex-col lg:flex-row gap-12">
-                {/* Colonne de gauche : Infos & Map */}
                 <div className="flex-2 space-y-8">
+                    {images.length > 0 ? <div className="w-full overflow-hidden rounded-2xl shadow-md bg-gray-50">
+                        <ImageGallery
+                            ref={galleryRef}
+                            items={images}
+                            autoPlay
+                            slideInterval={2000}
+                            onSlide={(index) => console.log("Slid to", index)}
+                        />
+                    </div> : <p>Aucune image</p>}
                     <div className="border-b pb-8">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">À propos de ce logement</h2>
                         <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-line">
@@ -165,6 +152,25 @@ export function PropertyDetailsPage() {
                             <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
                         </div>
                     </div>
+
+                    <Card>
+                        <h2 className='text-title-medium'>Avis (100)</h2>
+                        <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> 4.5</h3>
+                        <ul>
+                            <li className='max-w-xs'>
+                                <Card>
+                                    <div className="flex items-center gap-2 justify-center">
+                                        <span className='font-semibold'>Nom Prénom</span>
+                                        <span className='flex'><Star /> 4/5</span>
+                                    </div>
+                                    <p className='text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga aut cupiditate voluptatem incidunt illo dolore, id minima dolor ab sunt.</p>
+                                </Card>
+                            </li>
+                        </ul>
+                        <Link to={`/property/${property.id}/rate`}>
+                            <Button>Donner son avis</Button>
+                        </Link>
+                    </Card>
                 </div>
 
                 {!isOwner && <div className="flex-1">
@@ -175,8 +181,7 @@ export function PropertyDetailsPage() {
                                 <span className="text-gray-500"> / nuit</span>
                             </div>
                         </div>
-
-                        <div className="flex justify-center bg-gray-50 rounded-xl p-2 border border-gray-100">
+                        <Card className='bg-base-300'>
                             <DayPicker
                                 mode="range"
                                 selected={range}
@@ -187,7 +192,7 @@ export function PropertyDetailsPage() {
                                 onMonthChange={setMonth}
                                 className="m-0"
                             />
-                        </div>
+                        </Card>
 
                         <div className="space-y-3 pt-2">
                             <div className="flex justify-between text-gray-600">
@@ -215,12 +220,11 @@ export function PropertyDetailsPage() {
                                 },
                                 totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
                             }}
-                            className={`block w-full text-center py-4 text-white font-bold rounded-xl transition-all ${numberOfNights > 0
-                                ? 'bg-linear-to-r from-blue-600 to-indigo-600 hover:shadow-lg hover:scale-[1.02] cursor-pointer'
-                                : 'bg-gray-400 cursor-not-allowed pointer-events-none'
-                                }`}
+                            viewTransition
                         >
-                            {numberOfNights > 0 ? 'Réserver maintenant' : 'Sélectionnez vos dates'}
+                            <Button className='text-xl py-3 w-full font-semibold' disabled={true}>
+                                {numberOfNights > 0 ? 'Réserver maintenant' : 'Sélectionnez vos dates'}
+                            </Button>
                         </Link>
 
                         <p className="text-center text-xs text-gray-400">Aucun montant ne vous sera débité pour le moment</p>

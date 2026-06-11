@@ -23,6 +23,7 @@ import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 import api from './api/axios.ts'
 import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
+import { RateProperyPage } from './pages/RatePropertyPage.tsx'
 
 let router = createBrowserRouter([
   {
@@ -94,6 +95,14 @@ let router = createBrowserRouter([
           return (await api.get<Property>(`/properties/${params.id}`)).data;
         },
         Component: PropertyDetailsPage,
+      },
+      {
+        path: "/property/:id/rate",
+        loader: async ({ params }) => {
+          return (await api.get<Property>(`/properties/${params.id}`)).data;
+        },
+        middleware: [authMiddleware],
+        Component: RateProperyPage,
       },
       {
         path: "/property/:id/edit",

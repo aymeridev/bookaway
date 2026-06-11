@@ -2,9 +2,9 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 const VARIANTS = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
+    primary: 'bg-primary hover:bg-primary/90 text-primary-content focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed',
+    secondary: 'bg-secondary hover:bg-secondary/90 text-secondary-content focus:ring-gray-400',
+    danger: 'bg-error hover:bg-error/90 text-error-content focus:ring-red-500',
     outline: 'border border-gray-300 bg-transparent hover:bg-gray-50 text-gray-700 focus:ring-gray-400',
     flat: 'bg-transparent border-0 text-gray-600 hover:bg-gray-100 focus:ring-gray-200'
 } as const;

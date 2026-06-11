@@ -1,18 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
-import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Settings, User } from "lucide-react";
+import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Moon, Settings, Sun, User } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
+import { useDarkMode } from "../hooks/useDarkMode";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
+
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
 
     return (
-        <div className="flex flex-col h-svh">
-            <nav className="flex p-4 bg-blue-500 items-center shadow-md">
+        <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh">
+            <nav className="flex mx-4 mt-4 rounded-full p-3 bg-primary border-primary-content border-2 text-primary-content items-center shadow-md">
                 <Link to={"/"} className="block" viewTransition>
                     <div
                         className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
@@ -91,6 +93,9 @@ function ProfileButton() {
         navigate("/login");
         logout();
     };
+
+    const { isDark, toggleTheme } = useDarkMode();
+
     return (
         <>
             <li ref={menuRef} className="relative">
@@ -101,7 +106,7 @@ function ProfileButton() {
                     <span>{user?.name}</span>
                     <ChevronDown className={showDetails ? "rotate-180" : ""} />
                 </button>
-                {showDetails && <div className="bg-white text-black rounded-xl shadow-xl absolute top-10 right-0 min-w-xs z-20">
+                {showDetails && <div className="bg-base-200 text-base-content rounded-xl shadow-xl absolute top-10 right-0 min-w-xs z-20">
                     <ul className="flex flex-col">
                         <li>
                             <Link className="p-2 flex items-center justify-center" to={"/profile"} viewTransition>
@@ -121,6 +126,12 @@ function ProfileButton() {
                                 <Settings />
                                 <span className="flex-1">Paramètres</span>
                             </Link>
+                        </li>
+                        <li>
+                            <button onClick={toggleTheme} className="p-2 cursor-pointer flex items-center justify-center">
+                                {isDark ? <Sun /> : <Moon />}
+                                <span className="flex-1">Mode {isDark ? "clair" : "sombre"}</span>
+                            </button>
                         </li>
                         <li>
                             <button className="p-2 flex items-center justify-center" onClick={handleLogout}>
@@ -146,7 +157,7 @@ function ProfileButton() {
 function ListNavLink({ to, children }: { to: string, children: React.ReactNode }) {
     return <li>
         <NavLink
-            className={({ isActive }) => `${isActive ? "bg-white text-blue-500" : "text-white hover:bg-blue-600 active:bg-blue-700"} py-2 px-4 rounded-lg font-semibold flex gap-2 items-center justify-center transition-colors`}
+            className={({ isActive }) => `${isActive ? "bg-primary text-primary-content" : "text-white hover:bg-blue-600 active:bg-blue-700"} py-2 px-4 rounded-lg font-semibold flex gap-2 items-center justify-center transition-colors`}
             to={to} viewTransition>
             {children}
         </NavLink>

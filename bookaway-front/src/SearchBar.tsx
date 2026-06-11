@@ -7,12 +7,12 @@ import { fr as fnsFR } from "date-fns/locale";
 import { useNavigate, useSearchParams } from "react-router";
 import { Map, MapPin, Minus, Plus, Search, Users } from "lucide-react";
 import { useDebounce } from "./hooks/useDebounce";
+import { Card } from "./components/Card";
 
 export function SearchBar() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    // Préremplissage depuis URL
     const initialTravelers = Number(
         searchParams.get("travelers") || 1
     );
@@ -33,9 +33,9 @@ export function SearchBar() {
         useState<DateRange | undefined>(
             initialFrom && initialTo
                 ? {
-                      from: parseISO(initialFrom),
-                      to: parseISO(initialTo),
-                  }
+                    from: parseISO(initialFrom),
+                    to: parseISO(initialTo),
+                }
                 : undefined
         );
 
@@ -45,9 +45,9 @@ export function SearchBar() {
     } | null>(
         initialLat && initialLon
             ? {
-                  lat: initialLat,
-                  lon: initialLon,
-              }
+                lat: initialLat,
+                lon: initialLon,
+            }
             : null
     );
 
@@ -78,7 +78,7 @@ export function SearchBar() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex gap-4 items-center justify-center border shadow rounded-xl py-2 px-8 bg-gray-200 border-gray-400 text-gray-900 mb-8"
+            className="flex gap-4 items-center justify-center border shadow rounded-full py-2 px-8 bg-base-200 border-base-300 text-base-content mb-8"
         >
             <FormDestinationPart
                 value={destination}
@@ -86,7 +86,7 @@ export function SearchBar() {
                 onLocationSelect={setCoords}
             />
 
-            <div className="select-none text-gray-400 font-extralight">
+            <div aria-hidden="true" className="select-none text-base-content/50 font-extralight">
                 |
             </div>
 
@@ -95,12 +95,12 @@ export function SearchBar() {
                 onSelect={setSelectedDate}
             />
 
-            <div className="select-none text-gray-400 font-extralight">
+            <div aria-hidden="true" className="select-none text-base-content/50 font-extralight">
                 |
             </div>
 
-            <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
-                <Users className="text-gray-600" />
+            <div className="flex items-center justify-center gap-2 bg-base-100 px-4 py-2 rounded-xl">
+                <Users className="text-base-content" />
 
                 <div className="flex flex-col">
                     <span className="font-bold text-sm">
@@ -114,7 +114,7 @@ export function SearchBar() {
                                     Math.max(travelers - 1, 1)
                                 );
                             }}
-                            className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"
+                            className="p-1 bg-base-100 text-base-content cursor-pointer rounded-full"
                             type="button"
                         >
                             <Minus />
@@ -126,7 +126,7 @@ export function SearchBar() {
                             onClick={() => {
                                 setTravelers(travelers + 1);
                             }}
-                            className="p-1 text-gray-800 bg-gray-200 cursor-pointer rounded-full"
+                            className="p-1 bg-base-100 text-base-content cursor-pointer rounded-full"
                             type="button"
                         >
                             <Plus />
@@ -135,7 +135,7 @@ export function SearchBar() {
                 </div>
             </div>
 
-            <button className="bg-blue-500 text-blue-50 rounded-full p-4 font-semibold cursor-pointer">
+            <button className="bg-primary text-primary-content rounded-full p-4 font-semibold cursor-pointer">
                 <Search />
             </button>
         </form>
@@ -179,7 +179,7 @@ function FormDestinationPart({
 
     return (
         <div className="relative">
-            <div className="flex items-center justify-center gap-2 bg-gray-50 px-4 py-2 rounded-xl">
+            <div className="flex items-center justify-center gap-2 bg-base-100 text-base-content px-4 py-2 rounded-xl">
                 <Map className="text-gray-600" />
 
                 <div className="flex flex-col">
@@ -188,7 +188,7 @@ function FormDestinationPart({
                     </span>
 
                     <input
-                        className="border-none focus:ring-0"
+                        className="border-none bg-transparent focus:ring-0"
                         value={value}
                         onChange={(e) => {
                             setIsSelecting(false);
@@ -205,8 +205,8 @@ function FormDestinationPart({
             </div>
 
             {results.length > 0 && (
-                <div className="absolute bg-white rounded-xl min-w-lg shadow-2xl p-4 top-16 z-50">
-                    <span className="text-sm text-gray-600">
+                <Card className="absolute text-base-content min-w-lg top-16 z-50">
+                    <span className="text-sm ">
                         Résultats de recherches
                     </span>
 
@@ -228,22 +228,22 @@ function FormDestinationPart({
                                         onChange(result.name);
                                         setResults([]);
                                     }}
-                                    className="cursor-pointer w-full flex items-center gap-1 hover:bg-gray-100 rounded-xl p-2"
+                                    className="cursor-pointer w-full flex items-center gap-1 hover:bg-base-100 rounded-xl p-2"
                                     type="button"
                                 >
-                                    <div className="size-16 flex items-center justify-center text-red-600 bg-red-100 rounded-xl">
+                                    <div className="size-16 flex items-center justify-center text-error bg-error-content rounded-xl">
                                         <MapPin
                                             className="size-8"
                                             strokeWidth={1}
                                         />
                                     </div>
 
-                                    <div className="flex flex-col items-start text-gray-900">
+                                    <div className="flex flex-col items-start text-base-content">
                                         <span className="font-medium">
                                             {result.name}
                                         </span>
 
-                                        <span className="text-gray-700 text-xs text-left line-clamp-1">
+                                        <span className="text-base-content/70 text-xs text-left line-clamp-1">
                                             {
                                                 result.display_name
                                             }
@@ -253,7 +253,7 @@ function FormDestinationPart({
                             </li>
                         ))}
                     </ul>
-                </div>
+                </Card>
             )}
         </div>
     );
@@ -291,7 +291,7 @@ function FormDatePart({
                 onClick={() => {
                     setOpenCalendar(!openCalendar);
                 }}
-                className="flex items-start flex-col bg-gray-50 px-4 py-2 rounded-xl"
+                className="flex items-start flex-col bg-base-100  px-4 py-2 rounded-xl"
             >
                 <span className="font-bold text-sm">
                     Dates
