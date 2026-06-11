@@ -19,7 +19,7 @@ class RatingController extends Controller
         $type = $request->ratable_type === 'property' ? Property::class : User::class;
         $ratings = Rating::where('ratable_type', $type)
             ->where('ratable_id', $request->ratable_id)
-            ->with('author')
+            ->with('author:id,name')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -53,7 +53,7 @@ class RatingController extends Controller
             'ratable_id' => $validated['ratable_id'],
         ]);
 
-        return response()->json($rating->load('author'), 201);
+        return response()->json($rating->load('author:id,name'), 201);
     }
 
     public function destroy(Request $request, string $id)

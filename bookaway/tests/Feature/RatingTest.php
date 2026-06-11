@@ -95,4 +95,43 @@ class RatingTest extends TestCase
                 'stars' => 5,
             ]);
     }
+
+    public function test_property_details_returns_avg_rating_and_hides_author_email(): void
+    {
+        $user1 = User::factory()->create(['email' => 'user1@example.com']);
+        $user2 = User::factory()->create(['email' => 'user2@example.com']);
+        $owner = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $owner->id,
+            'amenities' => [],
+        ]);
+
+        Rating::create([
+            'user_id' => $user1->id,
+            'stars' => 5,
+            'comment' => 'Parfait !',
+            'ratable_type' => Property::class,
+            'ratable_id' => $property->id,
+        ]);
+
+        Rating::create([
+            'user_id' => $user2->id,
+            'stars' => 3,
+            'comment' => 'Moyen.',
+            'ratable_type' => Property::class,
+            'ratable_id' => $property->id,
+        ]);
+
+        $response = $this->getJson("/api/properties/{$property->id}");
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'ratings_avg' => 4,
+        ]);
+
+        // Assert that the authors' names are returned, but their emails are hidden
+        $response->assertJsonFragment(['name' => $user1->name]);
+        $response->assertJsonMissing(['email' => 'user1@example.com']);
+        $response->assertJsonMissing(['email' => 'user2@example.com']);
+    }
 }

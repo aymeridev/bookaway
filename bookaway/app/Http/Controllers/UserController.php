@@ -39,7 +39,7 @@ class UserController extends Controller
 
     public function show(string $id)
     {
-        $user = User::with(['bookings.property', 'payments', 'ratingsReceived.author'])->findOrFail($id);
+        $user = User::with(['bookings.property', 'payments', 'ratingsReceived.author:id,name'])->findOrFail($id);
         return response()->json($user);
     }
 

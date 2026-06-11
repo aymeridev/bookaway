@@ -81,8 +81,12 @@ class PropertyController extends Controller
             },
             'bookings',
             'user',
-            'ratings.author'
+            'ratings.author:id,name'
         ])->findOrFail($id);
+
+        $property->ratings_avg = $property->ratings->isEmpty()
+            ? null
+            : round($property->ratings->avg('stars'), 1);
 
         return response()->json($property);
     }
