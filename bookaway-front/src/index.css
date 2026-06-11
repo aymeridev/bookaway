@@ -2,10 +2,99 @@
 @plugin "@tailwindcss/forms";
 @import '@fontsource/sriracha';
 
+:root {
+    --primary: hsl(221.2 83.2% 53.3%);
+    --primary-content: hsl(0 0% 100%);
+    --secondary: hsl(215.4 16.3% 46.9%);
+    --secondary-content: hsl(0 0% 100%);
+    --neutral: hsl(222.2 47.4% 11.2%);
+    --neutral-content: hsl(210 40% 98%);
+    --base-100: hsl(0 0% 100%);
+    --base-200: hsl(210 40% 98%);
+    --base-300: hsl(214.3 31.8% 91.4%);
+    --base-content: hsl(222.2 47.4% 11.2%);
+
+    --info: hsl(199 89% 48%);
+    --info-content: hsl(0 0% 100%);
+    --success: hsl(142 70% 45%);
+    --success-content: hsl(0 0% 100%);
+    --warning: hsl(38 92% 50%);
+    --warning-content: hsl(222.2 47.4% 11.2%);
+    --error: hsl(346 84% 61%);
+    --error-content: hsl(0 0% 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: hsl(217.2 91.2% 59.8%);
+        --primary-content: hsl(222.2 47.4% 11.2%);
+        --secondary: hsl(215.4 16.3% 70%);
+        --secondary-content: hsl(222.2 47.4% 11.2%);
+        --neutral: hsl(210 40% 98%);
+        --neutral-content: hsl(222.2 47.4% 11.2%);
+        --base-100: hsl(222.2 47.4% 11.2%);
+        --base-200: hsl(222.2 47.4% 7%);
+        --base-300: hsl(217 33% 17%);
+        --base-content: hsl(210 40% 98%);
+
+        --info: hsl(199 89% 48%);
+        --info-content: hsl(222.2 47.4% 11.2%);
+        --success: hsl(142 70% 45%);
+        --success-content: hsl(222.2 47.4% 11.2%);
+        --warning: hsl(38 92% 50%);
+        --warning-content: hsl(222.2 47.4% 11.2%);
+        --error: hsl(346 84% 61%);
+        --error-content: hsl(222.2 47.4% 11.2%);
+    }
+}
+
+.dark {
+    /* Dark Theme (Manual Toggle Class) */
+    --primary: hsl(217.2 91.2% 59.8%);
+    --primary-content: hsl(222.2 47.4% 11.2%);
+    --secondary: hsl(215.4 16.3% 70%);
+    --secondary-content: hsl(222.2 47.4% 11.2%);
+    --neutral: hsl(210 40% 98%);
+    --neutral-content: hsl(222.2 47.4% 11.2%);
+    --base-100: hsl(222.2 47.4% 11.2%);
+    --base-200: hsl(222.2 47.4% 7%);
+    --base-300: hsl(217 33% 17%);
+    --base-content: hsl(210 40% 98%);
+
+    --info: hsl(199 89% 48%);
+    --info-content: hsl(222.2 47.4% 11.2%);
+    --success: hsl(142 70% 45%);
+    --success-content: hsl(222.2 47.4% 11.2%);
+    --warning: hsl(38 92% 50%);
+    --warning-content: hsl(222.2 47.4% 11.2%);
+    --error: hsl(346 84% 61%);
+    --error-content: hsl(222.2 47.4% 11.2%);
+}
+
 @theme {
     --background-image-logo: url('/bookaway_logo.png');
     --background-image-hero: url('/background.jpg');
     --font-display: 'Sriracha', cursive;
+
+    --color-primary: var(--primary);
+    --color-primary-content: var(--primary-content);
+    --color-secondary: var(--secondary);
+    --color-secondary-content: var(--secondary-content);
+    --color-neutral: var(--neutral);
+    --color-neutral-content: var(--neutral-content);
+    --color-base-100: var(--base-100);
+    --color-base-200: var(--base-200);
+    --color-base-300: var(--base-300);
+    --color-base-content: var(--base-content);
+
+    --color-info: var(--info);
+    --color-info-content: var(--info-content);
+    --color-success: var(--success);
+    --color-success-content: var(--success-content);
+    --color-warning: var(--warning);
+    --color-warning-content: var(--warning-content);
+    --color-error: var(--error);
+    --color-error-content: var(--error-content);
 }
 
 @variant primary (&[data-primary="true"]);
