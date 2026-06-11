@@ -35,5 +35,32 @@ class DatabaseSeeder extends Seeder
         }
 
         \App\Models\Booking::factory(10)->create();
+
+        // création avis pour les logements
+        $properties = \App\Models\Property::all();
+        $users = \App\Models\User::all();
+
+        if ($properties->count() > 0 && $users->count() > 0) {
+            foreach ($properties as $prop) {
+                $numRatings = rand(1, 4);
+
+                $potentialAuthors = $users->filter(function ($u) use ($prop) {
+                    return $u->id !== $prop->user_id;
+                });
+
+                if ($potentialAuthors->isEmpty()) {
+                    $potentialAuthors = $users;
+                }
+
+                for ($i = 0; $i < $numRatings; $i++) {
+                    $author = $potentialAuthors->random();
+                    \App\Models\Rating::factory()->create([
+                        'user_id' => $author->id,
+                        'ratable_type' => \App\Models\Property::class,
+                        'ratable_id' => $prop->id,
+                    ]);
+                }
+            }
+        }
     }
 }
