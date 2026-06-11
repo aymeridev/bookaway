@@ -37,7 +37,7 @@ export function NavbarLayout() {
 
         fetchNotifications();
         
-        const interval = setInterval(fetchNotifications, 3000);
+        const interval = setInterval(fetchNotifications, 30000);
         return () => clearInterval(interval);
 
     }, [isAuthenticated, location]); 
