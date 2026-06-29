@@ -106,7 +106,6 @@ export function PropertyReservationPage() {
             <h1 className="text-3xl font-bold text-gray-900">Demande de réservation</h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-                {/* Section gauche : Détails du séjour & Paiement */}
                 <div className="lg:col-span-7 space-y-8">
 
                     <Card>
@@ -124,7 +123,6 @@ export function PropertyReservationPage() {
                         </div>
                     </Card>
 
-                    {/* Formulaire de paiement connecté */}
                     <Card>
                         <h2 className="text-xl font-semibold text-gray-800">Paiement</h2>
 
@@ -183,10 +181,10 @@ export function PropertyReservationPage() {
                     </Card>
                 </div>
 
-                {/* Section droite : Facturation Sticky */}
-                <div className="lg:col-span-5 sticky top-8 bg-white border border-gray-200 rounded-2xl shadow-xl p-6 space-y-6">
+
+                <Card className="lg:col-span-5 sticky top-8">
                     <div className="flex gap-4 pb-6 border-b border-gray-100">
-                        <img className="w-24 h-24 object-cover rounded-xl" src="https://loremflickr.com/320/240/camping" alt="Miniature" />
+
                         <div className="flex flex-col justify-center">
                             <h3 className="font-bold text-gray-900 line-clamp-2">{property.title}</h3>
                             <p className="text-xs text-gray-400 mt-1">Hébergement vérifié</p>
@@ -209,7 +207,7 @@ export function PropertyReservationPage() {
                             <span>{totals.grandTotal}€</span>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div >
         </div >
     );

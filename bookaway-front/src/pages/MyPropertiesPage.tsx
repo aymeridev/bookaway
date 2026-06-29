@@ -12,17 +12,15 @@ export function MyPropertiesPage() {
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">
             <Banner title="Mes logements" />
-            
+
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-8">
-                
-                {/* En-tête de la section de gestion */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-gray-200">
                     <div>
                         <h2 className="text-xl font-bold text-gray-900">Vos annonces actives</h2>
                         <p className="text-sm text-gray-500">Gérez, modifiez et visualisez les logements que vous louez.</p>
                     </div>
-                    
-                    <Button 
+
+                    <Button
                         onClick={() => {
                             navigate("/new-property", {
                                 viewTransition: true
@@ -35,7 +33,6 @@ export function MyPropertiesPage() {
                     </Button>
                 </div>
 
-                {/* Condition : Liste des propriétés OU État vide (Empty State) */}
                 {properties.length === 0 ? (
                     <div className="flex flex-col items-center justify-center text-center p-12 bg-white border border-gray-200 rounded-2xl shadow-sm max-w-md mx-auto mt-8 space-y-4">
                         <div className="p-4 bg-blue-50 rounded-full text-blue-600">
@@ -47,8 +44,8 @@ export function MyPropertiesPage() {
                                 Vous n'avez pas encore mis de propriété en location sur notre plateforme.
                             </p>
                         </div>
-                        <Link 
-                            to="/new-property" 
+                        <Link
+                            to="/new-property"
                             className="inline-block text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl shadow-sm transition"
                         >
                             Créer ma première annonce
@@ -57,7 +54,7 @@ export function MyPropertiesPage() {
                 ) : (
                     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {properties.map((property) => (
-                            <li 
+                            <li
                                 key={property.id}
                                 className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100"
                             >

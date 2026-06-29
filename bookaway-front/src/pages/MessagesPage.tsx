@@ -6,7 +6,6 @@ import { Send, Home, MessageSquare, User } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 
-// --- Types pour la messagerie ---
 interface ChatMessage {
     id: number;
     conversation_id: number;
@@ -31,7 +30,7 @@ interface Conversation {
 export function MessagesPage() {
     const initialConversations = useLoaderData() as Conversation[];
     const currentUser = useAuthStore((state) => state.user);
-    
+
     const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
     const [activeChatId, setActiveChatId] = useState<number | null>(
         conversations[0]?.id || null
@@ -59,13 +58,13 @@ export function MessagesPage() {
         if (!activeChatId) return;
 
         // 1. Appel API pour mettre à jour la base de données
-        api.post(`/conversations/${activeChatId}/read`).catch(err => 
+        api.post(`/conversations/${activeChatId}/read`).catch(err =>
             console.error("Erreur marquage lu", err)
         );
 
         // 2. Mise à jour de l'état React pour faire disparaître la pastille rouge immédiatement
         setConversations(prev =>
-            prev.map(conv => 
+            prev.map(conv =>
                 conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
             )
         );
@@ -106,8 +105,7 @@ export function MessagesPage() {
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-[calc(100vh-140px)] min-h-[500px] flex overflow-hidden">
-                
-                {/* 1. SIDEBAR : Liste des discussions (Gauche) */}
+
                 <div className="w-full md:w-80 lg:w-96 border-r border-gray-200 flex flex-col bg-gray-50/50">
                     <div className="p-4 border-b border-gray-200 bg-white">
                         <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -115,7 +113,7 @@ export function MessagesPage() {
                             Messages
                         </h1>
                     </div>
-                    
+
                     <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
                         {conversations.length === 0 ? (
                             <div className="p-6 text-center text-sm text-gray-500">
@@ -132,13 +130,12 @@ export function MessagesPage() {
                                     <button
                                         key={conv.id}
                                         onClick={() => setActiveChatId(conv.id)}
-                                        className={`w-full p-4 text-left flex gap-3 transition-colors ${
-                                            isActive ? "bg-blue-50/70 border-l-4 border-blue-600" : "bg-white hover:bg-gray-50"
-                                        }`}
+                                        className={`w-full p-4 text-left flex gap-3 transition-colors ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600" : "bg-white hover:bg-gray-50"
+                                            }`}
                                     >
-                                        <img 
-                                            src={propImage} 
-                                            alt={conv.property?.title} 
+                                        <img
+                                            src={propImage}
+                                            alt={conv.property?.title}
                                             className="w-12 h-12 rounded-xl object-cover border border-gray-100 shrink-0"
                                         />
                                         <div className="flex-1 min-w-0 space-y-0.5">
@@ -166,11 +163,9 @@ export function MessagesPage() {
                     </div>
                 </div>
 
-                {/* 2. CHAT BOX : Discussion Active (Droite) */}
                 <div className="flex-1 flex flex-col bg-white">
                     {activeConversation ? (
                         <>
-                            {/* En-tête du Chat */}
                             <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white shadow-sm">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-gray-100 rounded-full text-gray-600">
@@ -186,8 +181,6 @@ export function MessagesPage() {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Zone de défilement des bulles de messages */}
                             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
                                 {activeConversation.messages.map((msg) => {
                                     const isMe = String(msg.sender_id) === String(currentUser?.id);
@@ -198,11 +191,10 @@ export function MessagesPage() {
                                             className={`flex ${isMe ? "justify-end" : "justify-start"}`}
                                         >
                                             <div
-                                                className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm leading-relaxed ${
-                                                    isMe
-                                                        ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-br-none"
-                                                        : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
-                                                }`}
+                                                className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm leading-relaxed ${isMe
+                                                    ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-br-none"
+                                                    : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
+                                                    }`}
                                             >
                                                 <p className="whitespace-pre-wrap">{msg.content}</p>
                                                 <p className={`text-[10px] mt-1 text-right ${isMe ? "text-blue-100" : "text-gray-400"}`}>
@@ -214,8 +206,6 @@ export function MessagesPage() {
                                 })}
                                 <div ref={messagesEndRef} />
                             </div>
-
-                            {/* Barre fixe d'envoi en bas */}
                             <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
                                 <div className="flex gap-2">
                                     <input

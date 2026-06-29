@@ -226,7 +226,7 @@ export function PropertyDetailsPage() {
                             }}
                             viewTransition
                         >
-                            <Button className='text-xl py-3 w-full font-semibold' disabled={true}>
+                            <Button className='text-xl py-3 w-full font-semibold' disabled={numberOfNights === 0}>
                                 {numberOfNights > 0 ? 'Réserver maintenant' : 'Sélectionnez vos dates'}
                             </Button>
                         </Link>

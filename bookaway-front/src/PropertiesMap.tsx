@@ -22,7 +22,6 @@ export function PropertiesMap({ properties }: { properties: Property[] }) {
                         key={property.id}
                         position={[parseFloat(property.latitude), parseFloat(property.longitude)]}
                     >
-                        {/* On définit une largeur max pour que le popup ne s'étale pas */}
                         <Popup maxWidth={260} minWidth={260} className="property-popup">
                             <PropertyMiniCard property={property} />
                         </Popup>

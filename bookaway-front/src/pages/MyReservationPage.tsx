@@ -10,7 +10,7 @@ interface Booking {
     start_date: string;
     end_date: string;
     total_price: number;
-    property: Property; 
+    property: Property;
 }
 
 export function MyReservationsPage() {
@@ -34,7 +34,7 @@ export function MyReservationsPage() {
     return (
         <>
             <Banner title="Mes réservations" />
-            
+
             <main className="max-w-6xl mx-auto p-6">
                 {bookings.length === 0 ? (
                     <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
@@ -51,24 +51,22 @@ export function MyReservationsPage() {
                             const firstImage = booking.property.images?.[0]?.url;
 
                             return (
-                                <div 
-                                    key={booking.id} 
+                                <div
+                                    key={booking.id}
                                     className="flex flex-col sm:flex-row bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                                 >
-                                    {/* Image du logement */}
                                     <div className="sm:w-64 h-48 sm:h-auto relative shrink-0">
-                                        <img 
-                                            src={firstImage} 
+                                        <img
+                                            src={firstImage}
                                             alt={booking.property.title}
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
 
-                                    {/* Infos de la réservation */}
                                     <div className="flex-1 p-6 flex flex-col justify-between space-y-4">
                                         <div className="space-y-2">
                                             <div className="flex items-start justify-between gap-4">
-                                                <Link 
+                                                <Link
                                                     to={`/property/${booking.property.id}`}
                                                     className="text-xl font-bold text-gray-900 hover:text-blue-600 transition line-clamp-1"
                                                 >
@@ -91,9 +89,8 @@ export function MyReservationsPage() {
                                             </div>
                                         </div>
 
-                                        {/* Actions */}
                                         <div className="flex justify-end pt-2 border-t border-gray-50">
-                                            <Link 
+                                            <Link
                                                 to={`/property/${booking.property.id}`}
                                                 className="text-sm font-semibold text-blue-600 hover:text-blue-800 underline"
                                             >

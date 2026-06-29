@@ -182,7 +182,6 @@ export function SearchPage() {
                 </>
             ) : (
                 <div className="h-[70vh] rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
-                    {/* Tous les logements restent affichés sur la map */}
                     <PropertiesMap properties={properties} />
                 </div>
             )}

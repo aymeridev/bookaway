@@ -21,8 +21,6 @@ export function PriceStep({ form }: { form: UseFormReturn<PropertyForm, any, Pro
                 placeholder="Prix en €"
                 type="number"
                 min={1} max={999} />
-
-            {/* TODO: ajouter un exemple */}
         </>
     )
 }
