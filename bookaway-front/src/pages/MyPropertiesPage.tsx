@@ -4,6 +4,7 @@ import Button from "../components/ui/Button";
 import { useLoaderData, useNavigate, Link } from "react-router";
 import type { Property } from "../types";
 import { PropertyCard } from "./SearchPage";
+import { Card } from "../components/Card";
 
 export function MyPropertiesPage() {
     const properties: Property[] = useLoaderData();
@@ -20,21 +21,16 @@ export function MyPropertiesPage() {
                         <p className="text-sm text-gray-500">Gérez, modifiez et visualisez les logements que vous louez.</p>
                     </div>
 
-                    <Button
-                        onClick={() => {
-                            navigate("/new-property", {
-                                viewTransition: true
-                            })
-                        }}
-                        className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 active:scale-95"
-                    >
-                        <PlusCircle className="w-5 h-5" />
-                        Nouveau logement
+                    <Button asChild>
+                        <Link to={"/new-property"} viewTransition={true}>
+                            <PlusCircle className="w-5 h-5" />
+                            Nouveau logement
+                        </Link>
                     </Button>
                 </div>
 
                 {properties.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center text-center p-12 bg-white border border-gray-200 rounded-2xl shadow-sm max-w-md mx-auto mt-8 space-y-4">
+                    <Card className="flex flex-col items-center justify-center text-center max-w-md mx-auto mt-8 space-y-4">
                         <div className="p-4 bg-blue-50 rounded-full text-blue-600">
                             <Home className="w-8 h-8" />
                         </div>
@@ -44,13 +40,7 @@ export function MyPropertiesPage() {
                                 Vous n'avez pas encore mis de propriété en location sur notre plateforme.
                             </p>
                         </div>
-                        <Link
-                            to="/new-property"
-                            className="inline-block text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl shadow-sm transition"
-                        >
-                            Créer ma première annonce
-                        </Link>
-                    </div>
+                    </Card>
                 ) : (
                     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {properties.map((property) => (

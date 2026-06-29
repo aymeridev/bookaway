@@ -46,23 +46,19 @@ export function MessagesPage() {
         return String(currentUser?.id) === String(conv.user_id) ? conv.owner : conv.user;
     };
 
-    // Faire défiler automatiquement le chat vers le bas lors d'un nouveau message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Déclenché dès qu'on change de conversation active
     useEffect(() => {
         scrollToBottom();
 
         if (!activeChatId) return;
 
-        // 1. Appel API pour mettre à jour la base de données
         api.post(`/conversations/${activeChatId}/read`).catch(err =>
             console.error("Erreur marquage lu", err)
         );
 
-        // 2. Mise à jour de l'état React pour faire disparaître la pastille rouge immédiatement
         setConversations(prev =>
             prev.map(conv =>
                 conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
@@ -70,7 +66,6 @@ export function MessagesPage() {
         );
     }, [activeChatId]);
 
-    // Action d'envoi de message à l'API Laravel
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!newMessage.trim() || !activeChatId || !currentUser) return;
@@ -82,7 +77,6 @@ export function MessagesPage() {
 
             const createdMessage: ChatMessage = res.data;
 
-            // Mettre à jour l'état local instantanément pour éviter les latences de rechargement
             setConversations(prevConversations =>
                 prevConversations.map(conv => {
                     if (conv.id === activeChatId) {

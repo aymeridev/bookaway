@@ -1,9 +1,10 @@
 import { useLoaderData, Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MapPin, Receipt } from "lucide-react";
+import { Calendar, Receipt } from "lucide-react";
 import { Banner } from "../components/Banner";
 import type { Property } from "../types";
+import Button from "../components/ui/Button";
 
 interface Booking {
     id: number;
@@ -39,9 +40,11 @@ export function MyReservationsPage() {
                 {bookings.length === 0 ? (
                     <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
                         <p className="text-gray-500 text-lg">Vous n'avez effectué aucune réservation pour le moment.</p>
-                        <Link to="/" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-blue-700 transition">
-                            Explorer les logements
-                        </Link>
+                        <Button asChild>
+                            <Link to="/">
+                                Explorer les logements
+                            </Link>
+                        </Button>
                     </div>
                 ) : (
                     <div className="space-y-6">
