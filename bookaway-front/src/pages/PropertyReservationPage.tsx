@@ -130,50 +130,52 @@ export function PropertyReservationPage() {
                             <Input
                                 label="Nom sur la carte"
                                 required
-                                type="text"
+                                autoComplete="cc-name"
                                 value={cardHolderName}
                                 onChange={(e) => setCardHolderName(e.target.value)}
                                 placeholder="John Doe"
-                                className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
                             />
 
                             <Input
                                 required
+                                autoComplete="cc-number"
                                 label="Numéro de carte"
                                 type="text"
-                                maxLength={16}
+                                inputMode="numeric"
+                                pattern="[\d ]{13,19}"
                                 value={cardNumber}
                                 onChange={(e) => setCardNumber(e.target.value)}
                                 placeholder="0000 0000 0000 0000"
-                                className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
                             />
 
                             <div className="grid grid-cols-2 gap-4">
                                 <Input
                                     label="Expiration"
+                                    autoComplete="cc-exp"
+                                    inputMode="numeric"
+                                    maxLength={5}
                                     required
-                                    type="text"
                                     value={expirationDate}
                                     onChange={(e) => setExpirationDate(e.target.value)}
                                     placeholder="MM/AA"
-                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
                                 />
                                 <Input
                                     required
                                     label="Code CVC"
+                                    autoComplete="cc-cvv"
                                     type="text"
-                                    maxLength={3}
+                                    inputMode="numeric"
+                                    pattern="[0-9]{3,4}"
+                                    maxLength={4}
                                     value={cvv}
                                     onChange={(e) => setCvv(e.target.value)}
                                     placeholder="123"
-                                    className="w-full p-3 border rounded-xl outline-none focus:border-indigo-500 transition"
                                 />
                             </div>
 
                             <Button
                                 disabled={isSubmitting}
                                 isLoading={isSubmitting}
-                                className={`w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center py-4 font-bold rounded-xl hover:shadow-lg hover:opacity-95 transition-all cursor-pointer ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 Confirmer et payer {totals.grandTotal}€
                             </Button>
