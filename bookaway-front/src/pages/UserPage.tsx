@@ -12,6 +12,7 @@ export function UserPage() {
         <>
             <Button variant="flat" onClick={() => navigate(-1)}>Retour</Button>
             <h1 className="text-title-large">Profil</h1>
+            <div aria-hidden="true" className="rounded-full size-32 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}")` }}></div>
             {properties.length > 0 && (
                 <>
                     <h2 className="text-title-medium">Les annonces de {user.name}</h2>

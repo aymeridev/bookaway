@@ -26,6 +26,17 @@ export type Property = {
     bookings?: any[];
     user_id?: number;
     user?: User;
+    ratings_avg: number;
+    ratings: {
+        id: number;
+        created_at: string;
+        stars: number;
+        user_id: number;
+        author: {
+            id: number;
+            name: string;
+        }
+    }[]
 }
 
 export type PropertyImage = {

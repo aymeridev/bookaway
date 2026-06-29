@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
-import { differenceInDays, parseISO, eachDayOfInterval } from "date-fns";
+import { differenceInDays, parseISO, eachDayOfInterval, formatDate } from "date-fns";
 import Button from '../components/ui/Button';
 import { ArrowLeft, Map, SquarePen, Star } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
@@ -14,6 +14,7 @@ import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
 import type { Property } from '../types';
 import { Card } from '../components/Card';
 import useAuthStore from '../context/AuthStore';
+import { frCA } from 'date-fns/locale';
 
 export function PropertyDetailsPage() {
     const property: Property = useLoaderData();
@@ -130,7 +131,8 @@ export function PropertyDetailsPage() {
                     {property.user && (
                         <Card className="p-6">
                             <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-gray-800">
+                                <h3 className="flex items-center gap-4 text-lg font-semibold text-gray-800">
+                                    <div aria-hidden="true" className="rounded-full size-8 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${property.id}")` }}></div>
                                     Logement proposé par {property.user.name}
                                 </h3>
                                 <Link to={`/user/${property.user.id}`} viewTransition>
@@ -154,18 +156,20 @@ export function PropertyDetailsPage() {
                     </div>
 
                     <Card>
-                        <h2 className='text-title-medium'>Avis (100)</h2>
-                        <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> 4.5</h3>
-                        <ul>
-                            <li className='max-w-xs'>
+                        <h2 className='text-title-medium'>Avis ({property.ratings.length})</h2>
+                        <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> {property.ratings_avg}</h3>
+                        <ul className='grid grid-cols-2 gap-4'>
+                            {property.ratings.map((rating) => (<li className='max-w-xs'>
                                 <Card>
                                     <div className="flex items-center gap-2 justify-center">
-                                        <span className='font-semibold'>Nom Prénom</span>
-                                        <span className='flex'><Star /> 4/5</span>
+                                        <div aria-hidden="true" className="rounded-full size-6 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
+                                        <span className='font-semibold'>{rating.author.name}</span>
+                                        <span className='flex'><Star fill="currentColor" /> {rating.stars}/5</span>
                                     </div>
                                     <p className='text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga aut cupiditate voluptatem incidunt illo dolore, id minima dolor ab sunt.</p>
+                                    <span className='text-base-content/60'>Avis laissé en {formatDate(rating.created_at, "MMMM yyyy", { locale: frCA })}</span>
                                 </Card>
-                            </li>
+                            </li>))}
                         </ul>
                         <Link to={`/property/${property.id}/rate`}>
                             <Button>Donner son avis</Button>

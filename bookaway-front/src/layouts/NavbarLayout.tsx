@@ -36,11 +36,11 @@ export function NavbarLayout() {
         };
 
         fetchNotifications();
-        
+
         const interval = setInterval(fetchNotifications, 30000);
         return () => clearInterval(interval);
 
-    }, [isAuthenticated, location]); 
+    }, [isAuthenticated, location]);
 
     return (
         <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh">
@@ -142,9 +142,8 @@ function ProfileButton() {
             <li ref={menuRef} className="relative">
                 <button onClick={() => {
                     setShowDetails(!showDetails);
-                }} className="flex border border-transparent hover:border-blue-100 p-2 rounded-lg">
-                    <User />
-                    <span>{user?.name}</span>
+                }} className="flex border border-transparent hover:bg-blue-100 p-2 rounded-lg">
+                    <div aria-hidden="true" className="rounded-full size-8" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}")` }}></div>
                     <ChevronDown className={showDetails ? "rotate-180" : ""} />
                 </button>
                 {showDetails && <div className="bg-base-200 text-base-content rounded-xl shadow-xl absolute top-10 right-0 min-w-xs z-20">
