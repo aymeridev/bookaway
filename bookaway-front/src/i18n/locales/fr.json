@@ -7,6 +7,7 @@
     "camping": "Camping",
     "previous": "Précedent",
     "step": "Etape",
+    "next": "Suivant",
     "header": {
         "reservations": "Mes réservations",
         "accommodation": "Mes logements",
@@ -31,12 +32,15 @@
         "accommodation": "Mes logements",
         "announcements": "Vos annonces actives",
         "new-accommodation": "Nouveau logement",
-        "create-accommodation": "Ajouter un logement",
+        "add-accommodation": "Ajouter un logement",
         "management-accommodation": "Gérez, modifiez et visualisez les logements que vous louez.",
         "none-accommodation": "Aucun logement enregistré",
         "none-location-platform": "Vous n'avez pas encore mis de propriété en location sur notre plateforme.",
         "first-announcement": "Créer ma première annonce",
-        "title-description": "Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme."
+        "title-description": "Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme.",
+        "success-accommodation": "Votre logement a été créé avec succès!",
+        "create-accommodation": "Créer le logement",
+        "loading": "Chargement de vos logements..."
     },
     "reservations": {
         "reservations":"Mes réservations",
@@ -44,12 +48,19 @@
         "total-amount": "Montant total",
         "see-accommodation": "voir le logement",
         "from": "Du",
-        "to" : "au"
+        "to" : "au",
+        "contact-host": "Contacter l'hôte",
+        "view-booking": "Voir la réservation",
+        "explore-properties": "Explorer les logements",
+        "no-reservations": "Vous n'avez effectué aucune réservation pour le moment.",
+        "loading": "Chargement de vos réservations..."
     },
     "state": {
-        "forthcoming": "A venir",
-        "progress": "En cours",
-        "finished": "Terminé"
+        "cancelled": "Annulé",
+        "pending": "En attente",
+        "forthcoming": "À venir",
+        "finished": "Terminé",
+        "progress": "En cours"
     },
     "properties-edit": {
         "location": "Localisation du logement",
@@ -82,5 +93,51 @@
         "camera": "Caméra de surveillance",
         "pool": "Piscine",
         "parking": "Parking"
+    },
+    "accommodation-edit": {
+        "title": "Modifier le logement",
+        "save": "Sauvegarder les modifications",
+        "delete": "Supprimer",
+        "delete-confirm": "Êtes-vous sûr de vouloir supprimer ce logement ?"
+    },
+    "home-page": {
+        "loading": "Recherche de vos vacances en cours...",
+        "title": "Vos prochaines vacances commencent aujourd'hui",
+        "subtitle": "avec BookAway",
+        "search-label": "Rechercher mon séjour :"
+    },
+    "login-page": {
+        "title": "Connexion à BookAway",
+        "error-invalid": "Identifiants incorrects. Veuillez réessayer.",
+        "label-email": "Adresse e-mail",
+        "label-password": "Mot de passe",
+        "button-submit": "Se connecter",
+        "no-account": "Pas encore de compte ?",
+        "register-link": "Inscrivez-vous gratuitement"
+    },
+    "chat-page": {
+        "loading": "Chargement de vos messages...",
+        "title": "Messages",
+        "no-discussions": "Aucune discussion pour le moment.",
+        "start-discussion": "Démarrer la discussion...",
+        "subject": "Sujet :",
+        "booking-cancelled": "Réservation annulée",
+        "cancelled-description": "La réservation pour ce logement a été annulée.",
+        "cancellation-reason": "Motif :",
+        "placeholder-input": "Écrivez votre message ici...",
+        "select-discussion": "Sélectionnez une discussion pour commencer à échanger"
+    },
+    "profile-page": {
+        "loading": "Chargement des données utilisateur...",
+        "unauthenticated": "Veuillez vous connecter pour accéder à cette page.",
+        "banner-title": "Mon Profil",
+        "personal-info": "Informations personnelles",
+        "name": "Nom :",
+        "email": "Email :",
+        "member-since": "Membre depuis {{date}}",
+        "my-bookings": "Mes Réservations",
+        "from": "Du",
+        "to": "au",
+        "no-bookings": "Vous n'avez pas encore de réservations."
     }
 }

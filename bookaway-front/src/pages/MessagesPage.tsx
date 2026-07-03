@@ -1,17 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { fr } from "date-fns/locale";
 import { Send, Home, MessageSquare, Loader2, XCircle } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
 import { useConversations } from "../hooks/apiHooks";
 import type { Conversation, ChatMessage } from "../types";
+import { useTranslation } from "react-i18next";
+import { fr, enUS } from "date-fns/locale";
 
 export function MessagesPage() {
     const { data: conversationsData, isLoading } = useConversations();
     const currentUser = useAuthStore((state) => state.user);
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
 
     const [searchParams, setSearchParams] = useSearchParams();
     const paramId = searchParams.get("conversation_id");
@@ -95,7 +98,7 @@ export function MessagesPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                 <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-                <p className="text-gray-500 font-medium">Chargement de vos messages...</p>
+                <p className="text-gray-500 font-medium">{t("chat-page.loading")}</p>
             </div>
         );
     }
@@ -108,14 +111,14 @@ export function MessagesPage() {
                     <div className="p-4 border-b border-gray-200 bg-white">
                         <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                             <MessageSquare className="w-5 h-5 text-blue-600" />
-                            Messages
+                            {t("chat-page.title")}
                         </h1>
                     </div>
 
                     <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
                         {conversations.length === 0 ? (
                             <div className="p-6 text-center text-sm text-gray-500">
-                                Aucune discussion pour le moment.
+                                {t("chat-page.no-discussions")}
                             </div>
                         ) : (
                             conversations.map((conv) => {
@@ -152,7 +155,7 @@ export function MessagesPage() {
                                                 </span>
                                                 {lastMsg && (
                                                     <span className="text-xs text-gray-400 shrink-0">
-                                                        {formatDistanceToNow(parseISO(lastMsg.created_at), { addSuffix: false, locale: fr })}
+                                                       {formatDistanceToNow(parseISO(lastMsg.created_at), { addSuffix: false, locale: currentLocale })}
                                                     </span>
                                                 )}
                                             </div>
@@ -164,7 +167,7 @@ export function MessagesPage() {
                                             <p className={`text-sm truncate ${
                                                 conv.booking?.status === "cancelled" ? "text-red-400/80 italic" : "text-gray-500"
                                             }`}>
-                                                {lastMsg ? lastMsg.content : "Démarrer la discussion..."}
+                                               {lastMsg ? lastMsg.content : t("chat-page.start-discussion")}
                                             </p>
                                         </div>
                                     </button>
@@ -185,7 +188,7 @@ export function MessagesPage() {
                                             {getInterlocutor(activeConversation).name}
                                         </h3>
                                         <p className="text-xs text-gray-500">
-                                            Sujet : {activeConversation.property?.title}
+                                            {t("chat-page.subject")} {activeConversation.property?.title}
                                         </p>
                                     </div>
                                 </div>
@@ -197,12 +200,12 @@ export function MessagesPage() {
                                         <XCircle className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 text-sm text-red-800">
-                                        <p className="font-bold">Réservation annulée</p>
+                                        <p className="font-bold">{t("chat-page.booking-cancelled")}</p>
                                         <p className="mt-1 text-red-700 leading-relaxed">
-                                            La réservation pour ce logement a été annulée.
+                                            {t("chat-page.cancelled-description")}
                                             {activeConversation.booking.cancellation_reason && (
                                                 <span className="block mt-1 text-red-600 italic">
-                                                    Motif : "{activeConversation.booking.cancellation_reason}"
+                                                    {t("chat-page.cancellation-reason")} "{activeConversation.booking.cancellation_reason}"
                                                 </span>
                                             )}
                                         </p>
@@ -227,7 +230,7 @@ export function MessagesPage() {
                                             >
                                                 <p className="whitespace-pre-wrap">{msg.content}</p>
                                                 <p className={`text-[10px] mt-1 text-right ${isMe ? "text-blue-100" : "text-gray-400"}`}>
-                                                    {formatDistanceToNow(parseISO(msg.created_at), { addSuffix: true, locale: fr })}
+                                                    {formatDistanceToNow(parseISO(msg.created_at), { addSuffix: true, locale: currentLocale })}
                                                 </p>
                                             </div>
                                         </div>
@@ -239,7 +242,7 @@ export function MessagesPage() {
                                 <div className="flex gap-2">
                                     <Input
                                         type="text"
-                                        placeholder="Écrivez votre message ici..."
+                                        placeholder={t("chat-page.placeholder-input")}
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         className="flex-1"
@@ -256,7 +259,7 @@ export function MessagesPage() {
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-gray-400 bg-gray-50/20 p-8">
                             <MessageSquare className="w-16 h-16 text-gray-200 mb-2" />
-                            <p className="font-medium">Sélectionnez une discussion pour commencer à échanger</p>
+                            <p className="font-medium">{t("chat-page.select-discussion")}</p>
                         </div>
                     )}
                 </div>

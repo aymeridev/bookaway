@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 import { Calendar, MessageSquare, Receipt, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
@@ -9,29 +9,31 @@ import { useMyReservations } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 
 export function MyReservationsPage() {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
+
     const { data: bookingsData, isLoading } = useMyReservations();
     const bookings = bookingsData || [];
 
     if (isLoading) {
         return (
             <>
-                <Banner title="Mes réservations" />
+                <Banner title={t("reservations.reservations")} />
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-                    <p className="text-gray-500 font-medium">Chargement de vos réservations...</p>
+                    <p className="text-gray-500 font-medium">{t("reservations.loading")}</p>
                 </div>
             </>
         );
     }
-    const { t } = useTranslation();
 
     // Fonction pour générer un badge de statut dynamique
     const getStatusBadge = (status: string, startDateStr: string, endDateStr: string) => {
         if (status === "cancelled") {
-            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-600 border border-red-200">Annulé</span>;
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-600 border border-red-200">{t("state.cancelled")}</span>;
         }
         if (status === "pending") {
-            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200">En attente</span>;
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200">{t("state.pending")}</span>;
         }
 
         const today = new Date();
@@ -54,10 +56,10 @@ export function MyReservationsPage() {
             <main className="max-w-6xl mx-auto p-6">
                 {bookings.length === 0 ? (
                     <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
-                        <p className="text-gray-500 text-lg">Vous n'avez effectué aucune réservation pour le moment.</p>
+                        <p className="text-gray-500 text-lg">{t("reservations.no-reservations")}</p>
                         <Button asChild>
                             <Link to="/">
-                                Explorer les logements
+                                {t("reservations.explore-properties")}
                             </Link>
                         </Button>
                     </div>
@@ -97,7 +99,7 @@ export function MyReservationsPage() {
                                                 <div className="flex items-center gap-2">
                                                     <Calendar className="w-4 h-4 text-gray-400" />
                                                     <span>
-                                                        {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: fr })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: fr })}
+                                                        {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: currentLocale })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: currentLocale })}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -107,18 +109,18 @@ export function MyReservationsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex justify-end pt-2 border-t border-gray-50">
+                                        <div className="flex justify-end pt-2 border-t border-gray-50 gap-2">
                                             <Button variant="flat" asChild>
                                                 <Link to={"/messages"} viewTransition={true}>
                                                     <MessageSquare />
-                                                    Contacter l'hôte
+                                                    {t("reservations.contact-host")}
                                                 </Link>
                                             </Button>
                                             <Button asChild>
                                                 <Link
                                                     to={`/reservation/${booking.id}`} viewTransition={true}
                                                 >
-                                                    Voir la reservation
+                                                    {t("reservations.view-booking")}
                                                 </Link>
                                             </Button>
                                         </div>

@@ -1,12 +1,15 @@
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 import { Banner } from "../components/Banner";
-
 import { useUserProfile } from "../hooks/apiHooks";
+import { useTranslation } from "react-i18next";
 
 export function ProfilePage() {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
+
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const user = useAuthStore((state) => state.user);
     
@@ -14,33 +17,33 @@ export function ProfilePage() {
     const bookings = profileData?.bookings || [];
 
     if ((isAuthenticated && !user) || isProfileLoading) {
-        return <p>Chargement des données utilisateur...</p>;
+        return <p>{t("profile-page.loading")}</p>;
     }
 
     if (!isAuthenticated) {
-        return <p>Veuillez vous connecter pour accéder à cette page.</p>;
+        return <p>{t("profile-page.unauthenticated")}</p>;
     }
 
     return <>
-        <Banner title="Mon Profil" />
+        <Banner title={t("profile-page.banner-title")} />
         <div className="max-w-4xl mx-auto p-8">
 
             {user && <Card>
-                <h2 className="text-xl font-semibold mb-4 border-b border-b-gray-230 pb-2">Informations personnelles</h2>
+                <h2 className="text-xl font-semibold mb-4 border-b border-b-gray-230 pb-2">{t("profile-page.personal-info")}</h2>
                 <div className="space-y-2">
-                    <p><span className="font-bold">Nom :</span> {user.name}</p>
-                    <p><span className="font-bold">Email :</span> {user.email}</p>
+                    <p><span className="font-bold">{t("profile-page.name")}</span> {user.name}</p>
+                    <p><span className="font-bold">{t("profile-page.email")}</span> {user.email}</p>
                     <p>
                         <span className="font-bold">
-                            Membre depuis {format(user.created_at, "PPP", {
-                                locale: fr
+                            {t("profile-page.member-since", {
+                                date: format(new Date(user.created_at), "PPP", { locale: currentLocale })
                             })}
                         </span>
                     </p>
                 </div>
             </Card>}
 
-            <h2 className="text-2xl font-bold mb-4">Mes Réservations</h2>
+            <h2 className="text-2xl font-bold mb-4 mt-8">{t("profile-page.my-bookings")}</h2>
             <div className="grid gap-4">
                 {bookings.length > 0 ? (
                     bookings.map((booking: any) => (
@@ -48,7 +51,7 @@ export function ProfilePage() {
                             <div>
                                 <h3 className="font-bold text-blue-600">{booking.property?.title}</h3>
                                 <p className="text-sm text-gray-600">
-                                    Du {new Date(booking.start_date).toLocaleDateString('fr-FR')} au {new Date(booking.end_date).toLocaleDateString('fr-FR')}
+                                    {t("profile-page.from")} {format(new Date(booking.start_date), "dd/MM/yyyy")} {t("profile-page.to")} {format(new Date(booking.end_date), "dd/MM/yyyy")}
                                 </p>
                             </div>
                             <div className="text-right">
@@ -60,7 +63,7 @@ export function ProfilePage() {
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500 italic">Vous n'avez pas encore de réservations.</p>
+                    <p className="text-gray-500 italic">{t("profile-page.no-bookings")}</p>
                 )}
             </div>
         </div>
