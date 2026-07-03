@@ -109,7 +109,7 @@ export function SearchPage() {
                     >
                         <List size={18} />
                         {t("search.view-list")}
-                    </button>
+                    </Button>
 
                     <Button
                         variant="flat"
@@ -121,7 +121,7 @@ export function SearchPage() {
                     >
                         <Map size={18} />
                         {t("search.view-map")}
-                    </button>
+                    </Button>
                 </div>
             </header>
 

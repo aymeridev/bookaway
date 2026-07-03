@@ -290,7 +290,16 @@
     "user-page": {
         "loading": "Loading profile...",
         "back": "Back",
-        "title": "Profile",
-        "user-listings": "{{name}}'s listings"
+        "role-host": "Host",
+        "role-verified-host": "Verified Host",
+        "role-traveler": "Traveler",
+        "member-since": "Member since",
+        "not-available": "N/A",
+        "label-listings": "Listings",
+        "listings-count": "{{count}} listing published",
+        "listings-count_other": "{{count}} listings published",
+        "user-listings": "{{name}}'s listings",
+        "no-listings-title": "No listings published",
+        "no-listings-desc": "{{name}} has not offered any accommodation on the platform yet."
     }
 }

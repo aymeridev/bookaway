@@ -5,7 +5,7 @@ import { useUserProfile, useUserProperties } from "../hooks/apiHooks";
 import { Loader2, ArrowLeft, Calendar, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 
 export function UserPage() {
     const { id } = useParams<{ id: string }>();
@@ -13,7 +13,10 @@ export function UserPage() {
     const { data: propertiesData, isLoading: isPropertiesLoading } = useUserProperties(id);
     const properties = propertiesData || [];
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+
+    const isFrench = i18n.language.startsWith("fr");
+    const dfLocale = isFrench ? dfFr : dfEnUS;
 
     if (isUserLoading || isPropertiesLoading || !user) {
         return (
@@ -35,7 +38,7 @@ export function UserPage() {
                     className="group flex items-center gap-2 text-gray-500 hover:text-primary dark:hover:text-primary transition-colors text-sm font-semibold p-2"
                 >
                     <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
-                    Retour
+                    {t("user-page.back")}
                 </Button>
             </div>
 
@@ -57,7 +60,7 @@ export function UserPage() {
                             </div>
                             {user.owner && (
                                 <span className="absolute bottom-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md border border-white dark:border-base-200">
-                                    Hôte
+                                    {t("user-page.role-host")}
                                 </span>
                             )}
                         </div>
@@ -68,22 +71,23 @@ export function UserPage() {
                         </h2>
                         
                         <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-6">
-                            {user.owner ? "Hôte Vérifié" : "Voyageur"}
+                            {user.owner ? t("user-page.role-verified-host") : t("user-page.role-traveler")}
                         </p>
 
                         <div className="w-full border-b border-base-300 dark:border-gray-800 mb-6" />
 
                         {/* Detailed information list */}
                         <div className="w-full space-y-4 text-left">
-
                             <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                 <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shrink-0">
                                     <Calendar className="size-4" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Membre depuis</p>
+                                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                                        {t("user-page.member-since")}
+                                    </p>
                                     <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                        {user.created_at ? format(new Date(user.created_at), "PPP", { locale: fr }) : "N/A"}
+                                        {user.created_at ? format(new Date(user.created_at), "PPP", { locale: dfLocale }) : t("user-page.not-available")}
                                     </p>
                                 </div>
                             </div>
@@ -94,9 +98,11 @@ export function UserPage() {
                                         <Building className="size-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Logements</p>
+                                        <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                                            {t("user-page.label-listings")}
+                                        </p>
                                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                            {properties.length} {properties.length > 1 ? "annonces publiées" : "annonce publiée"}
+                                            {t("user-page.listings-count", { count: properties.length })}
                                         </p>
                                     </div>
                                 </div>
@@ -110,7 +116,7 @@ export function UserPage() {
                     <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl h-full flex flex-col">
                         <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 flex items-center gap-2 pb-4 border-b border-base-300 dark:border-gray-800">
                             <Building className="size-6 text-primary" />
-                            Les annonces de {user.name}
+                            {t("user-page.user-listings", { name: user.name })}
                         </h2>
                         
                         {properties.length > 0 ? (
@@ -124,9 +130,11 @@ export function UserPage() {
                                 <div className="size-16 rounded-full bg-gray-50 dark:bg-base-300 flex items-center justify-center text-gray-400 mb-4">
                                     <Building className="size-8" />
                                 </div>
-                                <p className="text-gray-800 dark:text-gray-200 font-semibold mb-1">Aucune annonce publiée</p>
+                                <p className="text-gray-800 dark:text-gray-200 font-semibold mb-1">
+                                    {t("user-page.no-listings-title")}
+                                </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
-                                    {user.name} n'a pas encore proposé d'hébergements sur la plateforme.
+                                    {t("user-page.no-listings-desc", { name: user.name })}
                                 </p>
                             </div>
                         )}

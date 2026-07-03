@@ -290,7 +290,16 @@
     "user-page": {
         "loading": "Chargement du profil...",
         "back": "Retour",
-        "title": "Profil",
-        "user-listings": "Les annonces de {{name}}"
+        "role-host": "Hôte",
+        "role-verified-host": "Hôte Vérifié",
+        "role-traveler": "Voyageur",
+        "member-since": "Membre depuis",
+        "not-available": "N/A",
+        "label-listings": "Logements",
+        "listings-count": "{{count}} annonce publiée",
+        "listings-count_other": "{{count}} annonces publiées",
+        "user-listings": "Les annonces de {{name}}",
+        "no-listings-title": "Aucune annonce publiée",
+        "no-listings-desc": "{{name}} n'a pas encore proposé d'hébergements sur la plateforme."
     }
 }
