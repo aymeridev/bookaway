@@ -1,18 +1,20 @@
 import { DayPicker, type DateRange } from "react-day-picker";
 import "react-day-picker/style.css";
-import { useEffect, useRef, useState, type SubmitEvent } from "react";
-import { fr } from "react-day-picker/locale";
+import { useEffect, useRef, useState } from "react";
+import { fr as dpFr, enUS as dpEnUS } from "react-day-picker/locale";
 import { format, parseISO } from "date-fns";
-import { fr as fnsFR } from "date-fns/locale";
+import { fr as fnsFr, enUS as fnsEnUS } from "date-fns/locale";
 import { useNavigate, useSearchParams } from "react-router";
 import { Map, MapPin, Minus, Plus, Search, Users, Loader2 } from "lucide-react";
 import { useDebounce } from "./hooks/useDebounce";
 import { Card } from "./components/Card";
 import api from "./api/axios";
+import { useTranslation } from "react-i18next";
 
 export function SearchBar() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { t } = useTranslation();
 
     const initialTravelers = Number(
         searchParams.get("travelers") || 1
@@ -55,7 +57,7 @@ export function SearchBar() {
     const [destination, setDestination] =
         useState(initialDestination);
 
-    const handleSubmit = (e: SubmitEvent) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const params = new URLSearchParams({
@@ -105,7 +107,7 @@ export function SearchBar() {
                     <Users className="text-base-content shrink-0" />
                     <div className="flex flex-col">
                         <span className="font-bold text-sm whitespace-nowrap">
-                            Voyageurs
+                            {t("search-bar.travelers-label")}
                         </span>
                     </div>
                 </div>
@@ -137,9 +139,9 @@ export function SearchBar() {
                 </div>
             </div>
 
-            <button className="bg-primary text-primary-content rounded-xl md:rounded-full p-4 font-semibold cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 hover:bg-primary-hover active:scale-95 transition-all duration-150">
+            <button type="submit" className="bg-primary text-primary-content rounded-xl md:rounded-full p-4 font-semibold cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 hover:bg-primary-hover active:scale-95 transition-all duration-150">
                 <Search className="size-5" />
-                <span className="md:hidden">Rechercher</span>
+                <span>{t("search-bar.search-btn")}</span>
             </button>
         </form>
     );
@@ -163,6 +165,7 @@ function FormDestinationPart({
     const [isOpen, setIsOpen] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
+    const { t } = useTranslation();
 
     const debouncedSearch = useDebounce(value, 250);
     const [isSelecting, setIsSelecting] = useState(true);
@@ -302,7 +305,7 @@ function FormDestinationPart({
 
                 <div className="flex flex-col min-w-0 w-full">
                     <span className="font-bold text-sm">
-                        Destination
+                        {t("search-bar.destination-label")}
                     </span>
 
                     <input
@@ -325,7 +328,7 @@ function FormDestinationPart({
                         }}
                         onKeyDown={handleKeyDown}
                         type="text"
-                        placeholder="Rechercher une destination"
+                        placeholder={t("search-bar.destination-placeholder")}
                     />
                 </div>
             </div>
@@ -334,7 +337,7 @@ function FormDestinationPart({
                 <Card className="absolute text-base-content w-full md:min-w-[28rem] top-16 z-50 p-3 shadow-2xl border border-base-300 bg-base-200/95 backdrop-blur-md transition-all duration-200 animate-in fade-in slide-in-from-top-2 left-0 right-0">
                     <div className="flex items-center justify-between px-2 mb-2 pb-1 border-b border-base-300">
                         <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
-                            {isLoading ? "Recherche en cours..." : "Résultats de recherche"}
+                            {isLoading ? t("search-bar.searching-status") : t("search-bar.results-title")}
                         </span>
                         {isLoading && (
                             <Loader2 className="size-4 animate-spin text-primary" />
@@ -344,13 +347,13 @@ function FormDestinationPart({
                     {isLoading && results.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-6 gap-2 text-base-content/60">
                             <Loader2 className="size-8 animate-spin text-primary" />
-                            <span className="text-sm font-medium">Recherche de la destination...</span>
+                            <span className="text-sm font-medium">{t("search-bar.searching-box")}</span>
                         </div>
                     )}
 
                     {!isLoading && hasSearched && results.length === 0 && (
                         <div className="text-center py-6 text-base-content/60 text-sm font-medium">
-                            Aucun résultat trouvé pour "{value}"
+                            {t("search-bar.no-results", { value })}
                         </div>
                     )}
 
@@ -406,6 +409,11 @@ function FormDatePart({
 }) {
     const [openCalendar, setOpenCalendar] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const { t, i18n } = useTranslation();
+
+    const isFrench = i18n.language.startsWith("fr");
+    const fnsLocale = isFrench ? fnsFr : fnsEnUS;
+    const dpLocale = isFrench ? dpFr : dpEnUS;
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -432,21 +440,21 @@ function FormDatePart({
                 className="flex items-start flex-col bg-base-100 px-4 py-2.5 md:py-2 rounded-xl w-full text-left"
             >
                 <span className="font-bold text-sm">
-                    Dates
+                    {t("search-bar.dates-label")}
                 </span>
 
                 {selected?.from && selected.to ? (
                     <span className="text-sm">
                         {format(selected.from, "d MMM", {
-                            locale: fnsFR,
+                            locale: fnsLocale,
                         })}{" "}
                         -{" "}
                         {format(selected.to, "d MMM", {
-                            locale: fnsFR,
+                            locale: fnsLocale,
                         })}
                     </span>
                 ) : (
-                    <span className="text-sm text-base-content/60">Quand ?</span>
+                    <span className="text-sm text-base-content/60">{t("search-bar.dates-placeholder")}</span>
                 )}
             </button>
 
@@ -463,7 +471,7 @@ function FormDatePart({
                         timeZone="Europe/Paris"
                         selected={selected}
                         onSelect={onSelect}
-                        locale={fr}
+                        locale={dpLocale}
                         disabled={{ before: new Date() }}
                     />
                 </div>

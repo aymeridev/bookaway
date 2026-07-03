@@ -303,5 +303,17 @@
         "user-listings": "{{name}}'s listings",
         "no-listings-title": "No listings published",
         "no-listings-desc": "{{name}} has not offered any accommodation on the platform yet."
+    },
+    "search-bar": {
+        "travelers-label": "Travelers",
+        "search-btn": "Search",
+        "destination-label": "Destination",
+        "destination-placeholder": "Search a destination",
+        "searching-status": "Searching...",
+        "results-title": "Search results",
+        "searching-box": "Searching destination...",
+        "no-results": "No results found for \"{{value}}\"",
+        "dates-label": "Dates",
+        "dates-placeholder": "When?"
     }
 }
