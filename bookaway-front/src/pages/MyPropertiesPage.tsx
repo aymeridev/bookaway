@@ -8,6 +8,7 @@ import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 
 export function MyPropertiesPage() {
+    const { t } = useTranslation();
     const { data: propertiesData, isLoading } = useMyProperties();
     const properties = propertiesData || [];
     const { t } = useTranslation();

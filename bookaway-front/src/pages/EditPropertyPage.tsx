@@ -33,7 +33,7 @@ interface EditPropertyFormProps {
 }
 
 function EditPropertyForm({ property }: EditPropertyFormProps) {
-        const { t } = useTranslation();
+    const { t } = useTranslation();
     const form = useForm<PropertyForm>({
         defaultValues: {
             title: property.title || "",

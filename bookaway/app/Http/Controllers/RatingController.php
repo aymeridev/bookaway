@@ -45,6 +45,12 @@ class RatingController extends Controller
             ], 422);
         }
 
+        if ($validated['ratable_type'] === 'property' && $ratable->user_id == $request->user()->id) {
+            return response()->json([
+                'message' => 'Vous ne pouvez pas évaluer votre propre logement.'
+            ], 422);
+        }
+
         $rating = Rating::create([
             'user_id' => $request->user()->id,
             'stars' => $validated['stars'],

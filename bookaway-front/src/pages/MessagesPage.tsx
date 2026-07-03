@@ -34,6 +34,7 @@ export function MessagesPage() {
 
     useEffect(() => {
         if (conversationsData) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setConversations(
                 conversationsData.map(conv =>
                     conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv

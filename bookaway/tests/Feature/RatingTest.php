@@ -69,6 +69,24 @@ class RatingTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_host_cannot_rate_their_own_property(): void
+    {
+        $owner = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $owner->id,
+            'amenities' => [],
+        ]);
+
+        $response = $this->actingAs($owner, 'sanctum')->postJson('/api/ratings', [
+            'ratable_type' => 'property',
+            'ratable_id' => $property->id,
+            'stars' => 5,
+            'comment' => 'Mon logement est incroyable.',
+        ]);
+
+        $response->assertStatus(422);
+    }
+
     public function test_can_retrieve_ratings_for_property(): void
     {
         $user = User::factory()->create();
