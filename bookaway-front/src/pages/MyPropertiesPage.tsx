@@ -11,7 +11,6 @@ export function MyPropertiesPage() {
     const { t } = useTranslation();
     const { data: propertiesData, isLoading } = useMyProperties();
     const properties = propertiesData || [];
-    const { t } = useTranslation();
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50/50 pb-12">
