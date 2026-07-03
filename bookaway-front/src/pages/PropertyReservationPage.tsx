@@ -90,7 +90,7 @@ export function PropertyReservationPage() {
 
         } catch (error: any) {
             alert(`${t("property-reservation.error-prefix")}${error.message}`);
-        } finaly {
+        } finally {
             setIsSubmitting(false);
         }
     };
