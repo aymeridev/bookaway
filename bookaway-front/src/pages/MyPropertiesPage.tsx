@@ -2,10 +2,10 @@ import { PlusCircle, Home, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
 import { Link } from "react-router";
-import { PropertyCard } from "./SearchPage";
 import { Card } from "../components/Card";
 import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
+import { PropertyCard } from "../components/property/PropertyCard";
 
 export function MyPropertiesPage() {
     const { t } = useTranslation();

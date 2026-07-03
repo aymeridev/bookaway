@@ -184,7 +184,8 @@
         "total": "Total",
         "book-now": "Book now",
         "select-dates": "Select dates",
-        "no-charge-yet": "You won't be charged yet"
+        "no-charge-yet": "You won't be charged yet",
+        "login-required": "You must be logged in to book"
     },
     "property-reservation": {
         "no-booking-title": "No current booking",

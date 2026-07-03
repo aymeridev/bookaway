@@ -371,29 +371,39 @@ export function PropertyDetailsPage() {
                             </div>
                         </div>
 
-                        <Link
-                            to="/reservation"
-                            state={{
-                                property,
-                                dateRange: {
-                                    from: range?.from?.toISOString(),
-                                    to: range?.to?.toISOString()
-                                },
-                                totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
-                            }}
-                            viewTransition
-                            onClick={(e) => {
-                                if (numberOfNights === 0) {
-                                    e.preventDefault();
-                                }
-                            }}
-                        >
-                            <Button className='text-xl py-3 w-full font-semibold' disabled={numberOfNights === 0}>
-                                {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}
-                            </Button>
-                        </Link>
-
-                        <p className="text-center text-xs text-gray-400">{t("property-details.no-charge-yet")}</p>
+                        {!user ? (
+                            <>
+                                <Button className='text-xl py-3 w-full font-semibold' disabled>
+                                    {t("property-details.book-now")}
+                                </Button>
+                                <p className="text-center text-sm text-amber-600 font-medium">{t("property-details.login-required")}</p>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/reservation"
+                                    state={{
+                                        property,
+                                        dateRange: {
+                                            from: range?.from?.toISOString(),
+                                            to: range?.to?.toISOString()
+                                        },
+                                        totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
+                                    }}
+                                    viewTransition
+                                    onClick={(e) => {
+                                        if (numberOfNights === 0) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    <Button className='text-xl py-3 w-full font-semibold' disabled={numberOfNights === 0}>
+                                        {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}
+                                    </Button>
+                                </Link>
+                                <p className="text-center text-xs text-gray-400">{t("property-details.no-charge-yet")}</p>
+                            </>
+                        )}
                     </Card>
                 </div>}
             </div>

@@ -1,11 +1,11 @@
 import { useParams, useNavigate } from "react-router";
-import { PropertyCard } from "./SearchPage";
 import Button from "../components/ui/Button";
 import { useUserProfile, useUserProperties } from "../hooks/apiHooks";
 import { Loader2, ArrowLeft, Calendar, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
+import { PropertyCard } from "../components/property/PropertyCard";
 
 export function UserPage() {
     const { id } = useParams<{ id: string }>();
