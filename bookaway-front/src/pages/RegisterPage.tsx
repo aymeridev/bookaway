@@ -4,22 +4,23 @@ import { useNavigate, Link } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
+import { useTranslation } from "react-i18next";
 import Button from "../components/ui/Button";
 
 export function RegisterPage() {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         firstname: "",
         lastname: "",
         email: "",
         password: "",
         password_confirmation: "",
-        owner: false // 1. Initialisation à false
+        owner: false
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const login = useAuthStore((state) => state.login)
-
+    const login = useAuthStore((state) => state.login);
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,16 +35,12 @@ export function RegisterPage() {
                 const token = response.data.token;
                 const userData = response.data.user;
 
-                console.log(token)
-                console.log(userData);
-
                 login(userData, token);
-
 
                 navigate("/", { viewTransition: true });
             }
         } catch (err: any) {
-            setError(err.response?.data?.message || "Erreur lors de l'inscription.");
+            setError(err.response?.data?.message || t("register.default-error"));
         }
     };
 
@@ -53,13 +50,13 @@ export function RegisterPage() {
 
             <Card className="z-10">
                 <form onSubmit={handleRegister}>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Créer un compte BookAway</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">{t("register.title")}</h2>
 
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
 
                     <div className="flex flex-col gap-3">
                         <Input
-                            label="Prénom"
+                            label={t("register.firstname-label")}
                             type="text"
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
@@ -67,7 +64,7 @@ export function RegisterPage() {
                         />
 
                         <Input
-                            label="Nom"
+                            label={t("register.lastname-label")}
                             type="text"
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
@@ -75,7 +72,7 @@ export function RegisterPage() {
                         />
 
                         <Input
-                            label="Email"
+                            label={t("register.email-label")}
                             type="email"
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -83,17 +80,16 @@ export function RegisterPage() {
                         />
 
                         <Input
-                            label="Mot de passe"
+                            label={t("register.password-label")}
                             type="password"
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                             required
                         />
 
-
                         <Input
                             type="password"
-                            label="Confirmer le mot de passe"
+                            label={t("register.confirm-password-label")}
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
                             required
@@ -108,20 +104,20 @@ export function RegisterPage() {
                                 onChange={(e) => setFormData({ ...formData, owner: e.target.checked })}
                             />
                             <label htmlFor="owner" className="text-sm text-gray-700 cursor-pointer select-none">
-                                <span className="font-bold block text-gray-800">Je suis un propriétaire</span>
-                                Je souhaite mettre mes logements en ligne sur BookAway.
+                                <span className="font-bold block text-gray-800">{t("register.owner-title")}</span>
+                                {t("register.owner-desc")}
                             </label>
                         </div>
 
-                        <Button type="submit" className="mt-4">
+                        <button type="submit" className="bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition mt-4">
                             S'inscrire
-                        </Button>
+                        </button>
                     </div>
 
                     <div className="mt-6 text-center text-sm text-gray-600 border-t pt-4">
-                        Déjà un compte ?{" "}
+                        {t("register.already-account")}{" "}
                         <Link to="/login" className="text-blue-600 font-bold hover:underline" viewTransition>
-                            Connectez-vous
+                            {t("register.login-link")}
                         </Link>
                     </div>
                 </form>

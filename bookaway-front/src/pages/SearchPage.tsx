@@ -5,12 +5,13 @@ import { useMemo, useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
 import { amenitiesIcon } from "../amenities";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
 import Button from "../components/ui/Button";
 import { useSearchProperties } from "../hooks/apiHooks";
 
 export function SearchPage() {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const { data: propertiesData, isLoading } = useSearchProperties(searchParams);
     const properties = propertiesData || [];
@@ -89,11 +90,11 @@ export function SearchPage() {
                         id="page-title"
                         className="text-3xl font-extrabold text-gray-900 tracking-tight"
                     >
-                        Nos meilleurs logements
+                        {t("search.page-title")}
                     </h1>
 
                     <p className="text-gray-500 mt-1">
-                        {nearbyProperties.length} hébergements trouvés
+                        {t("search.found-count", { count: nearbyProperties.length })}
                     </p>
                 </div>
 
@@ -107,7 +108,7 @@ export function SearchPage() {
                             }`}
                     >
                         <List size={18} />
-                        Liste
+                        {t("search.view-list")}
                     </Button>
 
                     <Button
@@ -119,7 +120,7 @@ export function SearchPage() {
                             }`}
                     >
                         <Map size={18} />
-                        Carte
+                        {t("search.view-map")}
                     </Button>
                 </div>
             </header>
@@ -128,7 +129,7 @@ export function SearchPage() {
                 <div className="flex flex-col items-center justify-center py-20">
                     <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     <p className="mt-4 text-gray-500">
-                        Recherche des logements...
+                        {t("search.loading")}
                     </p>
                 </div>
             ) : view === "list" ? (
@@ -152,7 +153,7 @@ export function SearchPage() {
                                 }
                                 disabled={currentPage === 1}
                             >
-                                Précédent
+                                {t("search.btn-prev")}
                             </Button>
 
                             {[...Array(totalPages)].map((_, i) => (
@@ -169,7 +170,6 @@ export function SearchPage() {
 
                             <Button
                                 variant="outline"
-
                                 onClick={() =>
                                     paginate(currentPage + 1)
                                 }
@@ -177,7 +177,7 @@ export function SearchPage() {
                                     currentPage === totalPages
                                 }
                             >
-                                Suivant
+                                {t("search.btn-next")}
                             </Button>
                         </div>
                     )}
@@ -197,6 +197,7 @@ export function PropertyCard({
     property: Property;
     numberOfNights: number;
 }) {
+    const { t } = useTranslation();
     const totalPrice =
         property.base_price + property.price_per_night * numberOfNights;
     const [searchParams] = useSearchParams();
@@ -255,7 +256,7 @@ export function PropertyCard({
 
                         {property.distance !== undefined && (
                             <p className="text-sm text-blue-600 font-medium">
-                                📍 {Number(property.distance).toFixed(1)} km
+                                {t("search.card-distance", { distance: Number(property.distance).toFixed(1) })}
                             </p>
                         )}
 
@@ -269,28 +270,27 @@ export function PropertyCard({
                                     </span>
                                 )
                             })}
-
                         </div>
                     </div>
 
                     <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-50">
-                        {numberOfNights > 0 && <div className="flex flex-col">
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-xl font-extrabold text-gray-900">
-                                    {totalPrice}€
-                                </span>
+                        {numberOfNights > 0 && (
+                            <div className="flex flex-col">
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-xl font-extrabold text-gray-900">
+                                        {totalPrice}€
+                                    </span>
 
-                                <span className="text-gray-500 text-xs">
-                                    / {numberOfNights} nuit
-                                    {numberOfNights > 1 ? "s" : ""}
-                                </span>
+                                    <span className="text-gray-500 text-xs">
+                                        {t("search.card-per-night", { count: numberOfNights })}
+                                    </span>
+                                </div>
                             </div>
-                        </div>}
-
+                        )}
 
                         <Button variant="flat" className="text-blue-600">
                             <ArrowRight />
-                            Voir le logement
+                            {t("search.card-view-btn")}
                         </Button>
                     </div>
                 </div>
