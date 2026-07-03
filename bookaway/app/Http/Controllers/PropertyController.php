@@ -16,6 +16,10 @@ class PropertyController extends Controller
     {
         $query = Property::query();
 
+        if ($request->user()) {
+            $query->where('user_id', '!=', $request->user()->id);
+        }
+
         if ($request->filled('travelers')) {
             $query->where('capacity', '>=', $request->travelers);
         }
