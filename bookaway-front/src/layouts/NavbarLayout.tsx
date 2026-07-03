@@ -46,104 +46,115 @@ export function NavbarLayout() {
         ? conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0)
         : 0;
 
+    const noBannerRoutes = [
+        "/search",
+        "/messages",
+        "/reservation",
+    ];
+    const isNoBannerRoute = noBannerRoutes.includes(location.pathname) || 
+        (location.pathname.startsWith("/property/") && !location.pathname.endsWith("/edit")) ||
+        location.pathname.startsWith("/user/");
+
     return (
-        <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh">
-            <nav ref={navRef} className="relative flex mx-4 mt-4 rounded-full p-3 bg-primary border-primary-content border-2 text-primary-content items-center justify-between shadow-md">
-                <div className="flex items-center gap-6">
-                    <Link to={"/"} className="block" viewTransition>
-                        <div
-                            className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
-                            aria-label="Retour à l'accueil"
-                        ></div>
-                    </Link>
-                    {isAuthenticated && (
-                        <ul className="hidden md:flex gap-1">
-                            <ListNavLink to={"/my-reservations"}>
-                                <Calendar />
-                                {t("header.reservations")}
-                            </ListNavLink>
-                            <ListNavLink to={"/my-properties"}>
-                                <LandPlot />
-                                {t("header.accommodation")}
-                            </ListNavLink>
-                            <ListNavLink to={"/messages"}>
-                                <div className="relative flex items-center gap-2">
-                                    <MessageSquare />
-                                    <span>{t("header.messaging")}</span>
-                                    {unreadCount > 0 && (
-                                        <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
-                                            {unreadCount}
-                                        </span>
-                                    )}
-                                </div>
-                            </ListNavLink>
-                        </ul>
-                    )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                    {isAuthenticated ? (
-                        <>
-                            <ProfileButton key={location.pathname} />
-                            <button
-                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className="md:hidden flex items-center justify-center p-2 rounded-lg hover:bg-white/10 active:bg-white/20 transition-colors text-white"
-                                aria-label="Toggle menu"
-                            >
-                                {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-                            </button>
-                        </>
-                    ) : (
-                        <ListNavLink to={"/login"}>
-                            <LogIn />
-                            <span>{t('connexion')}</span>
-                        </ListNavLink>
-                    )}
-                </div>
-
-                {/* Mobile Dropdown Menu */}
-                {isAuthenticated && isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-primary border-primary-content border-2 rounded-2xl p-4 text-primary-content shadow-xl flex flex-col gap-2 z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                        <ul className="flex flex-col gap-2 w-full">
-                            <li>
-                                <NavLink
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
-                                    to={"/my-reservations"} viewTransition>
+        <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh relative">
+            <div className="absolute top-0 left-0 right-0 z-50 pointer-events-none">
+                <nav ref={navRef} className="pointer-events-auto flex mx-4 mt-4 rounded-full p-3 bg-primary border-primary-content border-2 text-primary-content items-center justify-between shadow-md">
+                    <div className="flex items-center gap-6">
+                        <Link to={"/"} className="block" viewTransition>
+                            <div
+                                className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
+                                aria-label="Retour à l'accueil"
+                            ></div>
+                        </Link>
+                        {isAuthenticated && (
+                            <ul className="hidden md:flex gap-1">
+                                <ListNavLink to={"/my-reservations"}>
                                     <Calendar />
                                     {t("header.reservations")}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
-                                    to={"/my-properties"} viewTransition>
+                                </ListNavLink>
+                                <ListNavLink to={"/my-properties"}>
                                     <LandPlot />
                                     {t("header.accommodation")}
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
-                                    to={"/messages"} viewTransition>
-                                    <div className="relative flex items-center gap-3 w-full">
+                                </ListNavLink>
+                                <ListNavLink to={"/messages"}>
+                                    <div className="relative flex items-center gap-2">
                                         <MessageSquare />
-                                        <span className="flex-1 text-left">{t("header.messaging")}</span>
+                                        <span>{t("header.messaging")}</span>
                                         {unreadCount > 0 && (
-                                            <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                                            <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
                                                 {unreadCount}
                                             </span>
                                         )}
                                     </div>
-                                </NavLink>
-                            </li>
-                        </ul>
+                                </ListNavLink>
+                            </ul>
+                        )}
                     </div>
-                )}
-            </nav>
-            <main className="flex-1 overflow-y-auto">
+
+                    <div className="flex items-center gap-3">
+                        {isAuthenticated ? (
+                            <>
+                                <ProfileButton key={location.pathname} />
+                                <button
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="md:hidden flex items-center justify-center p-2 rounded-lg hover:bg-white/10 active:bg-white/20 transition-colors text-white"
+                                    aria-label="Toggle menu"
+                                >
+                                    {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                                </button>
+                            </>
+                        ) : (
+                            <ListNavLink to={"/login"}>
+                                <LogIn />
+                                <span>{t('connexion')}</span>
+                            </ListNavLink>
+                        )}
+                    </div>
+
+                    {/* Mobile Dropdown Menu */}
+                    {isAuthenticated && isMobileMenuOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-primary border-primary-content border-2 rounded-2xl p-4 text-primary-content shadow-xl flex flex-col gap-2 z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <ul className="flex flex-col gap-2 w-full">
+                                <li>
+                                    <NavLink
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
+                                        to={"/my-reservations"} viewTransition>
+                                        <Calendar />
+                                        {t("header.reservations")}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
+                                        to={"/my-properties"} viewTransition>
+                                        <LandPlot />
+                                        {t("header.accommodation")}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-lg font-semibold flex gap-3 items-center transition-colors w-full`}
+                                        to={"/messages"} viewTransition>
+                                        <div className="relative flex items-center gap-3 w-full">
+                                            <MessageSquare />
+                                            <span className="flex-1 text-left">{t("header.messaging")}</span>
+                                            {unreadCount > 0 && (
+                                                <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                                                    {unreadCount}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
+                </nav>
+            </div>
+            <main className={`flex-1 overflow-y-auto ${isNoBannerRoute ? "pt-24" : "pt-0"}`}>
                 <Outlet />
             </main>
         </div>

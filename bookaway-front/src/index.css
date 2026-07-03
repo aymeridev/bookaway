@@ -27,29 +27,6 @@
     --error-content: hsl(0 0% 100%);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary: hsl(217.2 91.2% 59.8%);
-        --primary-content: hsl(222.2 47.4% 11.2%);
-        --secondary: hsl(215.4 16.3% 70%);
-        --secondary-content: hsl(222.2 47.4% 11.2%);
-        --neutral: hsl(210 40% 98%);
-        --neutral-content: hsl(222.2 47.4% 11.2%);
-        --base-100: hsl(222.2 47.4% 11.2%);
-        --base-200: hsl(222.2 47.4% 7%);
-        --base-300: hsl(217 33% 17%);
-        --base-content: hsl(210 40% 98%);
-
-        --info: hsl(199 89% 48%);
-        --info-content: hsl(222.2 47.4% 11.2%);
-        --success: hsl(142 70% 45%);
-        --success-content: hsl(222.2 47.4% 11.2%);
-        --warning: hsl(38 92% 50%);
-        --warning-content: hsl(222.2 47.4% 11.2%);
-        --error: hsl(346 84% 61%);
-        --error-content: hsl(222.2 47.4% 11.2%);
-    }
-}
 
 .dark {
     --primary: hsl(217.2 91.2% 59.8%);
@@ -71,6 +48,17 @@
     --warning-content: hsl(222.2 47.4% 11.2%);
     --error: hsl(346 84% 61%);
     --error-content: hsl(222.2 47.4% 11.2%);
+}
+
+/* react-day-picker dark mode overrides */
+.dark .rdp-root {
+    --rdp-accent-color: var(--primary);
+    --rdp-accent-background-color: var(--base-300);
+    --rdp-range_middle-background-color: var(--base-300);
+    --rdp-range_start-color: var(--base-content);
+    --rdp-range_end-color: var(--base-content);
+    color: var(--base-content);
+    background-color: var(--base-100);
 }
 
 @theme {
@@ -100,6 +88,8 @@
 }
 
 @variant primary (&[data-primary="true"]);
+@variant dark (&:where(.dark, .dark *));
+
 
 
 

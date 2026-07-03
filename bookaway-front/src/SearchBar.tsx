@@ -451,7 +451,7 @@ function FormDatePart({
             </button>
 
             {openCalendar && (
-                <div className="absolute bg-white shadow-xl rounded-xl top-16 z-50 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 max-w-[95vw] sm:max-w-md overflow-x-auto">
+                <div className="absolute bg-base-100 shadow-xl rounded-xl top-16 z-50 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 max-w-[95vw] sm:max-w-md overflow-x-auto">
                     <DayPicker
                         animate
                         captionLayout="dropdown"
