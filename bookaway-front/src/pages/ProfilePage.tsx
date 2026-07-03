@@ -42,26 +42,26 @@ export function ProfilePage() {
 
     return (
         <>
-            <Banner 
-                title={t("profile-page.banner-title")} 
-                description={t("profile-page.banner-description")} 
+            <Banner
+                title={t("profile-page.banner-title")}
+                description={t("profile-page.banner-description")}
             />
             <div className="max-w-6xl mx-auto px-4 py-10">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
+
                     {/* Left Column: Personal info */}
                     <div className="lg:col-span-1">
                         <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:shadow-2xl">
                             {/* Decorative top background gradient */}
                             <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-primary/80 opacity-90" />
-                            
+
                             {/* Avatar */}
                             <div className="relative z-10 mt-6 mb-4">
                                 <div className="size-28 rounded-full border-4 border-white dark:border-base-200 shadow-xl overflow-hidden bg-base-100 flex items-center justify-center">
-                                    <img 
-                                        src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user.id}`} 
-                                        alt={user.name} 
-                                        className="size-full object-cover" 
+                                    <img
+                                        src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user.id}`}
+                                        alt={user.name}
+                                        className="size-full object-cover"
                                     />
                                 </div>
                                 {user.owner && (
@@ -75,7 +75,7 @@ export function ProfilePage() {
                             <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">
                                 {user.name}
                             </h2>
-                            
+
                             <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-6">
                                 {user.owner ? t("profile-page.verified-host") : t("profile-page.traveler")}
                             </p>
@@ -107,8 +107,8 @@ export function ProfilePage() {
                                             {t("profile-page.personal-info")}
                                         </p>
                                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                            {user.created_at 
-                                                ? format(new Date(user.created_at), "PPP", { locale: currentLocale }) 
+                                            {user.created_at
+                                                ? format(new Date(user.created_at), "PPP", { locale: currentLocale })
                                                 : "N/A"
                                             }
                                         </p>
@@ -157,8 +157,8 @@ export function ProfilePage() {
                                         const propertyImg = booking.property?.images?.[0]?.url;
 
                                         return (
-                                            <div key={booking.id} className="group bg-base-100 dark:bg-base-200/50 border border-base-300 dark:border-gray-800 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center hover:shadow-lg transition-all duration-300">
-                                                
+                                            <div key={booking.id} className="group bg-base-100 dark:bg-base-200/50 border border-base-300 dark:border-gray-800 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row gap-4 items-start md:items-center transition-all duration-300">
+
                                                 {/* Property Image thumbnail */}
                                                 <div className="relative size-full md:size-24 rounded-xl overflow-hidden shrink-0 bg-base-200 border border-base-300 dark:border-gray-800">
                                                     {propertyImg ? (
@@ -177,7 +177,7 @@ export function ProfilePage() {
                                                             {statusText}
                                                         </span>
                                                     </div>
-                                                    
+
                                                     <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors truncate">
                                                         {booking.property?.title}
                                                     </h3>
@@ -201,7 +201,7 @@ export function ProfilePage() {
                                                         <span className="block font-black text-xl text-primary">{booking.total_price} €</span>
                                                         <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">{t("profile-page.total-price")}</span>
                                                     </div>
-                                                    
+
                                                     <Link to={`/reservation/${booking.id}`} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors p-2 bg-primary/5 hover:bg-primary/10 rounded-lg">
                                                         {t("profile-page.details")}
                                                         <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />

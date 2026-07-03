@@ -42,8 +42,6 @@ class DatabaseSeeder extends Seeder
 
         if ($properties->count() > 0 && $users->count() > 0) {
             foreach ($properties as $prop) {
-                $numRatings = rand(1, 4);
-
                 $potentialAuthors = $users->filter(function ($u) use ($prop) {
                     return $u->id !== $prop->user_id;
                 });
@@ -52,8 +50,10 @@ class DatabaseSeeder extends Seeder
                     $potentialAuthors = $users;
                 }
 
-                for ($i = 0; $i < $numRatings; $i++) {
-                    $author = $potentialAuthors->random();
+                $numRatings = min(rand(1, 4), $potentialAuthors->count());
+                $selectedAuthors = $potentialAuthors->random($numRatings);
+
+                foreach ($selectedAuthors as $author) {
                     \App\Models\Rating::factory()->create([
                         'user_id' => $author->id,
                         'ratable_type' => \App\Models\Property::class,

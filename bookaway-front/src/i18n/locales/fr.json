@@ -170,6 +170,8 @@
         "no-comment": "Aucun commentaire laissé.",
         "review-date": "Avis laissé en {{date}}",
         "no-reviews": "Aucun avis pour le moment.",
+        "already-reviewed": "Vous avez déjà donné votre avis.",
+        "duplicate-rating-error": "Vous avez déjà donné votre avis pour ce logement.",
         "modal-title": "Donner votre avis",
         "modal-rating-label": "Note (sur 5)",
         "modal-comment-label": "Commentaire",

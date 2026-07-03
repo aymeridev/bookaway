@@ -170,6 +170,8 @@
         "no-comment": "No comment left.",
         "review-date": "Review left in {{date}}",
         "no-reviews": "No reviews yet.",
+        "already-reviewed": "You have already left a review.",
+        "duplicate-rating-error": "You have already reviewed this property.",
         "modal-title": "Leave a review",
         "modal-rating-label": "Rating (out of 5)",
         "modal-comment-label": "Comment",

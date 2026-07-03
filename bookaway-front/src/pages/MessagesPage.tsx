@@ -107,7 +107,7 @@ export function MessagesPage() {
 
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm h-[calc(100vh-140px)] min-h-[500px] flex overflow-hidden">
+            <div className="h-[calc(100vh-140px)] min-h-[500px] flex overflow-hidden">
 
                 <div className="w-full md:w-80 lg:w-96 border-r border-gray-200 flex flex-col bg-gray-50/50">
                     <div className="p-4 border-b border-gray-200 bg-white">

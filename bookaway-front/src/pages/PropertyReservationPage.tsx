@@ -25,7 +25,7 @@ export function PropertyReservationPage() {
     const [cvv, setCvv] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    if (!property || !dateRange || !totals) {
+    if (!property || !dateRange || !dateRange.from || !dateRange.to || !totals) {
         return (
             <div className="max-w-md mx-auto my-12 text-center p-6 bg-white border rounded-2xl shadow-sm">
                 <h2 className="text-xl font-bold text-gray-800 mb-2">{t("property-reservation.no-booking-title")}</h2>

@@ -187,4 +187,62 @@ class RatingTest extends TestCase
             'ratings_avg' => 4,
         ]);
     }
+
+    public function test_user_cannot_rate_same_property_twice(): void
+    {
+        $user = User::factory()->create();
+        $owner = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $owner->id,
+            'amenities' => [],
+        ]);
+
+        // First rating should succeed
+        $response = $this->actingAs($user, 'sanctum')->postJson('/api/ratings', [
+            'ratable_type' => 'property',
+            'ratable_id' => $property->id,
+            'stars' => 4,
+            'comment' => 'Très bon logement.',
+        ]);
+
+        $response->assertStatus(201);
+
+        // Second rating should be rejected
+        $response = $this->actingAs($user, 'sanctum')->postJson('/api/ratings', [
+            'ratable_type' => 'property',
+            'ratable_id' => $property->id,
+            'stars' => 5,
+            'comment' => 'Encore mieux la deuxième fois.',
+        ]);
+
+        $response->assertStatus(409);
+        $this->assertDatabaseCount('ratings', 1);
+    }
+
+    public function test_user_cannot_rate_same_user_twice(): void
+    {
+        $user = User::factory()->create();
+        $target = User::factory()->create();
+
+        // First rating should succeed
+        $response = $this->actingAs($user, 'sanctum')->postJson('/api/ratings', [
+            'ratable_type' => 'user',
+            'ratable_id' => $target->id,
+            'stars' => 4,
+            'comment' => 'Bon hôte.',
+        ]);
+
+        $response->assertStatus(201);
+
+        // Second rating should be rejected
+        $response = $this->actingAs($user, 'sanctum')->postJson('/api/ratings', [
+            'ratable_type' => 'user',
+            'ratable_id' => $target->id,
+            'stars' => 5,
+            'comment' => 'Encore meilleur hôte.',
+        ]);
+
+        $response->assertStatus(409);
+        $this->assertDatabaseCount('ratings', 1);
+    }
 }

@@ -158,8 +158,8 @@ class PropertyFactory extends Factory
             'base_price' => fake()->numberBetween(20, 60),
             'price_per_night' => fake()->numberBetween(15, 50),
             'amenities' => fake()->randomElements(['wifi', 'kitchen', 'parking', 'pool'], 3),
-            'latitude' => fake()->randomFloat(8, 41, 51),
-            'longitude' => fake()->randomFloat(8, 5, 9),
+            'latitude' => fake()->randomFloat(8, 42.5, 51),
+            'longitude' => fake()->randomFloat(8, -5, 9),
             'user_id' => function () {
                 if (User::count() >= 5 && fake()->boolean(80)) {
                     return User::inRandomOrder()->first()->id;

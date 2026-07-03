@@ -230,7 +230,14 @@ export function PropertyDetailsPage() {
                                 <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> {property.ratings_avg}</h3>
                             </div>
                             {!isOwner && (
-                                <Button onClick={handleOpenModal}>{t("property-details.give-review")}</Button>
+                                (() => {
+                                    const hasAlreadyReviewed = user && property.ratings.some((r: any) => r.author?.id === user.id || r.user_id === user.id);
+                                    return hasAlreadyReviewed ? (
+                                        <span className="text-sm text-gray-500 italic">{t("property-details.already-reviewed")}</span>
+                                    ) : (
+                                        <Button onClick={handleOpenModal}>{t("property-details.give-review")}</Button>
+                                    );
+                                })()
                             )}
                         </div>
                         {property.ratings.length > 0 ? (
@@ -375,6 +382,11 @@ export function PropertyDetailsPage() {
                                 totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
                             }}
                             viewTransition
+                            onClick={(e) => {
+                                if (numberOfNights === 0) {
+                                    e.preventDefault();
+                                }
+                            }}
                         >
                             <Button className='text-xl py-3 w-full font-semibold' disabled={numberOfNights === 0}>
                                 {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}

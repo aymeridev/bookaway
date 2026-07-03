@@ -32,9 +32,9 @@ export function UserPage() {
     return (
         <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
             <div className="mb-6">
-                <Button 
-                    variant="flat" 
-                    onClick={() => navigate(-1)} 
+                <Button
+                    variant="flat"
+                    onClick={() => navigate(-1)}
                     className="group flex items-center gap-2 text-gray-500 hover:text-primary dark:hover:text-primary transition-colors text-sm font-semibold p-2"
                 >
                     <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
@@ -45,17 +45,17 @@ export function UserPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Profile Detail Card (Left Column) */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                    <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center text-center relative overflow-hidden transition-all duration-300">
                         {/* Decorative top background gradient */}
-                        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-primary/80 opacity-90" />
-                        
+                        <div className="absolute top-0 inset-x-0 h-24 bg-linear-to-r from-blue-500 via-indigo-500 to-primary/80 opacity-90" />
+
                         {/* Avatar */}
                         <div className="relative z-10 mt-6 mb-4">
                             <div className="size-28 rounded-full border-4 border-white dark:border-base-200 shadow-xl overflow-hidden bg-base-100 flex items-center justify-center">
-                                <img 
-                                    src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user.id}`} 
-                                    alt={user.name} 
-                                    className="size-full object-cover" 
+                                <img
+                                    src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user.id}`}
+                                    alt={user.name}
+                                    className="size-full object-cover"
                                 />
                             </div>
                             {user.owner && (
@@ -69,7 +69,7 @@ export function UserPage() {
                         <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">
                             {user.name}
                         </h2>
-                        
+
                         <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-6">
                             {user.owner ? t("user-page.role-verified-host") : t("user-page.role-traveler")}
                         </p>
@@ -118,7 +118,7 @@ export function UserPage() {
                             <Building className="size-6 text-primary" />
                             {t("user-page.user-listings", { name: user.name })}
                         </h2>
-                        
+
                         {properties.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1">
                                 {properties.map((property) => (

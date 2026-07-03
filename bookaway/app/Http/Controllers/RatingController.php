@@ -51,6 +51,17 @@ class RatingController extends Controller
             ], 422);
         }
 
+        $existingRating = Rating::where('user_id', $request->user()->id)
+            ->where('ratable_type', $modelClass)
+            ->where('ratable_id', $validated['ratable_id'])
+            ->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'message' => 'Vous avez déjà donné votre avis.'
+            ], 409);
+        }
+
         $rating = Rating::create([
             'user_id' => $request->user()->id,
             'stars' => $validated['stars'],
