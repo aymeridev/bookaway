@@ -28,6 +28,13 @@ class ConversationController extends Controller
                     ->where('sender_id', '!=', $userId) // Reçu de l'autre personne
                     ->where('is_read', false)           // Pas encore lu
                     ->count();
+
+                // Récupère la dernière réservation associée à ce logement et ce voyageur
+                $conversation->booking = \App\Models\Booking::where('user_id', $conversation->user_id)
+                    ->where('property_id', $conversation->property_id)
+                    ->latest()
+                    ->first();
+
                 return $conversation;
             });
 
@@ -58,7 +65,13 @@ class ConversationController extends Controller
             'property_id' => $property->id,
         ]);
 
-        return response()->json($conversation->load(['user', 'owner', 'property', 'messages']));
+        $conversation->load(['user', 'owner', 'property', 'messages']);
+        $conversation->booking = \App\Models\Booking::where('user_id', $conversation->user_id)
+            ->where('property_id', $conversation->property_id)
+            ->latest()
+            ->first();
+
+        return response()->json($conversation);
     }
 
     /**

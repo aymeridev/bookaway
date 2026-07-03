@@ -26,7 +26,14 @@ export function MyReservationsPage() {
     const { t } = useTranslation();
 
     // Fonction pour générer un badge de statut dynamique
-    const getStatusBadge = (startDateStr: string, endDateStr: string) => {
+    const getStatusBadge = (status: string, startDateStr: string, endDateStr: string) => {
+        if (status === "cancelled") {
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-600 border border-red-200">Annulé</span>;
+        }
+        if (status === "pending") {
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-600 border border-yellow-200">En attente</span>;
+        }
+
         const today = new Date();
         const start = parseISO(startDateStr);
         const end = parseISO(endDateStr);
@@ -83,7 +90,7 @@ export function MyReservationsPage() {
                                                 >
                                                     {booking.property.title}
                                                 </Link>
-                                                {getStatusBadge(booking.start_date, booking.end_date)}
+                                                {getStatusBadge(booking.status, booking.start_date, booking.end_date)}
                                             </div>
 
                                             <div className="flex flex-col space-y-1.5 text-sm text-gray-600">
