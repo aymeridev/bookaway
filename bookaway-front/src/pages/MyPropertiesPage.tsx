@@ -4,20 +4,22 @@ import Button from "../components/ui/Button";
 import { useLoaderData, useNavigate, Link } from "react-router";
 import type { Property } from "../types";
 import { PropertyCard } from "./SearchPage";
+import { useTranslation } from "react-i18next";
 
 export function MyPropertiesPage() {
     const properties: Property[] = useLoaderData();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">
-            <Banner title="Mes logements" />
+            <Banner title={t("accommodation.accommodation")} />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-8">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-gray-200">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">Vos annonces actives</h2>
-                        <p className="text-sm text-gray-500">Gérez, modifiez et visualisez les logements que vous louez.</p>
+                        <h2 className="text-xl font-bold text-gray-900">{t("accommodation.announcements")}</h2>
+                        <p className="text-sm text-gray-500">{t("accommodation.management-accommodation")}</p>
                     </div>
 
                     <Button
@@ -29,7 +31,7 @@ export function MyPropertiesPage() {
                         className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition-all duration-200 active:scale-95"
                     >
                         <PlusCircle className="w-5 h-5" />
-                        Nouveau logement
+                        {t("accommodation.new-accommodation")}
                     </Button>
                 </div>
 
@@ -39,16 +41,16 @@ export function MyPropertiesPage() {
                             <Home className="w-8 h-8" />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="font-semibold text-gray-900 text-lg">Aucun logement enregistré</h3>
+                            <h3 className="font-semibold text-gray-900 text-lg">{t("accommodation.none-accommodation")}</h3>
                             <p className="text-sm text-gray-500 max-w-xs">
-                                Vous n'avez pas encore mis de propriété en location sur notre plateforme.
+                                {t("accommodation.none-location-platform")}
                             </p>
                         </div>
                         <Link
                             to="/new-property"
                             className="inline-block text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-xl shadow-sm transition"
                         >
-                            Créer ma première annonce
+                            {t("accommodation.first-announcement")}
                         </Link>
                     </div>
                 ) : (
