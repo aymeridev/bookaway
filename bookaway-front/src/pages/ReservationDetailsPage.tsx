@@ -38,6 +38,7 @@ interface Property {
         id: number;
         name: string;
     };
+    address?: string;
 }
 
 interface Booking {
@@ -89,32 +90,10 @@ export function ReservationDetailsPage() {
     }, [id]);
 
     useEffect(() => {
-        if (!booking?.property) return;
-        const { latitude, longitude } = booking.property;
-        if (!latitude || !longitude) {
-            setAddress("Adresse non spécifiée (coordonnées manquantes)");
-            return;
+        if (booking) {
+            setAddress(booking.property?.address || "Adresse non spécifiée");
         }
-
-        const fetchAddress = async () => {
-            try {
-                const res = await fetch(
-                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&email=ulco@ulco.fr`
-                );
-                const data = await res.json();
-                if (data && data.display_name) {
-                    setAddress(data.display_name);
-                } else {
-                    setAddress("Adresse introuvable");
-                }
-            } catch (err) {
-                console.error("Error reverse geocoding:", err);
-                setAddress("Impossible de charger l'adresse");
-            }
-        };
-
-        fetchAddress();
-    }, [booking?.property]);
+    }, [booking]);
 
     const handleContactHost = async () => {
         if (!booking?.property) return;

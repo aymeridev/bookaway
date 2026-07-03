@@ -112,6 +112,9 @@ class BookingController extends Controller
     public function show(string $id)
     {
         $booking = Booking::with(['property.images', 'property.user', 'user', 'payment'])->findOrFail($id);
+        if ($booking->property) {
+            $booking->property->setAttribute('address', $booking->property->address);
+        }
         return response()->json($booking);
     }
 
@@ -133,7 +136,12 @@ class BookingController extends Controller
 
         $booking->update($validated);
 
-        return response()->json($booking->load(['property.images', 'property.user', 'payment']));
+        $booking->load(['property.images', 'property.user', 'payment']);
+        if ($booking->property) {
+            $booking->property->setAttribute('address', $booking->property->address);
+        }
+
+        return response()->json($booking);
     }
 
     /**
