@@ -6,7 +6,7 @@ import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
 import { Card } from "../components/Card";
 import { useMyReservations } from "../hooks/apiHooks";
-
+import { useTranslation } from "react-i18next";
 
 export function MyReservationsPage() {
     const { data: bookingsData, isLoading } = useMyReservations();
@@ -23,6 +23,7 @@ export function MyReservationsPage() {
             </>
         );
     }
+    const { t } = useTranslation();
 
     // Fonction pour générer un badge de statut dynamique
     const getStatusBadge = (status: string, startDateStr: string, endDateStr: string) => {
@@ -38,18 +39,17 @@ export function MyReservationsPage() {
         const end = parseISO(endDateStr);
 
         if (isAfter(start, today)) {
-            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-600 border border-blue-200">À venir</span>;
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-50 text-blue-600 border border-blue-200">{t("state.forthcoming")}</span>;
         } else if (isBefore(end, today)) {
-            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">Terminé</span>;
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">{t("state.finished")}</span>;
         } else {
-            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-600 border border-green-200 animate-pulse">En cours</span>;
+            return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-600 border border-green-200 animate-pulse">{t("state.progress")}</span>;
         }
     };
 
     return (
         <>
-            <Banner title="Mes réservations" />
-
+            <Banner title={t("reservations.reservations")} />
 
             <main className="max-w-6xl mx-auto p-6">
                 {bookings.length === 0 ? (
@@ -97,12 +97,12 @@ export function MyReservationsPage() {
                                                 <div className="flex items-center gap-2">
                                                     <Calendar className="w-4 h-4 text-gray-400" />
                                                     <span>
-                                                        Du {format(start, "dd MMMM yyyy", { locale: fr })} au {format(end, "dd MMMM yyyy", { locale: fr })}
+                                                        {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: fr })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: fr })}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <Receipt className="w-4 h-4 text-gray-400" />
-                                                    <span>Montant total : <strong className="text-gray-900">{booking.total_price}€</strong></span>
+                                                    <span>{t("reservations.total-amount")} : <strong className="text-gray-900">{booking.total_price}€</strong></span>
                                                 </div>
                                             </div>
                                         </div>

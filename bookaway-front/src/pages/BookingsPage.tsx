@@ -1,9 +1,11 @@
 import { Banner } from "../components/Banner";
+import { useTranslation } from "react-i18next";
 
 export function BookingsPage() {
+    const { t } = useTranslation();
     return (
         <>
-            <Banner title="Mes réservations" description="Retrouvez toutes vos réservations sur la plateforme" />
+            <Banner title={t("reservations.reservations")} description={t("reservations.descriptions")} />
         </>
     )
 }

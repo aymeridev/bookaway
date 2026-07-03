@@ -2,10 +2,55 @@
     "home": "Accueil",
     "connexion": "Se connecter",
     "deconnexion": "Se déconnecter",
-    "profil": "Profil",
     "searchTrip": "Rechercher un séjour",
     "hotel": "Hotel",
     "camping": "Camping",
+    "previous": "Précedent",
+    "step": "Etape",
+    "header": {
+        "reservations": "Mes réservations",
+        "accommodation": "Mes logements",
+        "messaging": "Messagerie"
+    },
+    "profil": {
+        "my-profil": "Mon Profil",
+        "public-profil": "Mon profil public",
+        "settings": "Paramètres",
+        "dark-mode": "Mode sombre",
+        "personal-information": "Informations personnelles",
+        "name": "nom",
+        "membership": "Membre depuis le"
+    },
+    "messaging": {
+        "subject": "Sujet",
+        "write-message": "Ecrivez votre message ici...",
+        "there-is": "Il y a ",
+        "days": "jours"
+    },
+    "accommodation": {
+        "accommodation": "Mes logements",
+        "announcements": "Vos annonces actives",
+        "new-accommodation": "Nouveau logement",
+        "create-accommodation": "Ajouter un logement",
+        "management-accommodation": "Gérez, modifiez et visualisez les logements que vous louez.",
+        "none-accommodation": "Aucun logement enregistré",
+        "none-location-platform": "Vous n'avez pas encore mis de propriété en location sur notre plateforme.",
+        "first-announcement": "Créer ma première annonce",
+        "title-description": "Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme."
+    },
+    "reservations": {
+        "reservations":"Mes réservations",
+        "descriptions": "Retrouvez toutes vos réservations sur la plateforme",
+        "total-amount": "Montant total",
+        "see-accommodation": "voir le logement",
+        "from": "Du",
+        "to" : "au"
+    },
+    "state": {
+        "forthcoming": "A venir",
+        "progress": "En cours",
+        "finished": "Terminé"
+    },
     "properties-edit": {
         "location": "Localisation du logement",
         "type": "Type du logement",

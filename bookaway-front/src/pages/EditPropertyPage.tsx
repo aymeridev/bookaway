@@ -10,8 +10,10 @@ import { Save, Loader2 } from "lucide-react";
 import { StepperList } from "../components/create_property/StepperList";
 import api from "../api/axios";
 import { usePropertyDetails } from "../hooks/apiHooks";
+import { useTranslation } from "react-i18next";
 
 export function EditPropertyPage() {
+    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const { data: property, isLoading } = usePropertyDetails(id);
 
@@ -67,14 +69,14 @@ function EditPropertyForm({ property }: EditPropertyFormProps) {
                     <CurrentStep form={form} property={property} />
                     <Button>
                         <Save />
-                        Sauvegarder les modifications
+                        {t("accommodation-edit.save")}
                     </Button>
                     <Button onClick={() => {
-                        if (confirm("Êtes-vous sûr de vouloir supprimer ce logement ?")) {
+                        if (confirm(t("accommodation-edit.delete-confirm"))) {
                             api.delete(`/properties/${property.id}`);
                             navigate("/my-properties");
                         }
-                    }} variant="danger">Supprimer</Button>
+                    }} variant="danger">{t("accommodation-edit.delete")}</Button>
                 </Card>
             </main>
         </>

@@ -39,17 +39,17 @@ export function NavbarLayout() {
                             <ListNavLink
                                 to={"/my-reservations"}>
                                 <Calendar />
-                                Mes réservations
+                                {t("header.reservations")}
                             </ListNavLink>
                             <ListNavLink
                                 to={"/my-properties"}>
                                 <LandPlot />
-                                Mes logements
+                                {t("header.accommodation")}
                             </ListNavLink>
                             <ListNavLink to={"/messages"}>
                                 <div className="relative flex items-center gap-2">
                                     <MessageSquare />
-                                    <span>Messagerie</span>
+                                    <span>{t("header.messaging")}</span>
                                     {unreadCount > 0 && (
                                         <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
                                             {unreadCount}
@@ -128,20 +128,20 @@ function ProfileButton() {
                         <li>
                             <Link className="p-2 flex items-center justify-center" to={"/profile"} viewTransition>
                                 <User />
-                                <span className="flex-1">Mon profil</span>
+                                <span className="flex-1">{t('profil.my-profil')}</span>
                             </Link>
                         </li>
                         <li>
                             <Link className="p-2 flex items-center justify-center" to={`/user/${user?.id}`} viewTransition>
                                 <Eye />
-                                <span className="flex-1">Mon profil public</span>
+                                <span className="flex-1">{t('profil.public-profil')}</span>
                             </Link>
                         </li>
 
                         <li>
                             <Link className="p-2 flex items-center justify-center" to={"/settings"} viewTransition>
                                 <Settings />
-                                <span className="flex-1">Paramètres</span>
+                                <span className="flex-1">{t('profil.settings')}</span>
                             </Link>
                         </li>
                         <li>
