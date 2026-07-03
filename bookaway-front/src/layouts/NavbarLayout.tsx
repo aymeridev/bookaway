@@ -81,7 +81,7 @@ export function NavbarLayout() {
                 <ul className="flex-1 flex justify-end text-white font-semibold items-center gap-6">
                     {isAuthenticated ? (
                         <>
-                            <ProfileButton />
+                            <ProfileButton key={location.pathname} />
                         </>
                     ) : (
                         <ListNavLink to={"/login"}>
@@ -102,9 +102,8 @@ export function NavbarLayout() {
 function ProfileButton() {
 
     const { t } = useTranslation();
-    let [showDetails, setShowDetails] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const menuRef = useRef<HTMLLIElement>(null);
@@ -123,10 +122,6 @@ function ProfileButton() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [showDetails]);
-
-    useEffect(() => {
-        setShowDetails(false);
-    }, [location]);
 
     const handleLogout = () => {
         setShowDetails(false);

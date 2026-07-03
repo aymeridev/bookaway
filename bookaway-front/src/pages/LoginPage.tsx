@@ -27,7 +27,7 @@ export function LoginPage() {
             login(userData, token);
 
             navigate("/", { viewTransition: true });
-        } catch (err: any) {
+        } catch {
             setError("Identifiants incorrects. Veuillez réessayer.");
         }
     };

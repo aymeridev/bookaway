@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Send, Home, MessageSquare, User } from "lucide-react";
+import { Send, Home, MessageSquare } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
@@ -35,13 +35,18 @@ export function MessagesPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const paramId = searchParams.get("conversation_id");
 
-    const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
-    const [activeChatId, setActiveChatId] = useState<number | null>(() => {
+    const activeChatId = (() => {
         if (paramId) {
             const parsed = parseInt(paramId, 10);
             if (!isNaN(parsed)) return parsed;
         }
         return initialConversations[0]?.id || null;
+    })();
+
+    const [conversations, setConversations] = useState<Conversation[]>(() => {
+        return initialConversations.map(conv =>
+            conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
+        );
     });
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -58,18 +63,6 @@ export function MessagesPage() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    // Synchroniser activeChatId si le paramètre conversation_id change dans l'URL
-    useEffect(() => {
-        if (paramId) {
-            const parsed = parseInt(paramId, 10);
-            if (!isNaN(parsed) && parsed !== activeChatId) {
-                if (conversations.some(c => c.id === parsed)) {
-                    setActiveChatId(parsed);
-                }
-            }
-        }
-    }, [paramId, conversations, activeChatId]);
-
     useEffect(() => {
         scrollToBottom();
 
@@ -77,12 +70,6 @@ export function MessagesPage() {
 
         api.post(`/conversations/${activeChatId}/read`).catch(err =>
             console.error("Erreur marquage lu", err)
-        );
-
-        setConversations(prev =>
-            prev.map(conv =>
-                conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
-            )
         );
     }, [activeChatId]);
 
@@ -144,8 +131,12 @@ export function MessagesPage() {
                                     <button
                                         key={conv.id}
                                         onClick={() => {
-                                            setActiveChatId(conv.id);
                                             setSearchParams({ conversation_id: String(conv.id) });
+                                            setConversations(prev =>
+                                                prev.map(c =>
+                                                    c.id === conv.id ? { ...c, unread_count: 0 } : c
+                                                )
+                                            );
                                         }}
                                         className={`w-full p-4 text-left flex gap-3 transition-colors ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600" : "bg-white hover:bg-gray-50"
                                             }`}

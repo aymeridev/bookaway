@@ -29,7 +29,7 @@ import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
 
 
 
-let router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     Component: NavbarLayout,
     errorElement: <ErrorPage />,

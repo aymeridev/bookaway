@@ -1,14 +1,13 @@
 import { PlusCircle, Home } from "lucide-react";
 import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
-import { useLoaderData, useNavigate, Link } from "react-router";
+import { useLoaderData, Link } from "react-router";
 import type { Property } from "../types";
 import { PropertyCard } from "./SearchPage";
 import { Card } from "../components/Card";
 
 export function MyPropertiesPage() {
     const properties: Property[] = useLoaderData();
-    const navigate = useNavigate();
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">

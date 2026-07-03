@@ -10,21 +10,20 @@ export function ProfilePage() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const user = useAuthStore((state) => state.user);
     const [bookings, setBookings] = useState([]);
-
     useEffect(() => {
+        const fetchMyProfile = async () => {
+            try {
+                const response = await api.get(`/users/${user?.id}`);
+                setBookings(response.data.bookings || []);
+            } catch (err) {
+                console.error("Erreur profil", err);
+            }
+        };
+
         if (user?.id) {
             fetchMyProfile();
         }
-    }, [user?.id]); // Se déclenchera dès que user est récupéré
-
-    const fetchMyProfile = async () => {
-        try {
-            const response = await api.get(`/users/${user?.id}`);
-            setBookings(response.data.bookings || []);
-        } catch (err) {
-            console.error("Erreur profil", err);
-        }
-    };
+    }, [user?.id]);
 
     if (isAuthenticated && !user) {
         return <p>Chargement des données utilisateur...</p>;
