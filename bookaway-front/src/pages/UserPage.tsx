@@ -58,21 +58,12 @@ export function UserPage() {
                                     className="size-full object-cover"
                                 />
                             </div>
-                            {user.owner && (
-                                <span className="absolute bottom-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md border border-white dark:border-base-200">
-                                    {t("user-page.role-host")}
-                                </span>
-                            )}
                         </div>
 
-                        {/* Name and Role */}
-                        <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">
+                        {/* Name */}
+                        <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-6">
                             {user.name}
                         </h2>
-
-                        <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-6">
-                            {user.owner ? t("user-page.role-verified-host") : t("user-page.role-traveler")}
-                        </p>
 
                         <div className="w-full border-b border-base-300 dark:border-gray-800 mb-6" />
 
@@ -92,7 +83,7 @@ export function UserPage() {
                                 </div>
                             </div>
 
-                            {user.owner && (
+                            {properties.length > 0 && (
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shrink-0">
                                         <Building className="size-4" />

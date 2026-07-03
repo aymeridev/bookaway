@@ -9,6 +9,31 @@ vi.mock('react-day-picker', () => ({
     DayPicker: () => <div data-testid="day-picker" />,
 }));
 
+// Mock react-i18next translation hook
+vi.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string, options?: any) => {
+            const translations: Record<string, string> = {
+                'search-bar.destination-placeholder': 'Rechercher une destination',
+                'search-bar.travelers-label': 'Voyageurs',
+                'search-bar.dates-label': 'Dates',
+                'search-bar.search-btn': 'Rechercher',
+                'search-bar.radius-label': 'Rayon de recherche',
+                'search-bar.suggestions-title': 'Destinations suggérées',
+            };
+            let val = translations[key] || key;
+            if (options && options.value) {
+                val = val.replace('{{value}}', options.value);
+            }
+            return val;
+        },
+        i18n: {
+            language: 'fr',
+            changeLanguage: vi.fn(),
+        },
+    }),
+}));
+
 // Mock the API axios client
 vi.mock('./api/axios', () => ({
     default: {
@@ -103,8 +128,9 @@ describe('SearchBar Component', () => {
         expect(screen.getByText('Paris')).toBeInTheDocument();
         expect(api.get).toHaveBeenCalledTimes(1);
 
-        // Clear input to close and advance timers to propagate the empty value debounced state
+        // Clear input to close and click outside to close the dropdown
         fireEvent.change(input, { target: { value: '' } });
+        fireEvent.mouseDown(document.body);
         await act(async () => {
             await vi.advanceTimersByTimeAsync(250);
         });
@@ -149,7 +175,7 @@ describe('SearchBar Component', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         // Input value should be set to selected city
-        expect(input).toHaveValue('Marseille');
+        expect(input).toHaveValue('Marseille (200km)');
         // List should close
         expect(screen.queryByText('Paris')).not.toBeInTheDocument();
     });

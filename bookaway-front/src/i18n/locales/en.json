@@ -315,6 +315,8 @@
         "searching-box": "Searching destination...",
         "no-results": "No results found for \"{{value}}\"",
         "dates-label": "Dates",
-        "dates-placeholder": "When?"
+        "dates-placeholder": "When?",
+        "radius-label": "Search radius",
+        "suggestions-title": "Suggested destinations"
     }
 }

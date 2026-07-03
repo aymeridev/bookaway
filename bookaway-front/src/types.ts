@@ -2,7 +2,6 @@ export type User = {
     id: string;
     email: string;
     name: string;
-    owner: boolean;
     email_verified_at: string;
     updated_at: string;
     created_at: string;

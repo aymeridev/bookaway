@@ -13,8 +13,7 @@ export function RegisterPage() {
         lastname: "",
         email: "",
         password: "",
-        password_confirmation: "",
-        owner: false
+        password_confirmation: ""
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -93,20 +92,6 @@ export function RegisterPage() {
                             onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
                             required
                         />
-
-                        <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 mt-2">
-                            <input
-                                type="checkbox"
-                                id="owner"
-                                className="mt-1 w-5 h-5 cursor-pointer accent-green-600"
-                                checked={formData.owner}
-                                onChange={(e) => setFormData({ ...formData, owner: e.target.checked })}
-                            />
-                            <label htmlFor="owner" className="text-sm text-gray-700 cursor-pointer select-none">
-                                <span className="font-bold block text-gray-800">{t("register.owner-title")}</span>
-                                {t("register.owner-desc")}
-                            </label>
-                        </div>
 
                         <button type="submit" className="bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition mt-4">
                             S'inscrire

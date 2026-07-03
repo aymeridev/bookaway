@@ -29,8 +29,14 @@ export function SearchBar() {
     const initialLat = searchParams.get("lat");
     const initialLon = searchParams.get("lon");
 
+    const initialRadius = Number(
+        searchParams.get("radius") || 200
+    );
+
     const [travelers, setTravelers] =
         useState(initialTravelers);
+
+    const [radius, setRadius] = useState(initialRadius);
 
     const [selectedDate, setSelectedDate] =
         useState<DateRange | undefined>(
@@ -71,6 +77,7 @@ export function SearchBar() {
             lat: coords?.lat || "",
             lon: coords?.lon || "",
             destination,
+            radius: radius.toString(),
         });
 
         navigate(`/search?${params.toString()}`, {
@@ -86,7 +93,15 @@ export function SearchBar() {
             <FormDestinationPart
                 value={destination}
                 onChange={setDestination}
-                onLocationSelect={setCoords}
+                onLocationSelect={(coords, isDefault) => {
+                    setCoords(coords);
+                    if (isDefault) {
+                        setRadius(200);
+                    }
+                }}
+                radius={radius}
+                onRadiusChange={setRadius}
+                coords={coords}
             />
 
             <div aria-hidden="true" className="hidden md:block select-none text-base-content/50 font-extralight">
@@ -151,14 +166,33 @@ interface FormDestinationProps {
     value: string;
     onChange: (value: string) => void;
     onLocationSelect: (
-        coords: { lat: string; lon: string } | null
+        coords: { lat: string; lon: string } | null,
+        isDefault?: boolean
     ) => void;
+    radius: number;
+    onRadiusChange: (r: number) => void;
+    coords: { lat: string; lon: string } | null;
 }
+
+const DEFAULT_LOCATIONS = [
+    { place_id: "default-paris", name: "Paris", lat: "48.8566", lon: "2.3522", display_name: "Paris, Île-de-France, France", isDefault: true },
+    { place_id: "default-lille", name: "Lille", lat: "50.6292", lon: "3.0573", display_name: "Lille, Hauts-de-France, France", isDefault: true },
+    { place_id: "default-lyon", name: "Lyon", lat: "45.7640", lon: "4.8357", display_name: "Lyon, Auvergne-Rhône-Alpes, France", isDefault: true },
+    { place_id: "default-marseille", name: "Marseille", lat: "43.2965", lon: "5.3698", display_name: "Marseille, Provence-Alpes-Côte d'Azur, France", isDefault: true },
+    { place_id: "default-toulouse", name: "Toulouse", lat: "43.6047", lon: "1.4442", display_name: "Toulouse, Occitanie, France", isDefault: true },
+];
+
+const getCleanDestination = (val: string) => {
+    return val.replace(/\s*\(\d+\s*km\)$/i, "");
+};
 
 function FormDestinationPart({
     value,
     onChange,
     onLocationSelect,
+    radius,
+    onRadiusChange,
+    coords,
 }: FormDestinationProps) {
     const [results, setResults] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -251,10 +285,13 @@ function FormDestinationPart({
 
     const handleSelect = (result: any) => {
         setIsSelecting(true);
-        onLocationSelect({
-            lat: result.lat,
-            lon: result.lon,
-        });
+        onLocationSelect(
+            {
+                lat: result.lat,
+                lon: result.lon,
+            },
+            result.isDefault
+        );
         onChange(result.name);
         setResults([]);
         setIsOpen(false);
@@ -269,7 +306,8 @@ function FormDestinationPart({
             return;
         }
 
-        const maxIndex = results.length - 1;
+        const currentList = value === "" ? DEFAULT_LOCATIONS : results;
+        const maxIndex = currentList.length - 1;
 
         switch (e.key) {
             case "ArrowDown":
@@ -283,10 +321,11 @@ function FormDestinationPart({
             case "Enter":
                 e.preventDefault();
                 if (activeIndex >= 0 && activeIndex <= maxIndex) {
-                    handleSelect(results[activeIndex]);
-                } else if (results.length > 0) {
-                    handleSelect(results[0]);
+                    handleSelect(currentList[activeIndex]);
+                } else if (currentList.length > 0) {
+                    handleSelect(currentList[0]);
                 }
+                e.currentTarget.blur();
                 break;
             case "Escape":
                 e.preventDefault();
@@ -310,19 +349,37 @@ function FormDestinationPart({
 
                     <input
                         className="border-none bg-transparent focus:ring-0 w-full text-sm p-0 min-w-0"
-                        value={value}
+                        value={
+                            isSelecting && coords && value
+                                ? `${getCleanDestination(value)} (${radius}km)`
+                                : value
+                        }
                         onChange={(e) => {
                             setIsSelecting(false);
-                            onChange(e.target.value);
+                            let val = e.target.value;
+                            
+                            if (isSelecting && coords && value) {
+                                const cleanPrev = getCleanDestination(value);
+                                const formattedPrev = `${cleanPrev} (${radius}km)`;
+                                
+                                if (val.startsWith(formattedPrev) && val.length > formattedPrev.length) {
+                                    const added = val.substring(formattedPrev.length);
+                                    val = cleanPrev + added;
+                                } else if (formattedPrev.startsWith(val) && val.length < formattedPrev.length) {
+                                    val = cleanPrev;
+                                } else {
+                                    val = getCleanDestination(val);
+                                }
+                            }
+
+                            onChange(val);
                             setIsOpen(true);
 
-                            if (e.target.value === "") {
+                            if (val === "") {
                                 onLocationSelect(null);
                                 setResults([]);
                                 setHasSearched(false);
                             }
-                        }}
-                        onFocus={() => {
                             setIsOpen(true);
                             setActiveIndex(-1);
                         }}
@@ -333,16 +390,20 @@ function FormDestinationPart({
                 </div>
             </div>
 
-            {isOpen && (isLoading || results.length > 0 || (hasSearched && results.length === 0)) && (
+            {isOpen && (
                 <Card className="absolute text-base-content w-full md:min-w-[28rem] top-16 z-50 p-3 shadow-2xl border border-base-300 bg-base-200/95 backdrop-blur-md transition-all duration-200 animate-in fade-in slide-in-from-top-2 left-0 right-0">
-                    <div className="flex items-center justify-between px-2 mb-2 pb-1 border-b border-base-300">
-                        <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
-                            {isLoading ? t("search-bar.searching-status") : t("search-bar.results-title")}
-                        </span>
-                        {isLoading && (
-                            <Loader2 className="size-4 animate-spin text-primary" />
-                        )}
-                    </div>
+                    {(isLoading || results.length > 0 || value === "" || (hasSearched && results.length === 0)) && (
+                        <div className="flex items-center justify-between px-2 mb-2 pb-1 border-b border-base-300">
+                            <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
+                                {value === "" 
+                                    ? t("search-bar.suggestions-title") 
+                                    : (isLoading ? t("search-bar.searching-status") : t("search-bar.results-title"))}
+                            </span>
+                            {isLoading && (
+                                <Loader2 className="size-4 animate-spin text-primary" />
+                            )}
+                        </div>
+                    )}
 
                     {isLoading && results.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-6 gap-2 text-base-content/60">
@@ -351,15 +412,15 @@ function FormDestinationPart({
                         </div>
                     )}
 
-                    {!isLoading && hasSearched && results.length === 0 && (
+                    {!isLoading && hasSearched && results.length === 0 && value !== "" && (
                         <div className="text-center py-6 text-base-content/60 text-sm font-medium">
                             {t("search-bar.no-results", { value })}
                         </div>
                     )}
 
-                    {results.length > 0 && (
+                    {((value === "" && !isLoading) || results.length > 0) && (
                         <ul className="flex w-full flex-col gap-1 max-h-80 overflow-y-auto custom-scrollbar">
-                            {results.map((result: any, index: number) => (
+                            {(value === "" ? DEFAULT_LOCATIONS : results).map((result: any, index: number) => (
                                 <li
                                     key={result.place_id}
                                     className="w-full"
@@ -394,6 +455,10 @@ function FormDestinationPart({
                             ))}
                         </ul>
                     )}
+
+                    <div className="mt-3 pt-3 border-t border-base-300">
+                        <FormDistanceSlider radius={radius} onChange={onRadiusChange} />
+                    </div>
                 </Card>
             )}
         </div>
@@ -476,6 +541,33 @@ function FormDatePart({
                     />
                 </div>
             )}
+        </div>
+    );
+}
+
+function FormDistanceSlider({
+    radius,
+    onChange,
+}: {
+    radius: number;
+    onChange: (r: number) => void;
+}) {
+    const { t } = useTranslation();
+    return (
+        <div className="flex items-center justify-between md:justify-center gap-4 bg-base-100 px-4 py-2.5 md:py-2 rounded-xl w-full md:w-auto min-w-[160px]">
+            <div className="flex flex-col w-full gap-1">
+                <span className="font-bold text-sm whitespace-nowrap text-left">
+                    {t("search-bar.radius-label")}: {radius} km
+                </span>
+                <input
+                    type="range"
+                    min="5"
+                    max="500"
+                    value={radius}
+                    onChange={(e) => onChange(Number(e.target.value))}
+                    className="w-full h-1 bg-base-300 rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
+                />
+            </div>
         </div>
     );
 }

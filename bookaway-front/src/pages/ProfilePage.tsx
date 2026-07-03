@@ -64,21 +64,12 @@ export function ProfilePage() {
                                         className="size-full object-cover"
                                     />
                                 </div>
-                                {user.owner && (
-                                    <span className="absolute bottom-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md border border-white dark:border-base-200">
-                                        {t("profile-page.host-badge")}
-                                    </span>
-                                )}
                             </div>
 
-                            {/* Name and Role */}
-                            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-1">
+                            {/* Name */}
+                            <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-6">
                                 {user.name}
                             </h2>
-
-                            <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-6">
-                                {user.owner ? t("profile-page.verified-host") : t("profile-page.traveler")}
-                            </p>
 
                             <div className="w-full border-b border-base-300 dark:border-gray-800 mb-6" />
 

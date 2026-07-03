@@ -29,14 +29,16 @@ class PropertyController extends Controller
             });
         }
 
-        // Filtrer par localisation (Rayon de 50km autour des coordonnées)
+        // Filtrer par localisation (Rayon autour des coordonnées, par défaut 200km)
         if ($request->filled(['lat', 'lon'])) {
             $lat = (float) $request->lat;
             $lon = (float) $request->lon;
+            $radius = $request->filled('radius') ? (float) $request->radius : 200.0;
 
             $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
             $query->selectRaw("*, $haversine AS distance", [$lat, $lon, $lat])
+                ->having('distance', '<=', $radius)
                 ->orderBy('distance');
         }
 

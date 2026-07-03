@@ -102,7 +102,7 @@ export function PropertyCard({
                             </div>
                         )}
 
-                        <Button variant="flat" className="text-blue-600">
+                        <Button variant="flat" className="text-blue-600" noHoverActive>
                             <ArrowRight />
                             {t("search.card-view-btn")}
                         </Button>

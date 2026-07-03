@@ -35,7 +35,9 @@ export function SearchPage() {
 
     const itemsPerPage = 18;
 
-    // Seulement les logements dans un rayon de 50km
+    const radius = Number(searchParams.get("radius") || 50);
+
+    // Seulement les logements dans le rayon spécifié
     const nearbyProperties = useMemo(() => {
         const list = propertiesData || [];
         return list.filter((property) => {
@@ -43,9 +45,9 @@ export function SearchPage() {
                 return true;
             }
 
-            return property.distance <= 50;
+            return property.distance <= radius;
         });
-    }, [propertiesData]);
+    }, [propertiesData, radius]);
 
     // Pagination
     const indexOfLastItem = currentPage * itemsPerPage;
