@@ -1,0 +1,95 @@
+{
+    "home": "Home",
+    "connexion": "Sign in",
+    "deconnexion": "Sign out",
+    "searchTrip": "Search for a stay",
+    "hotel": "Hotel",
+    "camping": "Camping",
+    "previous": "Previous",
+    "step": "Step",
+    "next": "Next",
+    "header": {
+        "reservations": "My bookings",
+        "accommodation": "My accommodations",
+        "messaging": "Messages"
+    },
+    "profil": {
+        "my-profil": "My Profile",
+        "public-profil": "My public profil",
+        "settings": "Settings",
+        "dark-mode": "Dark mode",
+        "personal-information": "Personal information",
+        "name": "Name",
+        "membership": "Member since"
+    },
+    "messaging": {
+        "subject": "Subject",
+        "write-message": "Write your message here...",
+        "there-is": "There are ",
+        "days": "days"
+    },
+    "accommodation": {
+        "accommodation": "My accommodations",
+        "announcements": "Your active listings",
+        "new-accommodation": "New accommodation",
+        "add-accommodation": "Add a listing",
+        "management-accommodation": "Manage, edit and view the accommodations you rent out.",
+        "none-accommodation": "No accommodation registered",
+        "none-location-platform": "You haven't listed any property on our platform yet.",
+        "first-announcement": "Create my first listing",
+        "title-description": "Fill out the form below to add a new property to the platform.",
+        "success-accommodation": "Your listing has been successfully created!",
+        "create-accommodation": "Créer le logement"
+    },
+    "reservations": {
+        "reservations": "My bookings",
+        "descriptions": "Find all your bookings on the platform",
+        "total-amount": "Total amount",
+        "see-accommodation": "View accommodation",
+        "from": "From",
+        "to" : "to"
+    },
+    "properties-edit": {
+        "location": "Accommodation location",
+        "type": "Accommodation type",
+        "basic-info": "Basic information",
+        "price": "Stay price",
+        "photos": "Accommodation photos",
+        "amenities": "Amenities"
+    },
+    "state": {
+        "forthcoming": "Forthcoming",
+        "progress": "In progress",
+        "finished": "Finished"
+    },
+    "amenities": {
+        "bathub": "Bathtub",
+        "cleaning-products": "Cleaning products",
+        "hot-water": "Hot water",
+        "washer": "Washing machine",
+        "essentials": "Essentials",
+        "bed-linens": "Bed linens",
+        "books": "Books",
+        "board-games": "Board games",
+        "central-heating": "Central heating",
+        "smoke-alarm": "Smoke alarm",
+        "wifi": "Wi-Fi",
+        "kitchen": "Kitchen",
+        "refrigerator": "Refrigerator",
+        "microwave": "Microwave",
+        "cooking-basics": "Basic cooking essentials",
+        "coffee": "Coffee maker",
+        "dining-table": "Dining table",
+        "climatisation": "Air conditioning",
+        "television": "Television",
+        "camera": "Security camera",
+        "pool": "Swimming pool",
+        "parking": "Parking"
+    },
+    "accommodation-edit": {
+        "title": "Edit accommodation",
+        "save": "Save changes",
+        "delete": "Delete",
+        "delete-confirm": "Are you sure you want to delete this accommodation?"
+    }
+}

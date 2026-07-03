@@ -11,7 +11,7 @@ import { type Property } from "../types";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
-
+import { useTranslation } from "react-i18next";
 
 
 const STEPS = [
@@ -34,6 +34,7 @@ export function CreatePropertyPage() {
         }
     });
     const { handleSubmit } = form;
+    const { t } = useTranslation();
 
     const [property, setProperty] = useState<Property>();
 
@@ -53,7 +54,7 @@ export function CreatePropertyPage() {
     const Component = STEPS[step].Step
 
     return <>
-        <Banner title="Ajouter un logement" description="Remplissez le formulaire ci-dessous pour ajouter un nouveau logement à la plateforme." />
+        <Banner title={t("accommodation.add-accommodation")} description={t("accommodation.title-description")} />
 
         <main className="flex p-8 gap-4">
             <Stepper steps={STEPS} currentStep={step} />
@@ -63,15 +64,15 @@ export function CreatePropertyPage() {
                     {step > 0 && <div className="flex items-center justify-center">
                         <Button onClick={() => {
                             setStep(step - 1)
-                        }} type="button" variant="outline">Précedent</Button>
-                        <span className="flex-1 text-center">Étape {step + 1}/{STEPS.length}</span>
+                        }} type="button" variant="outline">{t("previous")}</Button>
+                        <span className="flex-1 text-center">{t("step")} {step + 1}/{STEPS.length}</span>
 
                         {step === STEPS.length - 1 ?
                             <Button onClick={() => {
                                 navigate(`/property/${property?.id}`);
                                 toast.success("Votre logement a été créé avec succès!")
                             }}>
-                                Créer le logement
+                                {t("accommodation.create-accommodation")}
                             </Button> :
                             <Button isLoading={isLoading} onClick={async () => {
                                 const stepId = STEPS[step].id;
@@ -102,7 +103,7 @@ export function CreatePropertyPage() {
                                         setStep(step + 1)
                                         break;
                                 }
-                            }} type="button" variant="primary">Suivant</Button>}
+                            }} type="button" variant="primary">{t("next")}</Button>}
                     </div>}
                 </form >
             </div>
