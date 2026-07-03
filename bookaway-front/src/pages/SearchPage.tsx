@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import type { Property } from "../types";
 import { ArrowRight, List, Map } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -6,19 +6,18 @@ import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
 import { amenitiesIcon } from "../amenities";
 import { t } from "i18next";
-import { useSearchParams } from "react-router";
 import { differenceInDays, parseISO } from "date-fns";
-import { useNavigation } from "react-router";
 import Button from "../components/ui/Button";
+import { useSearchProperties } from "../hooks/apiHooks";
 
 export function SearchPage() {
-    const properties: Property[] = useLoaderData();
+    const [searchParams] = useSearchParams();
+    const { data: propertiesData, isLoading } = useSearchProperties(searchParams);
+    const properties = propertiesData || [];
 
     const [view, setView] = useState<"list" | "map">("list");
     const [currentPage, setCurrentPage] = useState(1);
-    const [searchParams] = useSearchParams();
-    const navigation = useNavigation();
-    const loading = navigation.state === "loading";
+    const loading = isLoading;
 
     const from = searchParams.get("from");
     const to = searchParams.get("to");

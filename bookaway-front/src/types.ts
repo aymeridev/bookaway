@@ -26,6 +26,7 @@ export type Property = {
     bookings?: any[];
     user_id?: number;
     user?: User;
+    address?: string;
     ratings_avg: number;
     ratings: {
         id: number;
@@ -50,5 +51,40 @@ export type ApiResponse<T> = {
     data: T;
     message: string;
     code?: string;
+}
 
+export interface Booking {
+    id: number;
+    start_date: string;
+    end_date: string;
+    total_price: number;
+    number_persons: number;
+    status: 'confirmed' | 'pending' | 'cancelled';
+    cancellation_reason?: string | null;
+    property: Property;
+    user?: {
+        id: number;
+        name: string;
+    };
+}
+
+export interface ChatMessage {
+    id: number;
+    conversation_id: number;
+    sender_id: number;
+    content: string;
+    created_at: string;
+}
+
+export interface Conversation {
+    id: number;
+    user_id: number;
+    owner_id: number;
+    property_id: number;
+    updated_at: string;
+    user: { id: number; name: string };
+    owner: { id: number; name: string };
+    property: { id: number; title: string; images: { url: string }[] };
+    messages: ChatMessage[];
+    unread_count: number;
 }

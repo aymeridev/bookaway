@@ -16,78 +16,24 @@ import {
     Users
 } from "lucide-react";
 import api from "../api/axios";
+import { useBookingDetails } from "../hooks/apiHooks";
 import { Banner } from "../components/Banner";
 import { Card } from "../components/Card";
 import Button from "../components/ui/Button";
 import toast from "react-hot-toast";
 
-interface PropertyImage {
-    id: number;
-    url: string;
-}
 
-interface Property {
-    id: number;
-    title: string;
-    description: string;
-    latitude: string;
-    longitude: string;
-    price_per_night: number;
-    images: PropertyImage[];
-    user?: {
-        id: number;
-        name: string;
-    };
-    address?: string;
-}
-
-interface Booking {
-    id: number;
-    start_date: string;
-    end_date: string;
-    total_price: number;
-    number_persons: number;
-    status: 'confirmed' | 'pending' | 'cancelled';
-    cancellation_reason?: string;
-    property: Property;
-    user: {
-        id: number;
-        name: string;
-        email: string;
-    };
-}
 
 export function ReservationDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    const [booking, setBooking] = useState<Booking | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const { data: booking, isLoading: loading, error: apiError, setData: setBooking } = useBookingDetails(id);
+    const error = apiError ? "Impossible de charger les détails de la réservation." : null;
     const [address, setAddress] = useState("Chargement de l'adresse...");
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [cancellationReason, setCancellationReason] = useState("");
     const [isCancelling, setIsCancelling] = useState(false);
-
-    useEffect(() => {
-        const fetchBooking = async () => {
-            try {
-                setLoading(true);
-                const res = await api.get(`/bookings/${id}`);
-                setBooking(res.data);
-                setError(null);
-            } catch (err) {
-                console.error("Error loading booking:", err);
-                setError("Impossible de charger les détails de la réservation.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) {
-            fetchBooking();
-        }
-    }, [id]);
 
     useEffect(() => {
         if (booking) {

@@ -3,25 +3,36 @@ import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
-import { Link, useLoaderData, useSearchParams, useNavigate } from "react-router";
+import { Link, useParams, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO, eachDayOfInterval, formatDate } from "date-fns";
 import Button from '../components/ui/Button';
-import { ArrowLeft, Map, SquarePen, Star } from 'lucide-react';
+import { ArrowLeft, Map, SquarePen, Star, Loader2 } from 'lucide-react';
 import { fr } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
 import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
-import type { Property } from '../types';
 import { Card } from '../components/Card';
 import useAuthStore from '../context/AuthStore';
 import { frCA } from 'date-fns/locale';
+import { usePropertyDetails } from '../hooks/apiHooks';
 
 export function PropertyDetailsPage() {
-    const property: Property = useLoaderData();
+    const { id } = useParams<{ id: string }>();
+    const { data: property, isLoading } = usePropertyDetails(id);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const user = useAuthStore((state) => state.user);
+
+    if (isLoading || !property) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <p className="text-gray-500 font-medium">Chargement des détails du logement...</p>
+            </div>
+        );
+    }
+
     const isOwner = user?.id === property.user_id;
 
     const urlFrom = searchParams.get("from");

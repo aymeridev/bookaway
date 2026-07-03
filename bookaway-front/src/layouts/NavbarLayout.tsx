@@ -4,43 +4,25 @@ import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Moon, Settings, Su
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
-import api from "../api/axios";
-
-interface ConversationNotification {
-    id: number;
-    unread_count: number;
-}
+import { useConversations } from "../hooks/apiHooks";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
-
+    const location = useLocation();
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-    const [unreadCount, setUnreadCount] = useState<number>(0);
-    const location = useLocation();
+    const { data: conversations, refetch } = useConversations(isAuthenticated ? 30000 : undefined);
 
     useEffect(() => {
-        if (!isAuthenticated) return;
+        if (isAuthenticated) {
+            refetch();
+        }
+    }, [location, isAuthenticated, refetch]);
 
-        const fetchNotifications = async () => {
-            try {
-                const res = await api.get('/conversations');
-                const conversations: ConversationNotification[] = res.data;
-                // Calcule la somme de tous les unread_count
-                const total = conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0);
-                setUnreadCount(total);
-            } catch (error) {
-                console.error("Impossible de charger les notifications de messages", error);
-            }
-        };
-
-        fetchNotifications();
-
-        const interval = setInterval(fetchNotifications, 30000);
-        return () => clearInterval(interval);
-
-    }, [isAuthenticated, location]);
+    const unreadCount = conversations
+        ? conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0)
+        : 0;
 
     return (
         <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh">

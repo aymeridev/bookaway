@@ -1,31 +1,19 @@
-import { useEffect, useState } from "react";
-import api from "../api/axios";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Banner } from "../components/Banner";
 
+import { useUserProfile } from "../hooks/apiHooks";
+
 export function ProfilePage() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const user = useAuthStore((state) => state.user);
-    const [bookings, setBookings] = useState([]);
-    useEffect(() => {
-        const fetchMyProfile = async () => {
-            try {
-                const response = await api.get(`/users/${user?.id}`);
-                setBookings(response.data.bookings || []);
-            } catch (err) {
-                console.error("Erreur profil", err);
-            }
-        };
+    
+    const { data: profileData, isLoading: isProfileLoading } = useUserProfile(user?.id);
+    const bookings = profileData?.bookings || [];
 
-        if (user?.id) {
-            fetchMyProfile();
-        }
-    }, [user?.id]);
-
-    if (isAuthenticated && !user) {
+    if ((isAuthenticated && !user) || isProfileLoading) {
         return <p>Chargement des données utilisateur...</p>;
     }
 

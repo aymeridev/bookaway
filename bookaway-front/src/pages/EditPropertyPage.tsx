@@ -3,15 +3,35 @@ import { Banner } from "../components/Banner";
 import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
 import { useForm } from "react-hook-form";
 import type { Property } from "../types";
-import { useLoaderData, useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Card } from "../components/Card";
 import Button from "../components/ui/Button";
-import { Save } from "lucide-react";
+import { Save, Loader2 } from "lucide-react";
 import { StepperList } from "../components/create_property/StepperList";
 import api from "../api/axios";
+import { usePropertyDetails } from "../hooks/apiHooks";
 
 export function EditPropertyPage() {
-    const property = useLoaderData() as Property;
+    const { id } = useParams<{ id: string }>();
+    const { data: property, isLoading } = usePropertyDetails(id);
+
+    if (isLoading || !property) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <p className="text-gray-500 font-medium">Chargement des données du logement...</p>
+            </div>
+        );
+    }
+
+    return <EditPropertyForm property={property} />;
+}
+
+interface EditPropertyFormProps {
+    property: Property;
+}
+
+function EditPropertyForm({ property }: EditPropertyFormProps) {
     const form = useForm<PropertyForm>({
         defaultValues: {
             title: property.title || "",
@@ -30,7 +50,6 @@ export function EditPropertyPage() {
             amenities: (property.amenities || []).map(a => ({ value: a })),
         }
     });
-
 
     const [step, setStep] = useState(0);
 
@@ -54,13 +73,10 @@ export function EditPropertyPage() {
                         if (confirm("Êtes-vous sûr de vouloir supprimer ce logement ?")) {
                             api.delete(`/properties/${property.id}`);
                             navigate("/my-properties");
-
                         }
                     }} variant="danger">Supprimer</Button>
                 </Card>
             </main>
-
-
         </>
     )
 }

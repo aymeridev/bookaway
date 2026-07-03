@@ -1,22 +1,28 @@
-import { useLoaderData, Link } from "react-router";
+import { Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, MessageSquare, Receipt } from "lucide-react";
+import { Calendar, MessageSquare, Receipt, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
-import type { Property } from "../types";
 import Button from "../components/ui/Button";
 import { Card } from "../components/Card";
+import { useMyReservations } from "../hooks/apiHooks";
 
-interface Booking {
-    id: number;
-    start_date: string;
-    end_date: string;
-    total_price: number;
-    property: Property;
-}
 
 export function MyReservationsPage() {
-    const bookings = useLoaderData() as Booking[];
+    const { data: bookingsData, isLoading } = useMyReservations();
+    const bookings = bookingsData || [];
+
+    if (isLoading) {
+        return (
+            <>
+                <Banner title="Mes réservations" />
+                <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+                    <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                    <p className="text-gray-500 font-medium">Chargement de vos réservations...</p>
+                </div>
+            </>
+        );
+    }
 
     // Fonction pour générer un badge de statut dynamique
     const getStatusBadge = (startDateStr: string, endDateStr: string) => {

@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { useLoaderData, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Send, Home, MessageSquare } from "lucide-react";
+import { Send, Home, MessageSquare, Loader2 } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
+import { useConversations } from "../hooks/apiHooks";
 
 interface ChatMessage {
     id: number;
@@ -29,27 +30,34 @@ interface Conversation {
 }
 
 export function MessagesPage() {
-    const initialConversations = useLoaderData() as Conversation[];
+    const { data: conversationsData, isLoading } = useConversations();
     const currentUser = useAuthStore((state) => state.user);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const paramId = searchParams.get("conversation_id");
+
+    const [conversations, setConversations] = useState<Conversation[]>([]);
 
     const activeChatId = (() => {
         if (paramId) {
             const parsed = parseInt(paramId, 10);
             if (!isNaN(parsed)) return parsed;
         }
-        return initialConversations[0]?.id || null;
+        return conversations[0]?.id || null;
     })();
 
-    const [conversations, setConversations] = useState<Conversation[]>(() => {
-        return initialConversations.map(conv =>
-            conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
-        );
-    });
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (conversationsData) {
+            setConversations(
+                conversationsData.map(conv =>
+                    conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
+                )
+            );
+        }
+    }, [conversationsData, activeChatId]);
 
     // Trouver la conversation actuellement sélectionnée
     const activeConversation = conversations.find(c => c.id === activeChatId);
@@ -102,6 +110,15 @@ export function MessagesPage() {
             console.error("Impossible d'envoyer le message", error);
         }
     };
+
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <p className="text-gray-500 font-medium">Chargement de vos messages...</p>
+            </div>
+        );
+    }
 
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">

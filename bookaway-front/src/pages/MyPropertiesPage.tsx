@@ -1,13 +1,26 @@
-import { PlusCircle, Home } from "lucide-react";
+import { PlusCircle, Home, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
 import Button from "../components/ui/Button";
-import { useLoaderData, Link } from "react-router";
-import type { Property } from "../types";
+import { Link } from "react-router";
 import { PropertyCard } from "./SearchPage";
 import { Card } from "../components/Card";
+import { useMyProperties } from "../hooks/apiHooks";
 
 export function MyPropertiesPage() {
-    const properties: Property[] = useLoaderData();
+    const { data: propertiesData, isLoading } = useMyProperties();
+    const properties = propertiesData || [];
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50/50 pb-12">
+                <Banner title="Mes logements" />
+                <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
+                    <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                    <p className="text-gray-500 font-medium">Chargement de vos logements...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">
