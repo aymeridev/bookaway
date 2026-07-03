@@ -181,7 +181,7 @@ export function PropertyDetailsPage() {
 
             <div className="flex flex-col lg:flex-row gap-12">
                 <div className="flex-2 space-y-8">
-                    {images.length > 0 ? <div className="w-full overflow-hidden rounded-2xl shadow-md bg-gray-50">
+                    {images.length > 0 ? <div className="w-full overflow-hidden rounded-2xl shadow-md bg-gray-50 property-details-gallery">
                         <ImageGallery
                             ref={galleryRef}
                             items={images}
@@ -267,7 +267,7 @@ export function PropertyDetailsPage() {
                     <dialog
                         ref={dialogRef}
                         onClick={handleBackdropClick}
-                        className="rounded-2xl p-6 shadow-2xl border border-gray-100 max-w-md w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+                        className="rounded-2xl p-6 shadow-2xl border border-gray-100 max-w-md w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm m-auto"
                     >
                         <div className="space-y-4">
                             <h3 className="text-xl font-bold text-gray-900">{t("property-details.modal-title")}</h3>
@@ -276,17 +276,19 @@ export function PropertyDetailsPage() {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t("property-details.modal-rating-label")}</label>
                                     <div className="flex gap-2">
                                         {[1, 2, 3, 4, 5].map((star) => (
-                                            <button
+                                            <Button
                                                 key={star}
                                                 type="button"
+                                                variant="flat"
+                                                size="sm"
                                                 onClick={() => setRatingStars(star)}
-                                                className="focus:outline-none transition-colors"
+                                                className="p-0 border-0 bg-transparent hover:bg-transparent shadow-none hover:scale-100 active:scale-100 min-h-0 min-w-0 flex items-center justify-center focus:ring-0 focus:ring-offset-0 focus:outline-none transition-colors"
                                             >
                                                 <Star
                                                     className={`size-8 ${star <= ratingStars ? 'text-yellow-400' : 'text-gray-300'}`}
                                                     fill={star <= ratingStars ? 'currentColor' : 'none'}
                                                 />
-                                            </button>
+                                            </Button>
                                         ))}
                                     </div>
                                 </div>

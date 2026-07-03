@@ -5,6 +5,7 @@ import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
 import { useTranslation } from "react-i18next";
+import Button from "../components/ui/Button";
 
 export function RegisterPage() {
     const { t } = useTranslation();
@@ -109,7 +110,7 @@ export function RegisterPage() {
                         </div>
 
                         <button type="submit" className="bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition mt-4">
-                            {t("register.submit-btn")}
+                            S'inscrire
                         </button>
                     </div>
 

@@ -67,6 +67,7 @@
     "state": {
         "cancelled": "Cancelled",
         "pending": "Pending",
+        "confirmed": "Confirmed",
         "forthcoming": "Upcoming",
         "finished": "Completed",
         "progress": "In progress"
@@ -132,14 +133,23 @@
         "loading": "Loading user data...",
         "unauthenticated": "Please log in to access this page.",
         "banner-title": "My Profile",
+        "banner-description": "Manage your personal information and check your bookings",
         "personal-info": "Personal information",
         "name": "Name:",
         "email": "Email:",
+        "email-label": "Email address",
         "member-since": "Member since {{date}}",
         "my-bookings": "My Bookings",
         "from": "From",
         "to": "to",
-        "no-bookings": "You don't have any bookings yet."
+        "no-bookings": "You don't have any bookings yet.",
+        "no-bookings-detail": "You have not made any bookings on Bookaway yet.",
+        "verified-host": "Verified Host",
+        "traveler": "Traveler",
+        "host-badge": "Host",
+        "bookings-label": "Bookings",
+        "total-price": "Total price",
+        "details": "Details"
     },
     "property-details": {
         "loading": "Loading property details...",

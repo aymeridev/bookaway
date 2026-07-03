@@ -5,6 +5,7 @@ import { Send, Home, MessageSquare, Loader2, XCircle } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 import { useConversations } from "../hooks/apiHooks";
 import type { Conversation, ChatMessage } from "../types";
 import { useTranslation } from "react-i18next";
@@ -129,8 +130,9 @@ export function MessagesPage() {
                                 const propImage = conv.property?.images?.[0]?.url || "https://loremflickr.com/100/100/house";
 
                                 return (
-                                    <button
+                                    <Button
                                         key={conv.id}
+                                        variant="flat"
                                         onClick={() => {
                                             setSearchParams({ conversation_id: String(conv.id) });
                                             setConversations(prev =>
@@ -139,7 +141,7 @@ export function MessagesPage() {
                                                 )
                                             );
                                         }}
-                                        className={`w-full p-4 text-left flex gap-3 transition-colors ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600" : "bg-white hover:bg-gray-50"
+                                        className={`w-full p-4 text-left flex gap-3 transition-colors rounded-none justify-start items-start enabled:hover:scale-100 enabled:hover:shadow-none enabled:active:scale-100 ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600 text-gray-900" : "bg-white hover:bg-gray-50"
                                             }`}
                                     >
                                         <img
@@ -171,7 +173,7 @@ export function MessagesPage() {
                                                {lastMsg ? lastMsg.content : t("chat-page.start-discussion")}
                                             </p>
                                         </div>
-                                    </button>
+                                    </Button>
                                 );
                             })
                         )}
@@ -248,12 +250,12 @@ export function MessagesPage() {
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         className="flex-1"
                                     />
-                                    <button
+                                    <Button
                                         type="submit"
-                                        className="bg-blue-600 hover:bg-blue-700 text-white font-medium p-3 rounded-xl transition-all shadow-sm active:scale-95 shrink-0 inline-flex items-center justify-center"
+                                        className="p-3 rounded-xl shrink-0"
                                     >
                                         <Send className="w-5 h-5" />
-                                    </button>
+                                    </Button>
                                 </div>
                             </form>
                         </>

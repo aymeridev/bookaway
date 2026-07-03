@@ -59,6 +59,7 @@
     "state": {
         "cancelled": "Annulé",
         "pending": "En attente",
+        "confirmed": "Confirmée",
         "forthcoming": "À venir",
         "finished": "Terminé",
         "progress": "En cours"
@@ -132,14 +133,23 @@
         "loading": "Chargement des données utilisateur...",
         "unauthenticated": "Veuillez vous connecter pour accéder à cette page.",
         "banner-title": "Mon Profil",
+        "banner-description": "Gérez vos informations personnelles et consultez vos réservations",
         "personal-info": "Informations personnelles",
         "name": "Nom :",
         "email": "Email :",
+        "email-label": "Adresse email",
         "member-since": "Membre depuis {{date}}",
         "my-bookings": "Mes Réservations",
         "from": "Du",
         "to": "au",
-        "no-bookings": "Vous n'avez pas encore de réservations."
+        "no-bookings": "Vous n'avez pas encore de réservations.",
+        "no-bookings-detail": "Vous n'avez pas encore effectué de réservation sur Bookaway.",
+        "verified-host": "Hôte Vérifié",
+        "traveler": "Voyageur",
+        "host-badge": "Hôte",
+        "bookings-label": "Réservations",
+        "total-price": "Prix total",
+        "details": "Détails"
     },
     "property-details": {
         "loading": "Chargement des détails du logement...",

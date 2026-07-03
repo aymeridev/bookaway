@@ -118,3 +118,31 @@
 .text-title-xsmall {
     @apply text-xl font-semibold tracking-tight;
 }
+
+.property-details-gallery {
+    .image-gallery-swipe-wrapper {
+        max-height: 500px;
+        
+        @media (max-width: 768px) {
+            max-height: 350px;
+        }
+        @media (max-width: 480px) {
+            max-height: 250px;
+        }
+    }
+    
+    .image-gallery-image {
+        max-height: 500px;
+        height: 500px;
+        object-fit: cover;
+        
+        @media (max-width: 768px) {
+            max-height: 350px;
+            height: 350px;
+        }
+        @media (max-width: 480px) {
+            max-height: 250px;
+            height: 250px;
+        }
+    }
+}

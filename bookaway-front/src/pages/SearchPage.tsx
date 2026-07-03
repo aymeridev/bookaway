@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router";
 import type { Property } from "../types";
-import { ArrowRight, List, Map } from "lucide-react";
+import { ArrowRight, List, Map, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
@@ -99,22 +99,24 @@ export function SearchPage() {
                 </div>
 
                 <div className="inline-flex p-1 bg-gray-100 rounded-xl border border-gray-200">
-                    <button
+                    <Button
+                        variant="flat"
                         onClick={() => setView("list")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "list"
-                            ? "bg-white shadow-sm text-blue-600"
-                            : "text-gray-500 hover:text-gray-700"
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-100 active:scale-100 shadow-none hover:shadow-none focus:ring-0 focus:ring-offset-0 focus:outline-none ${view === "list"
+                            ? "bg-white shadow-sm text-blue-600 hover:bg-white"
+                            : "text-gray-500 hover:text-gray-700 hover:bg-transparent"
                             }`}
                     >
                         <List size={18} />
                         {t("search.view-list")}
                     </button>
 
-                    <button
+                    <Button
+                        variant="flat"
                         onClick={() => setView("map")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${view === "map"
-                            ? "bg-white shadow-sm text-blue-600"
-                            : "text-gray-500 hover:text-gray-700"
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-100 active:scale-100 shadow-none hover:shadow-none focus:ring-0 focus:ring-offset-0 focus:outline-none ${view === "map"
+                            ? "bg-white shadow-sm text-blue-600 hover:bg-white"
+                            : "text-gray-500 hover:text-gray-700 hover:bg-transparent"
                             }`}
                     >
                         <Map size={18} />
@@ -215,13 +217,38 @@ export function PropertyCard({
                         src={property.images[0].url}
                         alt={property.title}
                     />
+                    {property.user && (
+                        <div 
+                            className="absolute bottom-3 right-3 z-10 size-10 rounded-full border-2 border-white dark:border-base-300 shadow-md overflow-hidden bg-white hover:scale-110 transition-transform duration-300"
+                            title={`Hôte: ${property.user.name}`}
+                        >
+                            <img 
+                                src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${property.user.id}`} 
+                                alt={property.user.name} 
+                                className="w-full h-full object-cover" 
+                            />
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex flex-col flex-1 p-5 justify-between">
                     <div className="space-y-2">
-                        <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-1">
-                            {property.title}
-                        </h3>
+                        <div className="flex items-start justify-between gap-4">
+                            <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-1 flex-1">
+                                {property.title}
+                            </h3>
+                            {property.ratings_avg !== null && property.ratings_avg !== undefined ? (
+                                <div className="flex items-center gap-1 shrink-0 text-sm font-bold text-gray-800 bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100/80 hover:bg-yellow-50/50 transition-colors">
+                                    <Star className="size-4 text-yellow-500 fill-yellow-500" />
+                                    <span>{property.ratings_avg}</span>
+                                    <span className="text-gray-400 font-normal text-xs">({property.ratings?.length || 0})</span>
+                                </div>
+                            ) : (
+                                <span className="text-xs font-semibold text-blue-600 bg-blue-50/50 border border-blue-100/50 px-2 py-0.5 rounded-lg shrink-0">
+                                    Nouveau
+                                </span>
+                            )}
+                        </div>
 
                         <p className="text-gray-600 line-clamp-2 text-sm leading-relaxed">
                             {property.description}
