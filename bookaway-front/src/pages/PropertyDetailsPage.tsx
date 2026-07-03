@@ -24,27 +24,8 @@ export function PropertyDetailsPage() {
 
     const user = useAuthStore((state) => state.user);
 
-    if (isLoading || !property) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-                <p className="text-gray-500 font-medium">Chargement des détails du logement...</p>
-            </div>
-        );
-    }
-
-    const isOwner = user?.id === property.user_id;
-
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
-
-    const disabledDays = [
-        { before: new Date() },
-        ...(property.bookings || []).map((booking: any) => ({
-            from: parseISO(booking.start_date),
-            to: parseISO(booking.end_date)
-        }))
-    ];
 
     const [range, setRange] = useState<DateRange | undefined>(() => {
         if (urlFrom && urlTo) {
@@ -56,6 +37,26 @@ export function PropertyDetailsPage() {
         return undefined;
     });
     const [month, setMonth] = useState<Date>(range?.from || new Date());
+    const galleryRef = useRef<ImageGalleryRef>(null);
+
+    if (isLoading || !property) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <p className="text-gray-500 font-medium">Chargement des détails du logement...</p>
+            </div>
+        );
+    }
+
+    const isOwner = user?.id === property.user_id;
+
+    const disabledDays = [
+        { before: new Date() },
+        ...(property.bookings || []).map((booking: any) => ({
+            from: parseISO(booking.start_date),
+            to: parseISO(booking.end_date)
+        }))
+    ];
 
     const handleSelectRange = (newRange: DateRange | undefined) => {
         if (!newRange?.from || !newRange?.to) {
@@ -102,7 +103,6 @@ export function PropertyDetailsPage() {
         original: img.url,
         thumbnail: img.url
     })) : [];
-    const galleryRef = useRef<ImageGalleryRef>(null);
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">

@@ -2,32 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Send, Home, MessageSquare, Loader2 } from "lucide-react";
+import { Send, Home, MessageSquare, Loader2, XCircle } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
 import { useConversations } from "../hooks/apiHooks";
-
-interface ChatMessage {
-    id: number;
-    conversation_id: number;
-    sender_id: number;
-    content: string;
-    created_at: string;
-}
-
-interface Conversation {
-    id: number;
-    user_id: number;
-    owner_id: number;
-    property_id: number;
-    updated_at: string;
-    user: { id: number; name: string };
-    owner: { id: number; name: string };
-    property: { id: number; title: string; images: { url: string }[] };
-    messages: ChatMessage[];
-    unread_count: number;
-}
+import type { Conversation, ChatMessage } from "../types";
 
 export function MessagesPage() {
     const { data: conversationsData, isLoading } = useConversations();
@@ -165,7 +145,9 @@ export function MessagesPage() {
                                         />
                                         <div className="flex-1 min-w-0 space-y-0.5">
                                             <div className="flex items-center justify-between">
-                                                <span className="font-semibold text-gray-900 truncate text-sm">
+                                                <span className={`font-semibold truncate text-sm ${
+                                                    conv.booking?.status === "cancelled" ? "text-red-600 line-through" : "text-gray-900"
+                                                }`}>
                                                     {interlocutor.name}
                                                 </span>
                                                 {lastMsg && (
@@ -174,10 +156,14 @@ export function MessagesPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-xs text-indigo-600 font-medium truncate flex items-center gap-1">
+                                            <p className={`text-xs font-medium truncate flex items-center gap-1 ${
+                                                conv.booking?.status === "cancelled" ? "text-red-500 line-through" : "text-indigo-600"
+                                            }`}>
                                                 <Home className="w-3 h-3 shrink-0" /> {conv.property?.title}
                                             </p>
-                                            <p className="text-sm text-gray-500 truncate">
+                                            <p className={`text-sm truncate ${
+                                                conv.booking?.status === "cancelled" ? "text-red-400/80 italic" : "text-gray-500"
+                                            }`}>
                                                 {lastMsg ? lastMsg.content : "Démarrer la discussion..."}
                                             </p>
                                         </div>
@@ -204,6 +190,26 @@ export function MessagesPage() {
                                     </div>
                                 </div>
                             </div>
+
+                            {activeConversation.booking?.status === "cancelled" && (
+                                <div className="bg-red-50 border-b border-red-200 p-4 flex items-start gap-3">
+                                    <div className="p-1.5 bg-red-100 rounded-lg text-red-600 shrink-0">
+                                        <XCircle className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1 text-sm text-red-800">
+                                        <p className="font-bold">Réservation annulée</p>
+                                        <p className="mt-1 text-red-700 leading-relaxed">
+                                            La réservation pour ce logement a été annulée.
+                                            {activeConversation.booking.cancellation_reason && (
+                                                <span className="block mt-1 text-red-600 italic">
+                                                    Motif : "{activeConversation.booking.cancellation_reason}"
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/30">
                                 {activeConversation.messages.map((msg) => {
                                     const isMe = String(msg.sender_id) === String(currentUser?.id);

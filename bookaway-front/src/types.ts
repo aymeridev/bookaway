@@ -87,4 +87,5 @@ export interface Conversation {
     property: { id: number; title: string; images: { url: string }[] };
     messages: ChatMessage[];
     unread_count: number;
+    booking?: Booking | null;
 }
