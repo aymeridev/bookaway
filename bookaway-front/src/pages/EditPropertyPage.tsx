@@ -13,7 +13,6 @@ import { usePropertyDetails } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 
 export function EditPropertyPage() {
-    const { t } = useTranslation();
     const { id } = useParams<{ id: string }>();
     const { data: property, isLoading } = usePropertyDetails(id);
 
@@ -34,6 +33,7 @@ interface EditPropertyFormProps {
 }
 
 function EditPropertyForm({ property }: EditPropertyFormProps) {
+    const { t } = useTranslation();
     const form = useForm<PropertyForm>({
         defaultValues: {
             title: property.title || "",

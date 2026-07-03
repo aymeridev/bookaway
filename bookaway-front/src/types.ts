@@ -32,6 +32,7 @@ export type Property = {
         id: number;
         created_at: string;
         stars: number;
+        comment?: string;
         user_id: number;
         author: {
             id: number;

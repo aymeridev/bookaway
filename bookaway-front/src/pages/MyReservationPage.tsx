@@ -9,6 +9,7 @@ import { useMyReservations } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 
 export function MyReservationsPage() {
+    const { t } = useTranslation();
     const { data: bookingsData, isLoading } = useMyReservations();
     const bookings = bookingsData || [];
 
@@ -23,7 +24,6 @@ export function MyReservationsPage() {
             </>
         );
     }
-    const { t } = useTranslation();
 
     // Fonction pour générer un badge de statut dynamique
     const getStatusBadge = (status: string, startDateStr: string, endDateStr: string) => {

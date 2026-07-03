@@ -21,7 +21,6 @@ import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/EditPropertyPage.tsx'
 import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
-import { RateProperyPage } from './pages/RatePropertyPage.tsx'
 import { MessagesPage } from './pages/MessagesPage.tsx'
 import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
  
@@ -73,11 +72,6 @@ import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
        {
          path: "/property/:id",
          Component: PropertyDetailsPage,
-       },
-       {
-         path: "/property/:id/rate",
-         middleware: [authMiddleware],
-         Component: RateProperyPage,
        },
        {
          path: "/property/:id/edit",

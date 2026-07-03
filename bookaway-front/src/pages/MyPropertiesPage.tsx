@@ -8,6 +8,7 @@ import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 
 export function MyPropertiesPage() {
+    const { t } = useTranslation();
     const { data: propertiesData, isLoading } = useMyProperties();
     const properties = propertiesData || [];
 
@@ -22,7 +23,6 @@ export function MyPropertiesPage() {
             </div>
         );
     }
-    const { t } = useTranslation();
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">

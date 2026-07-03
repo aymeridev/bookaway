@@ -37,14 +37,15 @@ export function SearchPage() {
 
     // Seulement les logements dans un rayon de 50km
     const nearbyProperties = useMemo(() => {
-        return properties.filter((property) => {
+        const list = propertiesData || [];
+        return list.filter((property) => {
             if (property.distance === undefined) {
                 return true;
             }
 
             return property.distance <= 50;
         });
-    }, [properties]);
+    }, [propertiesData]);
 
     // Pagination
     const indexOfLastItem = currentPage * itemsPerPage;

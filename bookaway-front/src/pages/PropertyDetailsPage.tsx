@@ -15,14 +15,66 @@ import { Card } from '../components/Card';
 import useAuthStore from '../context/AuthStore';
 import { frCA } from 'date-fns/locale';
 import { usePropertyDetails } from '../hooks/apiHooks';
+import api from '../api/axios';
+import toast from 'react-hot-toast';
 
 export function PropertyDetailsPage() {
     const { id } = useParams<{ id: string }>();
-    const { data: property, isLoading } = usePropertyDetails(id);
+    const { data: property, isLoading, refetch } = usePropertyDetails(id);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const user = useAuthStore((state) => state.user);
+
+    const dialogRef = useRef<HTMLDialogElement>(null);
+    const [ratingStars, setRatingStars] = useState<number>(5);
+    const [ratingComment, setRatingComment] = useState<string>('');
+    const [isSubmittingRating, setIsSubmittingRating] = useState<boolean>(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const handleOpenModal = () => {
+        if (!user) {
+            toast.error("Vous devez être connecté pour donner votre avis.");
+            navigate('/login');
+            return;
+        }
+        dialogRef.current?.showModal();
+    };
+
+    const handleBackdropClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+        if (e.target === dialogRef.current) {
+            dialogRef.current?.close();
+        }
+    };
+
+    const handleRatingSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!property) return;
+        setIsSubmittingRating(true);
+        setSubmitError(null);
+
+        try {
+            await api.post('/ratings', {
+                ratable_type: 'property',
+                ratable_id: property.id,
+                stars: ratingStars,
+                comment: ratingComment
+            });
+            
+            toast.success("Avis enregistré avec succès !");
+            setRatingComment('');
+            setRatingStars(5);
+            dialogRef.current?.close();
+            refetch();
+        } catch (err: any) {
+            console.error(err);
+            const errMsg = err.response?.data?.message || "Une erreur est survenue lors de l'enregistrement de votre avis.";
+            setSubmitError(errMsg);
+            toast.error(errMsg);
+        } finally {
+            setIsSubmittingRating(false);
+        }
+    };
 
     const urlFrom = searchParams.get("from");
     const urlTo = searchParams.get("to");
@@ -167,25 +219,99 @@ export function PropertyDetailsPage() {
                     </div>
 
                     <Card>
-                        <h2 className='text-title-medium'>Avis ({property.ratings.length})</h2>
-                        <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> {property.ratings_avg}</h3>
-                        <ul className='grid grid-cols-2 gap-4'>
-                            {property.ratings.map((rating) => (<li className='max-w-xs'>
-                                <Card>
-                                    <div className="flex items-center gap-2 justify-center">
-                                        <div aria-hidden="true" className="rounded-full size-6 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
-                                        <span className='font-semibold'>{rating.author.name}</span>
-                                        <span className='flex'><Star fill="currentColor" /> {rating.stars}/5</span>
-                                    </div>
-                                    <p className='text-base'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga aut cupiditate voluptatem incidunt illo dolore, id minima dolor ab sunt.</p>
-                                    <span className='text-base-content/60'>Avis laissé en {formatDate(rating.created_at, "MMMM yyyy", { locale: frCA })}</span>
-                                </Card>
-                            </li>))}
-                        </ul>
-                        <Link to={`/property/${property.id}/rate`}>
-                            <Button>Donner son avis</Button>
-                        </Link>
+                        <div className="flex justify-between items-center mb-4">
+                            <div>
+                                <h2 className='text-title-medium'>Avis ({property.ratings.length})</h2>
+                                <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> {property.ratings_avg}</h3>
+                            </div>
+                            {!isOwner && (
+                                <Button onClick={handleOpenModal}>Donner son avis</Button>
+                            )}
+                        </div>
+                        {property.ratings.length > 0 ? (
+                            <ul className='grid grid-cols-2 gap-4'>
+                                {property.ratings.map((rating) => (
+                                    <li key={rating.id} className='max-w-xs'>
+                                        <Card>
+                                            <div className="flex items-center gap-2 justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
+                                                    <span className='font-semibold'>{rating.author.name}</span>
+                                                </div>
+                                                <span className='flex items-center gap-1 text-yellow-500 font-semibold'><Star className="size-4" fill="currentColor" /> {rating.stars}/5</span>
+                                            </div>
+                                            {rating.comment ? (
+                                                <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
+                                            ) : (
+                                                <p className='text-base text-gray-400 italic mb-2'>Aucun commentaire laissé.</p>
+                                            )}
+                                            <span className='text-xs text-gray-500 block'>Avis laissé en {formatDate(rating.created_at, "MMMM yyyy", { locale: frCA })}</span>
+                                        </Card>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-500 italic">Aucun avis pour le moment.</p>
+                        )}
                     </Card>
+
+                    <dialog
+                        ref={dialogRef}
+                        onClick={handleBackdropClick}
+                        className="rounded-2xl p-6 shadow-2xl border border-gray-100 max-w-md w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+                    >
+                        <div className="space-y-4">
+                            <h3 className="text-xl font-bold text-gray-900">Donner votre avis</h3>
+                            <form onSubmit={handleRatingSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Note (sur 5)</label>
+                                    <div className="flex gap-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => setRatingStars(star)}
+                                                className="focus:outline-none transition-colors"
+                                            >
+                                                <Star
+                                                    className={`size-8 ${star <= ratingStars ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                    fill={star <= ratingStars ? 'currentColor' : 'none'}
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="modal-comment" className="block text-sm font-medium text-gray-700 mb-1">Commentaire</label>
+                                    <textarea
+                                        id="modal-comment"
+                                        value={ratingComment}
+                                        onChange={(e) => setRatingComment(e.target.value)}
+                                        placeholder="Racontez votre expérience..."
+                                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-[100px]"
+                                    />
+                                </div>
+                                {submitError && (
+                                    <p className="text-sm text-red-600 font-medium">{submitError}</p>
+                                )}
+                                <div className="flex justify-end gap-3 pt-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => dialogRef.current?.close()}
+                                    >
+                                        Annuler
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        isLoading={isSubmittingRating}
+                                    >
+                                        Soumettre
+                                    </Button>
+                                </div>
+                            </form>
+                        </div>
+                    </dialog>
                 </div>
 
                 {!isOwner && <div className="flex-1">
