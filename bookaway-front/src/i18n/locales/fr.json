@@ -301,5 +301,17 @@
         "user-listings": "Les annonces de {{name}}",
         "no-listings-title": "Aucune annonce publiée",
         "no-listings-desc": "{{name}} n'a pas encore proposé d'hébergements sur la plateforme."
+    },
+    "search-bar": {
+        "travelers-label": "Voyageurs",
+        "search-btn": "Rechercher",
+        "destination-label": "Destination",
+        "destination-placeholder": "Rechercher une destination",
+        "searching-status": "Recherche en cours...",
+        "results-title": "Résultats de recherche",
+        "searching-box": "Recherche de la destination...",
+        "no-results": "Aucun résultat trouvé pour \"{{value}}\"",
+        "dates-label": "Dates",
+        "dates-placeholder": "Quand ?"
     }
 }
