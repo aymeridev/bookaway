@@ -8,23 +8,24 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 export function SettingsPage() {
-
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
 
     const handleDelete = () => {
-        if (confirm("Êtes-vous sûr de vouloir supprimer votre compte ?")) {
-            api.delete("/users/" + user?.id).then(() => {
-                logout();
-                navigate('/');
-                toast.success("Compte désactivé avec succès");
-            }).catch(() => {
-                toast.error("Erreur lors de la désactivation du compte");
-            })
+        if (confirm(t("settings-page.delete-confirm"))) {
+            api.delete("/users/" + user?.id)
+                .then(() => {
+                    logout();
+                    navigate('/');
+                    toast.success(t("settings-page.delete-success"));
+                })
+                .catch(() => {
+                    toast.error(t("settings-page.delete-error"));
+                });
         }
-    }   
+    };
 
     const changeLanguage = (lang: "fr" | "en") => {
         i18n.changeLanguage(lang);
@@ -36,11 +37,10 @@ export function SettingsPage() {
             <Banner title={t("settings")} />
 
             <main className="p-8 space-y-8">
-
                 <section>
                     <h2 className="text-title-medium">{t("profil.my-profil")}</h2>
                     <p>{t("profil.name")} : {user?.name}</p>
-                    <p>Email : {user?.email}</p>
+                    <p>Email: {user?.email}</p>
                 </section>
 
                 <section>
@@ -57,17 +57,13 @@ export function SettingsPage() {
                 </section>
 
                 <section>
-                    <h2 className="text-title-medium text-red-500">
-                        {t("danger-zone")}
-                    </h2>
 
-                    <Button onClick={handleDelete} variant="danger">
-                        <Trash2 />
+                    <Button onClick={handleDelete} variant="danger" className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4" />
                         {t("disable-account")}
                     </Button>
                 </section>
-
             </main>
         </>
-    )
+    );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { format, parseISO } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import {
     Calendar,
     MapPin,
@@ -21,25 +21,28 @@ import { Banner } from "../components/Banner";
 import { Card } from "../components/Card";
 import Button from "../components/ui/Button";
 import toast from "react-hot-toast";
-
-
+import { useTranslation } from "react-i18next";
 
 export function ReservationDetailsPage() {
+    const { t, i18n } = useTranslation();
+    const isFrench = i18n.language.startsWith("fr");
+    const dfLocale = isFrench ? dfFr : dfEnUS;
+
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
     const { data: booking, isLoading: loading, error: apiError, setData: setBooking } = useBookingDetails(id);
-    const error = apiError ? "Impossible de charger les détails de la réservation." : null;
-    const [address, setAddress] = useState("Chargement de l'adresse...");
+    const error = apiError ? t("booking-details.load-error") : null;
+    const [address, setAddress] = useState(t("booking-details.loading-address"));
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [cancellationReason, setCancellationReason] = useState("");
     const [isCancelling, setIsCancelling] = useState(false);
 
     useEffect(() => {
         if (booking) {
-            setAddress(booking.property?.address || "Adresse non spécifiée");
+            setAddress(booking.property?.address || t("booking-details.no-address"));
         }
-    }, [booking]);
+    }, [booking, t]);
 
     const handleContactHost = async () => {
         if (!booking?.property) return;
@@ -51,7 +54,7 @@ export function ReservationDetailsPage() {
             navigate(`/messages?conversation_id=${conversationId}`);
         } catch (err) {
             console.error("Error starting conversation:", err);
-            toast.error("Impossible de contacter l'hôte.");
+            toast.error(t("booking-details.contact-error"));
         }
     };
 
@@ -66,10 +69,10 @@ export function ReservationDetailsPage() {
             setBooking(res.data);
             setIsCancelModalOpen(false);
             setCancellationReason("");
-            toast.success("Réservation annulée avec succès.");
+            toast.success(t("booking-details.cancel-success"));
         } catch (err) {
             console.error("Error cancelling reservation:", err);
-            toast.error("Une erreur est survenue lors de l'annulation.");
+            toast.error(t("booking-details.cancel-error"));
         } finally {
             setIsCancelling(false);
         }
@@ -79,7 +82,7 @@ export function ReservationDetailsPage() {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
-                <p className="text-gray-500 font-medium">Chargement de votre réservation...</p>
+                <p className="text-gray-500 font-medium">{t("booking-details.loading-text")}</p>
             </div>
         );
     }
@@ -87,12 +90,12 @@ export function ReservationDetailsPage() {
     if (error || !booking) {
         return (
             <main className="max-w-4xl mx-auto p-6 text-center space-y-6">
-                <Banner title="Détails de la réservation" />
+                <Banner title={t("booking-details.page-title")} />
                 <Card className="flex flex-col items-center p-8 bg-red-50 border border-red-200 space-y-4">
                     <AlertTriangle className="w-12 h-12 text-red-500" />
-                    <p className="text-red-700 font-semibold">{error || "Réservation introuvable."}</p>
+                    <p className="text-red-700 font-semibold">{error || t("booking-details.not-found")}</p>
                     <Button onClick={() => navigate("/my-reservations")}>
-                        <ArrowLeft className="w-4 h-4" /> Retour à mes réservations
+                        <ArrowLeft className="w-4 h-4" /> {t("booking-details.back-btn")}
                     </Button>
                 </Card>
             </main>
@@ -106,21 +109,18 @@ export function ReservationDetailsPage() {
 
     return (
         <>
-            <Banner title="Détails de la réservation" />
+            <Banner title={t("booking-details.page-title")} />
 
             <main className="max-w-6xl mx-auto p-6 space-y-8">
-                {/* Back button */}
                 <div className="flex justify-start">
                     <Button variant="flat" onClick={() => navigate("/my-reservations")} className="group">
                         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                        Retour à mes réservations
+                        {t("booking-details.back-btn")}
                     </Button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left & Middle Column (2 cols wide on desktop) */}
                     <div className="lg:col-span-2 space-y-6">
-                        {/* Property Details Card */}
                         <Card className="overflow-hidden bg-white border border-gray-100 flex flex-col md:flex-row gap-6 p-6">
                             {firstImage && (
                                 <div className="md:w-72 h-48 md:h-auto shrink-0 relative">
@@ -140,15 +140,15 @@ export function ReservationDetailsPage() {
                                         </h2>
                                         {status === "confirmed" ? (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-200 flex items-center gap-1 shrink-0">
-                                                <CheckCircle2 className="w-3.5 h-3.5" /> Confirmé
+                                                <CheckCircle2 className="w-3.5 h-3.5" /> {t("booking-details.status-confirmed")}
                                             </span>
                                         ) : status === "cancelled" ? (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-700 border border-red-200 flex items-center gap-1 shrink-0">
-                                                <XCircle className="w-3.5 h-3.5" /> Annulé
+                                                <XCircle className="w-3.5 h-3.5" /> {t("booking-details.status-cancelled")}
                                             </span>
                                         ) : (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200 flex items-center gap-1 shrink-0">
-                                                En attente
+                                                {t("booking-details.status-pending")}
                                             </span>
                                         )}
                                     </div>
@@ -157,19 +157,22 @@ export function ReservationDetailsPage() {
                                         <div className="flex items-center gap-2">
                                             <Calendar className="w-4 h-4 text-gray-400" />
                                             <span>
-                                                Du {format(start, "dd MMMM yyyy", { locale: fr })} au {format(end, "dd MMMM yyyy", { locale: fr })}
+                                                {t("booking-details.dates-range", {
+                                                    start: format(start, "dd MMMM yyyy", { locale: dfLocale }),
+                                                    end: format(end, "dd MMMM yyyy", { locale: dfLocale })
+                                                })}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Users className="w-4 h-4 text-gray-400" />
                                             <span>
-                                                {number_persons} voyageurs
+                                                {t("booking-details.guests-count", { count: number_persons })}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Receipt className="w-4 h-4 text-gray-400" />
                                             <span>
-                                                Montant total : <strong className="text-gray-900">{total_price}€</strong>
+                                                {t("booking-details.total-amount")}<strong className="text-gray-900">{total_price}€</strong>
                                             </span>
                                         </div>
                                     </div>
@@ -178,7 +181,7 @@ export function ReservationDetailsPage() {
                                 <div className="border-t border-gray-100 pt-4 flex flex-wrap gap-3">
                                     <Button variant="outline" asChild size="sm">
                                         <Link to={`/property/${property.id}`} className="flex items-center gap-2">
-                                            <Home className="w-4 h-4" /> Voir le logement
+                                            <Home className="w-4 h-4" /> {t("booking-details.view-property")}
                                         </Link>
                                     </Button>
                                     {status !== "cancelled" && (
@@ -188,39 +191,36 @@ export function ReservationDetailsPage() {
                                             onClick={() => setIsCancelModalOpen(true)}
                                             className="ml-auto"
                                         >
-                                            Annuler la réservation
+                                            {t("booking-details.cancel-btn")}
                                         </Button>
                                     )}
                                 </div>
                             </div>
                         </Card>
 
-                        {/* Cancellation Info Card (only if cancelled) */}
                         {status === "cancelled" && (
                             <Card className="bg-red-50/50 border border-red-200 p-6 space-y-3">
                                 <h3 className="text-lg font-bold text-red-800 flex items-center gap-2">
-                                    <XCircle className="w-5 h-5 text-red-600" /> Réservation annulée
+                                    <XCircle className="w-5 h-5 text-red-600" /> {t("booking-details.status-cancelled")}
                                 </h3>
                                 <div className="bg-white border border-red-100 rounded-xl p-4 text-sm text-gray-700">
-                                    <p className="font-semibold text-gray-800 mb-1">Motif d'annulation :</p>
+                                    <p className="font-semibold text-gray-800 mb-1">{t("booking-details.reason-label")}</p>
                                     <p className="italic text-gray-600">
-                                        "{cancellation_reason || "Aucun motif précisé."}"
+                                        "{cancellation_reason || t("booking-details.no-reason")}"
                                     </p>
                                 </div>
                             </Card>
                         )}
                     </div>
 
-                    {/* Right Column (1 col wide on desktop) */}
                     <div className="space-y-6">
-                        {/* Se rendre au logement Card */}
                         <Card className="bg-white border border-gray-100 p-6 space-y-4">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-3">
-                                <MapPin className="w-5 h-5 text-blue-600" /> Se rendre au logement
+                                <MapPin className="w-5 h-5 text-blue-600" /> {t("booking-details.go-to-property-title")}
                             </h3>
 
                             <div className="space-y-1">
-                                <p className="text-xs uppercase font-semibold text-gray-400">Adresse</p>
+                                <p className="text-xs uppercase font-semibold text-gray-400">{t("booking-details.address-label")}</p>
                                 <p className="text-sm text-gray-800 leading-relaxed font-medium">
                                     {address}
                                 </p>
@@ -238,15 +238,14 @@ export function ReservationDetailsPage() {
                                     }
                                     className="w-full"
                                 >
-                                    Voir sur Google Maps
+                                    {t("booking-details.view-maps")}
                                 </Button>
                             )}
                         </Card>
 
-                        {/* Hôte Card */}
                         <Card className="bg-white border border-gray-100 p-6 space-y-4">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-3">
-                                <MessageSquare className="w-5 h-5 text-blue-600" /> Hôte du logement
+                                <MessageSquare className="w-5 h-5 text-blue-600" /> {t("booking-details.host-title")}
                             </h3>
 
                             <div className="flex items-center gap-3">
@@ -255,9 +254,9 @@ export function ReservationDetailsPage() {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-gray-800">
-                                        {property.user?.name || "Hôte particulier"}
+                                        {property.user?.name || t("booking-details.host-default")}
                                     </p>
-                                    <p className="text-xs text-gray-400">Propriétaire</p>
+                                    <p className="text-xs text-gray-400">{t("booking-details.host-role")}</p>
                                 </div>
                             </div>
 
@@ -266,25 +265,24 @@ export function ReservationDetailsPage() {
                                 onClick={handleContactHost}
                                 className="w-full"
                             >
-                                <MessageSquare className="w-4 h-4" /> Ouvrir la conversation
+                                <MessageSquare className="w-4 h-4" /> {t("booking-details.open-chat")}
                             </Button>
                         </Card>
                     </div>
                 </div>
             </main>
 
-            {/* Cancel Reservation Modal */}
             {isCancelModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
                     <Card className="max-w-md w-full bg-white p-6 rounded-2xl shadow-2xl relative border border-gray-100 flex flex-col space-y-4">
-                        <h3 className="text-xl font-bold text-gray-900">Annuler la réservation</h3>
+                        <h3 className="text-xl font-bold text-gray-900">{t("booking-details.modal-title")}</h3>
                         <p className="text-sm text-gray-600">
-                            Veuillez indiquer le motif de l'annulation de votre séjour. Ce motif sera enregistré et transmis à l'hôte.
+                            {t("booking-details.modal-desc")}
                         </p>
                         <textarea
                             value={cancellationReason}
                             onChange={(e) => setCancellationReason(e.target.value)}
-                            placeholder="Ex: Contretemps professionnel, problème de transport..."
+                            placeholder={t("booking-details.modal-placeholder")}
                             className="w-full h-32 border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-800"
                             required
                         />
@@ -298,7 +296,7 @@ export function ReservationDetailsPage() {
                                 }}
                                 disabled={isCancelling}
                             >
-                                Conserver
+                                {t("booking-details.modal-keep")}
                             </Button>
                             <Button
                                 variant="danger"
@@ -307,7 +305,7 @@ export function ReservationDetailsPage() {
                                 isLoading={isCancelling}
                                 disabled={!cancellationReason.trim()}
                             >
-                                Confirmer l'annulation
+                                {t("booking-details.modal-confirm")}
                             </Button>
                         </div>
                     </Card>
