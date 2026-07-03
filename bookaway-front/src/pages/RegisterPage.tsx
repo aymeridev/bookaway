@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 export function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -112,9 +113,9 @@ export function RegisterPage() {
                             </label>
                         </div>
 
-                        <button type="submit" className="bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition mt-4">
+                        <Button type="submit" className="mt-4">
                             S'inscrire
-                        </button>
+                        </Button>
                     </div>
 
                     <div className="mt-6 text-center text-sm text-gray-600 border-t pt-4">

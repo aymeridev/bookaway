@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Property;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class PropertyController extends Controller
 {
@@ -38,11 +40,23 @@ class PropertyController extends Controller
                 ->orderBy('distance');
         }
 
-        $query->with(['images' => function ($q) {
-            $q->orderBy('sort_order', 'asc');
-        }]);
+        $query->with([
+            'images' => function ($q) {
+                $q->orderBy('sort_order', 'asc');
+            },
+            'ratings',
+            'user'
+        ]);
 
-        return response()->json($query->get());
+        $properties = $query->get();
+
+        foreach ($properties as $property) {
+            $property->ratings_avg = $property->ratings->isEmpty()
+                ? null
+                : round($property->ratings->avg('stars'), 1);
+        }
+
+        return response()->json($properties);
     }
 
     /**
@@ -118,10 +132,20 @@ class PropertyController extends Controller
     public function userProperties(Request $request)
     {
         $properties = $request->user()->properties()
-            ->with(['images' => function ($q) {
-                $q->orderBy('sort_order', 'asc');
-            }])
+            ->with([
+                'images' => function ($q) {
+                    $q->orderBy('sort_order', 'asc');
+                },
+                'ratings'
+            ])
             ->get();
+
+        foreach ($properties as $property) {
+            $property->ratings_avg = $property->ratings->isEmpty()
+                ? null
+                : round($property->ratings->avg('stars'), 1);
+        }
+
         return response()->json($properties);
     }
 
@@ -134,5 +158,41 @@ class PropertyController extends Controller
         $property->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Rechercher des coordonnées géographiques par terme (proxy Nominatim).
+     */
+    public function geocode(Request $request)
+    {
+        $query = $request->query('q');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $cacheKey = 'geocode_search_' . md5(strtolower(trim($query)));
+
+        $data = Cache::remember($cacheKey, now()->addDays(1), function () use ($query) {
+            try {
+                $response = Http::withHeaders([
+                    'User-Agent' => 'Bookaway-App/1.0',
+                ])->timeout(3)->get('https://nominatim.openstreetmap.org/search', [
+                    'format' => 'json',
+                    'q' => $query,
+                    'email' => 'ulco@ulco.fr',
+                ]);
+
+                if ($response->successful()) {
+                    return $response->json();
+                }
+            } catch (\Exception $e) {
+                \Log::error("Geocoding API error: " . $e->getMessage());
+            }
+
+            return [];
+        });
+
+        return response()->json($data);
     }
 }

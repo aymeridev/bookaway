@@ -152,4 +152,39 @@ class RatingTest extends TestCase
         $response->assertJsonMissing(['email' => 'user1@example.com']);
         $response->assertJsonMissing(['email' => 'user2@example.com']);
     }
+
+    public function test_properties_index_returns_avg_rating_for_each_property(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $owner = User::factory()->create();
+        $property = Property::factory()->create([
+            'user_id' => $owner->id,
+            'amenities' => [],
+        ]);
+
+        Rating::create([
+            'user_id' => $user1->id,
+            'stars' => 5,
+            'comment' => 'Parfait !',
+            'ratable_type' => Property::class,
+            'ratable_id' => $property->id,
+        ]);
+
+        Rating::create([
+            'user_id' => $user2->id,
+            'stars' => 3,
+            'comment' => 'Moyen.',
+            'ratable_type' => Property::class,
+            'ratable_id' => $property->id,
+        ]);
+
+        $response = $this->getJson('/api/properties');
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'id' => $property->id,
+            'ratings_avg' => 4,
+        ]);
+    }
 }

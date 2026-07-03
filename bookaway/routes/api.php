@@ -24,6 +24,7 @@ Route::apiResource('bookings', BookingController::class);
 Route::apiResource('payments', PaymentController::class);
 Route::apiResource('users', UserController::class);
 Route::get('/users/{id}/properties', [UserController::class, 'properties']);
+Route::get('/geocode', [PropertyController::class, 'geocode']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
