@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Send, Home, MessageSquare, User } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
+import Input from "../components/ui/Input";
 
 interface ChatMessage {
     id: number;
@@ -31,10 +32,17 @@ export function MessagesPage() {
     const initialConversations = useLoaderData() as Conversation[];
     const currentUser = useAuthStore((state) => state.user);
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    const paramId = searchParams.get("conversation_id");
+
     const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
-    const [activeChatId, setActiveChatId] = useState<number | null>(
-        conversations[0]?.id || null
-    );
+    const [activeChatId, setActiveChatId] = useState<number | null>(() => {
+        if (paramId) {
+            const parsed = parseInt(paramId, 10);
+            if (!isNaN(parsed)) return parsed;
+        }
+        return initialConversations[0]?.id || null;
+    });
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +57,18 @@ export function MessagesPage() {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+    // Synchroniser activeChatId si le paramètre conversation_id change dans l'URL
+    useEffect(() => {
+        if (paramId) {
+            const parsed = parseInt(paramId, 10);
+            if (!isNaN(parsed) && parsed !== activeChatId) {
+                if (conversations.some(c => c.id === parsed)) {
+                    setActiveChatId(parsed);
+                }
+            }
+        }
+    }, [paramId, conversations, activeChatId]);
 
     useEffect(() => {
         scrollToBottom();
@@ -123,7 +143,10 @@ export function MessagesPage() {
                                 return (
                                     <button
                                         key={conv.id}
-                                        onClick={() => setActiveChatId(conv.id)}
+                                        onClick={() => {
+                                            setActiveChatId(conv.id);
+                                            setSearchParams({ conversation_id: String(conv.id) });
+                                        }}
                                         className={`w-full p-4 text-left flex gap-3 transition-colors ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600" : "bg-white hover:bg-gray-50"
                                             }`}
                                     >
@@ -162,9 +185,7 @@ export function MessagesPage() {
                         <>
                             <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white shadow-sm">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-gray-100 rounded-full text-gray-600">
-                                        <User className="w-5 h-5" />
-                                    </div>
+                                    <div aria-hidden="true" className="rounded-full size-8 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${activeConversation?.id}")` }}></div>
                                     <div>
                                         <h3 className="font-bold text-gray-900 text-base">
                                             {getInterlocutor(activeConversation).name}
@@ -202,12 +223,12 @@ export function MessagesPage() {
                             </div>
                             <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
                                 <div className="flex gap-2">
-                                    <input
+                                    <Input
                                         type="text"
                                         placeholder="Écrivez votre message ici..."
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
-                                        className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3 shadow-inner outline-none transition-all"
+                                        className="flex-1"
                                     />
                                     <button
                                         type="submit"

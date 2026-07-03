@@ -1,10 +1,11 @@
 import { useLoaderData, Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar, Receipt } from "lucide-react";
+import { Calendar, MessageSquare, Receipt } from "lucide-react";
 import { Banner } from "../components/Banner";
 import type { Property } from "../types";
 import Button from "../components/ui/Button";
+import { Card } from "../components/Card";
 
 interface Booking {
     id: number;
@@ -36,6 +37,7 @@ export function MyReservationsPage() {
         <>
             <Banner title="Mes réservations" />
 
+
             <main className="max-w-6xl mx-auto p-6">
                 {bookings.length === 0 ? (
                     <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
@@ -54,15 +56,15 @@ export function MyReservationsPage() {
                             const firstImage = booking.property.images?.[0]?.url;
 
                             return (
-                                <div
+                                <Card
                                     key={booking.id}
-                                    className="flex flex-col sm:flex-row bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                                    className="flex flex-col sm:flex-row overflow-hidden"
                                 >
                                     <div className="sm:w-64 h-48 sm:h-auto relative shrink-0">
                                         <img
                                             src={firstImage}
                                             alt={booking.property.title}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full rounded-2xl object-cover"
                                         />
                                     </div>
 
@@ -93,15 +95,22 @@ export function MyReservationsPage() {
                                         </div>
 
                                         <div className="flex justify-end pt-2 border-t border-gray-50">
-                                            <Link
-                                                to={`/property/${booking.property.id}`}
-                                                className="text-sm font-semibold text-blue-600 hover:text-blue-800 underline"
-                                            >
-                                                Voir le logement
-                                            </Link>
+                                            <Button variant="flat" asChild>
+                                                <Link to={"/messages"} viewTransition={true}>
+                                                    <MessageSquare />
+                                                    Contacter l'hôte
+                                                </Link>
+                                            </Button>
+                                            <Button asChild>
+                                                <Link
+                                                    to={`/reservation/${booking.id}`} viewTransition={true}
+                                                >
+                                                    Voir la reservation
+                                                </Link>
+                                            </Button>
                                         </div>
                                     </div>
-                                </div>
+                                </Card>
                             );
                         })}
                     </div>

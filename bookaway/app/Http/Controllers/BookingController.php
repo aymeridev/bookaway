@@ -111,7 +111,7 @@ class BookingController extends Controller
      */
     public function show(string $id)
     {
-        $booking = Booking::with(['property', 'user', 'payment'])->findOrFail($id);
+        $booking = Booking::with(['property.images', 'property.user', 'user', 'payment'])->findOrFail($id);
         return response()->json($booking);
     }
 
@@ -128,11 +128,12 @@ class BookingController extends Controller
             'end_date' => 'sometimes|date|after:start_date',
             'status' => 'sometimes|string|in:confirmed,pending,cancelled',
             'payment_id' => 'sometimes|nullable|exists:payments,id',
+            'cancellation_reason' => 'sometimes|nullable|string',
         ]);
 
         $booking->update($validated);
 
-        return response()->json($booking->load(['property', 'payment']));
+        return response()->json($booking->load(['property.images', 'property.user', 'payment']));
     }
 
     /**

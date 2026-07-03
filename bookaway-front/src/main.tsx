@@ -25,6 +25,9 @@ import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
 import { RateProperyPage } from './pages/RatePropertyPage.tsx'
 import { MessagesPage } from './pages/MessagesPage.tsx'
+import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
+
+
 
 let router = createBrowserRouter([
   {
@@ -63,6 +66,11 @@ let router = createBrowserRouter([
         path: "bookings",
         middleware: [authMiddleware],
         Component: BookingsPage
+      },
+      {
+        path: "reservation/:id",
+        middleware: [authMiddleware],
+        Component: ReservationDetailsPage
       },
       {
         path: "my-reservations",

@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import 'tailwind-animations';
 @plugin "@tailwindcss/forms";
+
+
 @import '@fontsource/sriracha';
 
 :root {
