@@ -11,18 +11,18 @@ export function MyPropertiesPage() {
     const { t } = useTranslation();
     const { data: propertiesData, isLoading } = useMyProperties();
     const properties = propertiesData || [];
-
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50/50 pb-12">
                 <Banner title="Mes logements" />
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                     <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-                    <p className="text-gray-500 font-medium">Chargement de vos logements...</p>
+                    <p className="text-gray-500 font-medium">{t("accommodation.loading")}</p>
                 </div>
             </div>
         );
     }
+
 
     return (
         <div className="min-h-screen bg-gray-50/50 pb-12">

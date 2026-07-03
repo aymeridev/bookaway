@@ -6,6 +6,7 @@ import useAuthStore from "../context/AuthStore";
 import { LogIn } from "lucide-react";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
+import { useTranslation } from "react-i18next";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export function LoginPage() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login)
+    const { t } = useTranslation();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -27,8 +29,8 @@ export function LoginPage() {
             login(userData, token);
 
             navigate("/", { viewTransition: true });
-        } catch {
-            setError("Identifiants incorrects. Veuillez réessayer.");
+        }catch {
+            setError(t("login-page.error-invalid"));
         }
     };
 
@@ -38,13 +40,13 @@ export function LoginPage() {
 
             <Card className="z-10">
                 <form onSubmit={handleSubmit}>
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Connexion à BookAway</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">{t("login-page.title")}</h2>
 
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
 
                     <div className="flex flex-col gap-4">
                         <Input
-                            label="Adresse e-mail"
+                            label={t("login-page.label-email")}
                             type="email"
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             value={email}
@@ -54,7 +56,7 @@ export function LoginPage() {
 
                         <Input
                             type="password"
-                            label="Mot de passe"
+                            label={t("login-page.label-password")}
                             className="border p-2 rounded-lg outline-blue-500 text-gray-900"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -63,16 +65,16 @@ export function LoginPage() {
 
                         <Button>
                             <LogIn />
-                            Se connecter
+                            {t("login-page.button-submit")}
                         </Button>
                         <div className="mt-6 text-center text-sm text-gray-600">
-                            Pas encore de compte ?{" "}
+                            {t("login-page.no-account")}{" "}
                             <Link
                                 to="/register"
                                 className="text-blue-600 font-bold hover:underline"
                                 viewTransition
                             >
-                                Inscrivez-vous gratuitement
+                                {t("login-page.register-link")}
                             </Link>
                         </div>
                     </div>

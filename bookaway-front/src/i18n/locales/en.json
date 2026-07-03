@@ -39,7 +39,8 @@
         "first-announcement": "Create my first listing",
         "title-description": "Fill out the form below to add a new property to the platform.",
         "success-accommodation": "Your listing has been successfully created!",
-        "create-accommodation": "Créer le logement"
+        "create-accommodation": "Create accommodation",
+        "loading": "Loading your accommodations..."
     },
     "reservations": {
         "reservations": "My bookings",
@@ -47,7 +48,12 @@
         "total-amount": "Total amount",
         "see-accommodation": "View accommodation",
         "from": "From",
-        "to" : "to"
+        "to" : "to",
+        "loading": "Loading your bookings...",
+        "no-reservations": "You have not made any bookings yet.",
+        "explore-properties": "Explore accommodations",
+        "contact-host": "Contact host",
+        "view-booking": "View booking"
     },
     "properties-edit": {
         "location": "Accommodation location",
@@ -58,9 +64,11 @@
         "amenities": "Amenities"
     },
     "state": {
-        "forthcoming": "Forthcoming",
-        "progress": "In progress",
-        "finished": "Finished"
+        "cancelled": "Cancelled",
+        "pending": "Pending",
+        "forthcoming": "Upcoming",
+        "finished": "Completed",
+        "progress": "In progress"
     },
     "amenities": {
         "bathub": "Bathtub",
@@ -91,5 +99,105 @@
         "save": "Save changes",
         "delete": "Delete",
         "delete-confirm": "Are you sure you want to delete this accommodation?"
+    },
+    "home-page": {
+        "loading": "Searching for your holidays...",
+        "title": "Your next holiday starts today",
+        "subtitle": "with BookAway",
+        "search-label": "Search for my stay:"
+    },
+    "login-page": {
+        "title": "Sign in to BookAway",
+        "error-invalid": "Incorrect credentials. Please try again.",
+        "label-email": "Email address",
+        "label-password": "Password",
+        "button-submit": "Sign in",
+        "no-account": "Don't have an account yet?",
+        "register-link": "Sign up for free"
+    },
+    "chat-page": {
+        "loading": "Loading your messages...",
+        "title": "Messages",
+        "no-discussions": "No discussions yet.",
+        "start-discussion": "Start the discussion...",
+        "subject": "Subject:",
+        "booking-cancelled": "Booking cancelled",
+        "cancelled-description": "The booking for this accommodation has been cancelled.",
+        "cancellation-reason": "Reason:",
+        "placeholder-input": "Write your message here...",
+        "select-discussion": "Select a discussion to start chatting"
+    },
+    "profile-page": {
+        "loading": "Loading user data...",
+        "unauthenticated": "Please log in to access this page.",
+        "banner-title": "My Profile",
+        "personal-info": "Personal information",
+        "name": "Name:",
+        "email": "Email:",
+        "member-since": "Member since {{date}}",
+        "my-bookings": "My Bookings",
+        "from": "From",
+        "to": "to",
+        "no-bookings": "You don't have any bookings yet."
+    },
+    "property-details": {
+        "loading": "Loading property details...",
+        "auth-error-rating": "You must be logged in to leave a review.",
+        "rating-success": "Review saved successfully!",
+        "rating-error": "An error occurred while saving your review.",
+        "dates-blocked": "Sorry, this date range contains days that are already booked.",
+        "back-results": "Back to results",
+        "edit-property": "Edit property",
+        "no-image": "No image",
+        "about-title": "About this accommodation",
+        "hosted-by": "Hosted by {{name}}",
+        "view-profile": "View profile",
+        "where-title": "Where the property is located",
+        "where-info": "The exact location will be provided once the booking is completed.",
+        "reviews": "Reviews",
+        "give-review": "Leave a review",
+        "no-comment": "No comment left.",
+        "review-date": "Review left in {{date}}",
+        "no-reviews": "No reviews yet.",
+        "modal-title": "Leave a review",
+        "modal-rating-label": "Rating (out of 5)",
+        "modal-comment-label": "Comment",
+        "modal-placeholder": "Tell us about your experience...",
+        "modal-cancel": "Cancel",
+        "modal-submit": "Submit",
+        "per-night": "/ night",
+        "price-nights": "{{price}}€ x {{count}} nights",
+        "service-fees": "Service fees",
+        "total": "Total",
+        "book-now": "Book now",
+        "select-dates": "Select dates",
+        "no-charge-yet": "You won't be charged yet"
+    },
+    "property-reservation": {
+        "no-booking-title": "No current booking",
+        "no-booking-text": "Please select a property and valid dates before accessing the summary.",
+        "back-home": "Back to home",
+        "login-required-title": "Login required",
+        "login-required-text": "You must be logged in to make a reservation.",
+        "login-btn": "Log in",
+        "edit-selection": "← Edit selection",
+        "page-title": "Reservation request",
+        "your-stay": "Your stay",
+        "dates-label": "Dates",
+        "dates-range": "From {{start}} to {{end}}",
+        "edit-btn": "Edit",
+        "payment": "Payment",
+        "card-holder": "Name on card",
+        "card-number": "Card number",
+        "expiration": "Expiration",
+        "cvc": "CVC Code",
+        "confirm-button": "Confirm and pay {{total}}€",
+        "verified-property": "Verified property",
+        "price-details": "Price details",
+        "price-nights": "{{price}}€ x {{count}} nights",
+        "service-fees": "Service fees",
+        "total": "Total (EUR)",
+        "success-alert": "Payment and reservation successfully registered!",
+        "error-prefix": "Failed: "
     }
 }
