@@ -66,7 +66,7 @@ export function PropertyDetailsPage() {
                 stars: ratingStars,
                 comment: ratingComment
             });
-            
+
             toast.success(t("property-details.rating-success"));
             setRatingComment('');
             setRatingStars(5);
@@ -164,13 +164,13 @@ export function PropertyDetailsPage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
-            <Button
-                variant="flat"
+            <button
+                className='btn'
                 onClick={() => navigate(-1)}
             >
                 <ArrowLeft />
                 {t("property-details.back-results")}
-            </Button>
+            </button>
             {isOwner && <Button onClick={() => {
                 navigate(`/property/${property.id}/edit`);
             }}>

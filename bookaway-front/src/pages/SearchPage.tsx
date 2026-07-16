@@ -8,6 +8,7 @@ import { differenceInDays, parseISO } from "date-fns";
 import Button from "../components/ui/Button";
 import { useSearchProperties } from "../hooks/apiHooks";
 import { PropertyCard } from "../components/property/PropertyCard";
+import { SearchPropertyCardResult } from "../components/property/SearchPropertyCardResult";
 
 export function SearchPage() {
     const { t } = useTranslation();
@@ -133,11 +134,11 @@ export function SearchPage() {
                         {t("search.loading")}
                     </p>
                 </div>
-            ) : view === "list" ? (
-                <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            ) : (
+                <div className="flex">
+                    <div className="flex flex-1 flex-col gap-4">
                         {currentProperties.map((property) => (
-                            <PropertyCard
+                            <SearchPropertyCardResult
                                 key={property.id}
                                 property={property}
                                 numberOfNights={numberOfNights}
@@ -182,9 +183,6 @@ export function SearchPage() {
                             </Button>
                         </div>
                     )}
-                </>
-            ) : (
-                <div className="h-[70vh] rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
                     <PropertiesMap properties={properties} />
                 </div>
             )}

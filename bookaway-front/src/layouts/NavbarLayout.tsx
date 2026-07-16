@@ -51,111 +51,109 @@ export function NavbarLayout() {
         "/messages",
         "/reservation",
     ];
-    const isNoBannerRoute = noBannerRoutes.includes(location.pathname) || 
+    const isNoBannerRoute = noBannerRoutes.includes(location.pathname) ||
         (location.pathname.startsWith("/property/") && !location.pathname.endsWith("/edit")) ||
         location.pathname.startsWith("/user/");
 
     return (
-        <div className="bg-base-100 text-base-content transition-colors duration-200 flex flex-col h-svh relative">
-            <div className="absolute top-0 left-0 right-0 z-50 pointer-events-none">
-                <nav ref={navRef} className="pointer-events-auto flex mx-4 mt-4 rounded-full p-3 bg-primary border-primary-content border-2 text-primary-content items-center justify-between shadow-md">
-                    <div className="flex items-center gap-6">
-                        <Link to={"/"} className="block" viewTransition>
-                            <div
-                                className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
-                                aria-label="Retour à l'accueil"
-                            ></div>
-                        </Link>
-                        {isAuthenticated && (
-                            <ul className="hidden md:flex gap-1 list-none p-0 m-0">
-                                <ListNavLink to={"/my-reservations"}>
+        <div className="flex flex-col h-svh relative">
+            <nav ref={navRef} className="navbar shadow-sm bg-primary">
+                <div className="flex items-center gap-6">
+                    <Link to={"/"} className="block" viewTransition>
+                        <div
+                            className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
+                            aria-label="Retour à l'accueil"
+                        ></div>
+                    </Link>
+                    {isAuthenticated && (
+                        <ul className="hidden md:flex gap-1 list-none p-0 m-0">
+                            <ListNavLink to={"/my-reservations"}>
+                                <Calendar />
+                                {t("header.reservations")}
+                            </ListNavLink>
+                            <ListNavLink to={"/my-properties"}>
+                                <LandPlot />
+                                {t("header.accommodation")}
+                            </ListNavLink>
+                            <ListNavLink to={"/messages"}>
+                                <div className="relative flex items-center gap-2">
+                                    <MessageSquare />
+                                    <span>{t("header.messaging")}</span>
+                                    {unreadCount > 0 && (
+                                        <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                                            {unreadCount}
+                                        </span>
+                                    )}
+                                </div>
+                            </ListNavLink>
+                        </ul>
+                    )}
+                </div>
+
+                <ul className="flex items-center gap-3 list-none p-0 m-0">
+                    {isAuthenticated ? (
+                        <>
+                            <ProfileButton key={location.pathname} />
+                            <li className="list-none md:hidden">
+                                <button
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    className="flex items-center justify-center p-2 rounded-xl hover:bg-white/10 active:bg-white/20 transition-all text-white cursor-pointer"
+                                    aria-label="Toggle menu"
+                                >
+                                    {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                                </button>
+                            </li>
+                        </>
+                    ) : (
+                        <ListNavLink to={"/login"}>
+                            <LogIn />
+                            <span>{t('connexion')}</span>
+                        </ListNavLink>
+                    )}
+                </ul>
+
+                {/* Mobile Dropdown Menu */}
+                {isAuthenticated && isMobileMenuOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-primary border-primary-content border-2 rounded-2xl p-4 text-primary-content shadow-xl flex flex-col gap-2 z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        <ul className="flex flex-col gap-2 w-full list-none p-0 m-0">
+                            <li className="list-none">
+                                <NavLink
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
+                                    to={"/my-reservations"} viewTransition>
                                     <Calendar />
                                     {t("header.reservations")}
-                                </ListNavLink>
-                                <ListNavLink to={"/my-properties"}>
+                                </NavLink>
+                            </li>
+                            <li className="list-none">
+                                <NavLink
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
+                                    to={"/my-properties"} viewTransition>
                                     <LandPlot />
                                     {t("header.accommodation")}
-                                </ListNavLink>
-                                <ListNavLink to={"/messages"}>
-                                    <div className="relative flex items-center gap-2">
+                                </NavLink>
+                            </li>
+                            <li className="list-none">
+                                <NavLink
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
+                                    to={"/messages"} viewTransition>
+                                    <div className="relative flex items-center gap-3 w-full">
                                         <MessageSquare />
-                                        <span>{t("header.messaging")}</span>
+                                        <span className="flex-1 text-left">{t("header.messaging")}</span>
                                         {unreadCount > 0 && (
-                                            <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                                            <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
                                                 {unreadCount}
                                             </span>
                                         )}
                                     </div>
-                                </ListNavLink>
-                            </ul>
-                        )}
+                                </NavLink>
+                            </li>
+                        </ul>
                     </div>
-
-                    <ul className="flex items-center gap-3 list-none p-0 m-0">
-                        {isAuthenticated ? (
-                            <>
-                                <ProfileButton key={location.pathname} />
-                                <li className="list-none md:hidden">
-                                    <button
-                                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                        className="flex items-center justify-center p-2 rounded-xl hover:bg-white/10 active:bg-white/20 transition-all text-white cursor-pointer"
-                                        aria-label="Toggle menu"
-                                    >
-                                        {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-                                    </button>
-                                </li>
-                            </>
-                        ) : (
-                            <ListNavLink to={"/login"}>
-                                <LogIn />
-                                <span>{t('connexion')}</span>
-                            </ListNavLink>
-                        )}
-                    </ul>
-
-                    {/* Mobile Dropdown Menu */}
-                    {isAuthenticated && isMobileMenuOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-primary border-primary-content border-2 rounded-2xl p-4 text-primary-content shadow-xl flex flex-col gap-2 z-50 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                            <ul className="flex flex-col gap-2 w-full list-none p-0 m-0">
-                                <li className="list-none">
-                                    <NavLink
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
-                                        to={"/my-reservations"} viewTransition>
-                                        <Calendar />
-                                        {t("header.reservations")}
-                                    </NavLink>
-                                </li>
-                                <li className="list-none">
-                                    <NavLink
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
-                                        to={"/my-properties"} viewTransition>
-                                        <LandPlot />
-                                        {t("header.accommodation")}
-                                    </NavLink>
-                                </li>
-                                <li className="list-none">
-                                    <NavLink
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
-                                        to={"/messages"} viewTransition>
-                                        <div className="relative flex items-center gap-3 w-full">
-                                            <MessageSquare />
-                                            <span className="flex-1 text-left">{t("header.messaging")}</span>
-                                            {unreadCount > 0 && (
-                                                <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
-                                                    {unreadCount}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </NavLink>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
-                </nav>
-            </div>
+                )}
+            </nav>
             <main className={`flex-1 overflow-y-auto ${isNoBannerRoute ? "pt-24" : "pt-0"}`}>
                 <Outlet />
             </main>
@@ -197,21 +195,20 @@ function ProfileButton() {
 
     return (
         <li ref={menuRef} className="relative list-none">
-            <button 
-                onClick={() => setShowDetails(!showDetails)} 
-                className={`flex items-center gap-1.5 p-1.5 rounded-xl border border-transparent transition-all cursor-pointer ${
-                    showDetails 
-                        ? "bg-white/20 text-white border-white/10" 
-                        : "hover:bg-white/10 text-white"
-                }`}
+            <button
+                onClick={() => setShowDetails(!showDetails)}
+                className={`flex items-center gap-1.5 p-1.5 rounded-xl border border-transparent transition-all cursor-pointer ${showDetails
+                    ? "bg-white/20 text-white border-white/10"
+                    : "hover:bg-white/10 text-white"
+                    }`}
             >
-                <div 
-                    aria-hidden="true" 
+                <div
+                    aria-hidden="true"
                     className="rounded-full size-8 border border-white/20 overflow-hidden bg-white/10 shrink-0"
                 >
-                    <img 
-                        src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}`} 
-                        alt={user?.name || "Profil"} 
+                    <img
+                        src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}`}
+                        alt={user?.name || "Profil"}
                         className="size-full object-cover"
                     />
                 </div>
@@ -225,9 +222,9 @@ function ProfileButton() {
                     </div>
                     <ul className="flex flex-col gap-1 list-none p-0 m-0">
                         <li className="list-none">
-                            <Link 
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full" 
-                                to={"/profile"} 
+                            <Link
+                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                to={"/profile"}
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
@@ -236,9 +233,9 @@ function ProfileButton() {
                             </Link>
                         </li>
                         <li className="list-none">
-                            <Link 
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full" 
-                                to={`/user/${user?.id}`} 
+                            <Link
+                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                to={`/user/${user?.id}`}
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
@@ -247,9 +244,9 @@ function ProfileButton() {
                             </Link>
                         </li>
                         <li className="list-none">
-                            <Link 
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full" 
-                                to={"/settings"} 
+                            <Link
+                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                to={"/settings"}
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
@@ -258,11 +255,11 @@ function ProfileButton() {
                             </Link>
                         </li>
                         <li className="list-none">
-                            <button 
+                            <button
                                 onClick={() => {
                                     toggleTheme();
                                     setShowDetails(false);
-                                }} 
+                                }}
                                 className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full text-left cursor-pointer"
                             >
                                 {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
@@ -271,8 +268,8 @@ function ProfileButton() {
                         </li>
                         <div className="h-px bg-gray-100 dark:bg-gray-800/80 my-1" />
                         <li className="list-none">
-                            <button 
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full text-left cursor-pointer" 
+                            <button
+                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full text-left cursor-pointer"
                                 onClick={handleLogout}
                             >
                                 <LogOut className="size-4" />
