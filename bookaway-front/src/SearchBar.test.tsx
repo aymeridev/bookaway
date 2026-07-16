@@ -18,7 +18,6 @@ vi.mock('react-i18next', () => ({
                 'search-bar.travelers-label': 'Voyageurs',
                 'search-bar.dates-label': 'Dates',
                 'search-bar.search-btn': 'Rechercher',
-                'search-bar.radius-label': 'Rayon de recherche',
                 'search-bar.suggestions-title': 'Destinations suggérées',
             };
             let val = translations[key] || key;
@@ -119,7 +118,7 @@ describe('SearchBar Component', () => {
         );
 
         const input = screen.getByPlaceholderText('Rechercher une destination');
-        
+
         // Search "Par"
         fireEvent.change(input, { target: { value: 'Par' } });
         await act(async () => {
@@ -159,14 +158,14 @@ describe('SearchBar Component', () => {
         await act(async () => {
             await vi.advanceTimersByTimeAsync(250);
         });
-        
+
         expect(screen.getByText('Paris')).toBeInTheDocument();
 
         // Press ArrowDown to focus Paris (index 0)
         fireEvent.keyDown(input, { key: 'ArrowDown' });
         // Press ArrowDown to focus Marseille (index 1)
         fireEvent.keyDown(input, { key: 'ArrowDown' });
-        
+
         // Marseille should have active state styling (bg-base-300)
         const marseilleButton = screen.getByText('Marseille').closest('button');
         expect(marseilleButton).toHaveClass('bg-base-300');
@@ -192,7 +191,7 @@ describe('SearchBar Component', () => {
         await act(async () => {
             await vi.advanceTimersByTimeAsync(250);
         });
-        
+
         expect(screen.getByText('Paris')).toBeInTheDocument();
 
         // Press Escape

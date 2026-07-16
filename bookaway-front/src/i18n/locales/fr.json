@@ -44,12 +44,12 @@
         "loading": "Chargement de vos logements..."
     },
     "reservations": {
-        "reservations":"Mes réservations",
+        "reservations": "Mes réservations",
         "descriptions": "Retrouvez toutes vos réservations sur la plateforme",
         "total-amount": "Montant total",
         "see-accommodation": "voir le logement",
         "from": "Du",
-        "to" : "au",
+        "to": "au",
         "contact-host": "Contacter l'hôte",
         "view-booking": "Voir la réservation",
         "explore-properties": "Explorer les logements",
@@ -316,7 +316,6 @@
         "no-results": "Aucun résultat trouvé pour \"{{value}}\"",
         "dates-label": "Dates",
         "dates-placeholder": "Quand ?",
-        "radius-label": "Rayon de recherche",
         "suggestions-title": "Destinations suggérées"
     }
 }

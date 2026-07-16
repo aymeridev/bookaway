@@ -29,14 +29,9 @@ export function SearchBar() {
     const initialLat = searchParams.get("lat");
     const initialLon = searchParams.get("lon");
 
-    const initialRadius = Number(
-        searchParams.get("radius") || 200
-    );
-
     const [travelers, setTravelers] =
         useState(initialTravelers);
 
-    const [radius, setRadius] = useState(initialRadius);
 
     const [selectedDate, setSelectedDate] =
         useState<DateRange | undefined>(
@@ -77,7 +72,6 @@ export function SearchBar() {
             lat: coords?.lat || "",
             lon: coords?.lon || "",
             destination,
-            radius: radius.toString(),
         });
 
         navigate(`/search?${params.toString()}`, {
@@ -95,12 +89,7 @@ export function SearchBar() {
                 onChange={setDestination}
                 onLocationSelect={(coords, isDefault) => {
                     setCoords(coords);
-                    if (isDefault) {
-                        setRadius(200);
-                    }
                 }}
-                radius={radius}
-                onRadiusChange={setRadius}
                 coords={coords}
             />
 
@@ -169,8 +158,6 @@ interface FormDestinationProps {
         coords: { lat: string; lon: string } | null,
         isDefault?: boolean
     ) => void;
-    radius: number;
-    onRadiusChange: (r: number) => void;
     coords: { lat: string; lon: string } | null;
 }
 
@@ -190,8 +177,6 @@ function FormDestinationPart({
     value,
     onChange,
     onLocationSelect,
-    radius,
-    onRadiusChange,
     coords,
 }: FormDestinationProps) {
     const [results, setResults] = useState<any[]>([]);
@@ -351,26 +336,12 @@ function FormDestinationPart({
                         className="border-none bg-transparent focus:ring-0 w-full text-sm p-0 min-w-0"
                         value={
                             isSelecting && coords && value
-                                ? `${getCleanDestination(value)} (${radius}km)`
+                                ? getCleanDestination(value)
                                 : value
                         }
                         onChange={(e) => {
                             setIsSelecting(false);
-                            let val = e.target.value;
-                            
-                            if (isSelecting && coords && value) {
-                                const cleanPrev = getCleanDestination(value);
-                                const formattedPrev = `${cleanPrev} (${radius}km)`;
-                                
-                                if (val.startsWith(formattedPrev) && val.length > formattedPrev.length) {
-                                    const added = val.substring(formattedPrev.length);
-                                    val = cleanPrev + added;
-                                } else if (formattedPrev.startsWith(val) && val.length < formattedPrev.length) {
-                                    val = cleanPrev;
-                                } else {
-                                    val = getCleanDestination(val);
-                                }
-                            }
+                            let val = getCleanDestination(e.target.value);
 
                             onChange(val);
                             setIsOpen(true);
@@ -391,12 +362,12 @@ function FormDestinationPart({
             </div>
 
             {isOpen && (
-                <Card className="absolute text-base-content w-full md:min-w-[28rem] top-16 z-50 p-3 shadow-2xl border border-base-300 bg-base-200/95 backdrop-blur-md transition-all duration-200 animate-in fade-in slide-in-from-top-2 left-0 right-0">
+                <Card className="absolute text-base-content w-full md:min-w-md top-16 z-50 p-3 shadow-2xl border border-base-300 bg-base-200/95 backdrop-blur-md transition-all duration-200 animate-in fade-in slide-in-from-top-2 left-0 right-0">
                     {(isLoading || results.length > 0 || value === "" || (hasSearched && results.length === 0)) && (
                         <div className="flex items-center justify-between px-2 mb-2 pb-1 border-b border-base-300">
                             <span className="text-xs font-semibold text-base-content/60 uppercase tracking-wider">
-                                {value === "" 
-                                    ? t("search-bar.suggestions-title") 
+                                {value === ""
+                                    ? t("search-bar.suggestions-title")
                                     : (isLoading ? t("search-bar.searching-status") : t("search-bar.results-title"))}
                             </span>
                             {isLoading && (
@@ -427,11 +398,10 @@ function FormDestinationPart({
                                 >
                                     <button
                                         onClick={() => handleSelect(result)}
-                                        className={`cursor-pointer w-full flex items-center gap-3 rounded-xl p-2.5 text-left transition-all duration-150 outline-none ${
-                                            index === activeIndex
-                                                ? "bg-base-300 text-base-content"
-                                                : "hover:bg-base-300 text-base-content/90 hover:text-base-content"
-                                        }`}
+                                        className={`cursor-pointer w-full flex items-center gap-3 rounded-xl p-2.5 text-left transition-all duration-150 outline-none ${index === activeIndex
+                                            ? "bg-base-300 text-base-content"
+                                            : "hover:bg-base-300 text-base-content/90 hover:text-base-content"
+                                            }`}
                                         type="button"
                                     >
                                         <div className="size-10 flex shrink-0 items-center justify-center text-error bg-error-content rounded-xl shadow-sm">
@@ -455,10 +425,6 @@ function FormDestinationPart({
                             ))}
                         </ul>
                     )}
-
-                    <div className="mt-3 pt-3 border-t border-base-300">
-                        <FormDistanceSlider radius={radius} onChange={onRadiusChange} />
-                    </div>
                 </Card>
             )}
         </div>
@@ -541,33 +507,6 @@ function FormDatePart({
                     />
                 </div>
             )}
-        </div>
-    );
-}
-
-function FormDistanceSlider({
-    radius,
-    onChange,
-}: {
-    radius: number;
-    onChange: (r: number) => void;
-}) {
-    const { t } = useTranslation();
-    return (
-        <div className="flex items-center justify-between md:justify-center gap-4 bg-base-100 px-4 py-2.5 md:py-2 rounded-xl w-full md:w-auto min-w-[160px]">
-            <div className="flex flex-col w-full gap-1">
-                <span className="font-bold text-sm whitespace-nowrap text-left">
-                    {t("search-bar.radius-label")}: {radius} km
-                </span>
-                <input
-                    type="range"
-                    min="5"
-                    max="500"
-                    value={radius}
-                    onChange={(e) => onChange(Number(e.target.value))}
-                    className="w-full h-1 bg-base-300 rounded-lg appearance-none cursor-pointer accent-primary focus:outline-none"
-                />
-            </div>
         </div>
     );
 }

@@ -92,6 +92,9 @@
 
 
 
+.clickable {
+    @apply hover:scale-101 active:scale-99 transition-transform
+}
 
 .text-title-large {
     @apply mt-6 mb-4 text-4xl font-extrabold tracking-tight text-balance;
@@ -112,24 +115,26 @@
 .property-details-gallery {
     .image-gallery-swipe-wrapper {
         max-height: 500px;
-        
+
         @media (max-width: 768px) {
             max-height: 350px;
         }
+
         @media (max-width: 480px) {
             max-height: 250px;
         }
     }
-    
+
     .image-gallery-image {
         max-height: 500px;
         height: 500px;
         object-fit: cover;
-        
+
         @media (max-width: 768px) {
             max-height: 350px;
             height: 350px;
         }
+
         @media (max-width: 480px) {
             max-height: 250px;
             height: 250px;

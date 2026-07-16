@@ -49,7 +49,7 @@
         "total-amount": "Total amount",
         "see-accommodation": "View accommodation",
         "from": "From",
-        "to" : "to",
+        "to": "to",
         "loading": "Loading your bookings...",
         "no-reservations": "You have not made any bookings yet.",
         "explore-properties": "Explore accommodations",
@@ -316,7 +316,6 @@
         "no-results": "No results found for \"{{value}}\"",
         "dates-label": "Dates",
         "dates-placeholder": "When?",
-        "radius-label": "Search radius",
         "suggestions-title": "Suggested destinations"
     }
 }
