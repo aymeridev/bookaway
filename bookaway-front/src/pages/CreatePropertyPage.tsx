@@ -4,7 +4,6 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { Banner } from "../components/Banner";
 import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
 import { Stepper } from "../components/create_property/Stepper";
-import Button from "../components/ui/Button";
 import { PropertyLocationStep } from "../components/create_property/steps/PropertyLocationStep";
 import { PropertyTypeStep } from "../components/create_property/steps/PropertyTypeStep";
 import { type Property } from "../types";
@@ -49,8 +48,6 @@ export function CreatePropertyPage() {
     const navigate = useNavigate();
     const [step, setStep] = useState(0);
 
-    const [isLoading, setLoading] = useState(false);
-
     const Component = STEPS[step].Step
 
     return <>
@@ -62,19 +59,19 @@ export function CreatePropertyPage() {
                 <form onSubmit={handleSubmit(onSubmit)} action="" className="flex-1 flex flex-col gap-8 m-4 max-w-md">
                     <Component property={property!} form={form} onNext={() => setStep(step + 1)} />
                     {step > 0 && <div className="flex items-center justify-center">
-                        <Button onClick={() => {
+                        <button className="btn btn-outline" onClick={() => {
                             setStep(step - 1)
-                        }} type="button" variant="outline">{t("previous")}</Button>
+                        }} type="button">{t("previous")}</button>
                         <span className="flex-1 text-center">{t("step")} {step + 1}/{STEPS.length}</span>
 
                         {step === STEPS.length - 1 ?
-                            <Button onClick={() => {
+                            <button onClick={() => {
                                 navigate(`/property/${property?.id}`);
                                 toast.success("Votre logement a été créé avec succès!")
                             }}>
                                 {t("accommodation.create-accommodation")}
-                            </Button> :
-                            <Button isLoading={isLoading} onClick={async () => {
+                            </button> :
+                            <button className="btn btn-primary" onClick={async () => {
                                 const stepId = STEPS[step].id;
                                 switch (stepId) {
                                     case "amenities":
@@ -82,7 +79,6 @@ export function CreatePropertyPage() {
                                             const values = form.getValues();
                                             console.log(values);
                                             try {
-                                                setLoading(true);
                                                 const res = await api.post<Property>("/properties", {
                                                     ...values,
                                                     amenities: values.amenities.map((a) => a.value)
@@ -94,7 +90,6 @@ export function CreatePropertyPage() {
                                                 console.error(err);
                                                 toast.error("Erreur lors de la création du logement");
                                             }
-                                            setLoading(false);
                                         } else {
                                             setStep(step + 1)
                                         }
@@ -103,7 +98,7 @@ export function CreatePropertyPage() {
                                         setStep(step + 1)
                                         break;
                                 }
-                            }} type="button" variant="primary">{t("next")}</Button>}
+                            }} type="button">{t("next")}</button>}
                     </div>}
                 </form >
             </div>

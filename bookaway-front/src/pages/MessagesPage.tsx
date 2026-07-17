@@ -4,8 +4,6 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 import { Send, Home, MessageSquare, Loader2, XCircle } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
 import { useConversations } from "../hooks/apiHooks";
 import type { Conversation, ChatMessage } from "../types";
 import { useTranslation } from "react-i18next";
@@ -130,9 +128,8 @@ export function MessagesPage() {
                                 const propImage = conv.property?.images?.[0]?.url || "https://loremflickr.com/100/100/house";
 
                                 return (
-                                    <Button
+                                    <button
                                         key={conv.id}
-                                        variant="flat"
                                         onClick={() => {
                                             setSearchParams({ conversation_id: String(conv.id) });
                                             setConversations(prev =>
@@ -141,8 +138,7 @@ export function MessagesPage() {
                                                 )
                                             );
                                         }}
-                                        className={`w-full p-4 text-left flex gap-3 transition-colors rounded-none justify-start items-start enabled:hover:scale-100 enabled:hover:shadow-none enabled:active:scale-100 ${isActive ? "bg-blue-50/70 border-l-4 border-blue-600 text-gray-900" : "bg-white hover:bg-gray-50"
-                                            }`}
+                                        className={`btn btn-soft ${isActive ? "btn-primary" : ""}`}
                                     >
                                         <img
                                             src={propImage}
@@ -151,29 +147,26 @@ export function MessagesPage() {
                                         />
                                         <div className="flex-1 min-w-0 space-y-0.5">
                                             <div className="flex items-center justify-between">
-                                                <span className={`font-semibold truncate text-sm ${
-                                                    conv.booking?.status === "cancelled" ? "text-red-600 line-through" : "text-gray-900"
-                                                }`}>
+                                                <span className={`font-semibold truncate text-sm ${conv.booking?.status === "cancelled" ? "text-red-600 line-through" : "text-gray-900"
+                                                    }`}>
                                                     {interlocutor.name}
                                                 </span>
                                                 {lastMsg && (
                                                     <span className="text-xs text-gray-400 shrink-0">
-                                                       {formatDistanceToNow(parseISO(lastMsg.created_at), { addSuffix: false, locale: currentLocale })}
+                                                        {formatDistanceToNow(parseISO(lastMsg.created_at), { addSuffix: false, locale: currentLocale })}
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className={`text-xs font-medium truncate flex items-center gap-1 ${
-                                                conv.booking?.status === "cancelled" ? "text-red-500 line-through" : "text-indigo-600"
-                                            }`}>
+                                            <p className={`text-xs font-medium truncate flex items-center gap-1 ${conv.booking?.status === "cancelled" ? "text-red-500 line-through" : "text-indigo-600"
+                                                }`}>
                                                 <Home className="w-3 h-3 shrink-0" /> {conv.property?.title}
                                             </p>
-                                            <p className={`text-sm truncate ${
-                                                conv.booking?.status === "cancelled" ? "text-red-400/80 italic" : "text-gray-500"
-                                            }`}>
-                                               {lastMsg ? lastMsg.content : t("chat-page.start-discussion")}
+                                            <p className={`text-sm truncate ${conv.booking?.status === "cancelled" ? "text-red-400/80 italic" : "text-gray-500"
+                                                }`}>
+                                                {lastMsg ? lastMsg.content : t("chat-page.start-discussion")}
                                             </p>
                                         </div>
-                                    </Button>
+                                    </button>
                                 );
                             })
                         )}
@@ -227,7 +220,7 @@ export function MessagesPage() {
                                         >
                                             <div
                                                 className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-sm shadow-sm leading-relaxed ${isMe
-                                                    ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-br-none"
+                                                    ? "bg-linear-to-br from-blue-600 to-indigo-600 text-white rounded-br-none"
                                                     : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
                                                     }`}
                                             >
@@ -243,19 +236,19 @@ export function MessagesPage() {
                             </div>
                             <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
                                 <div className="flex gap-2">
-                                    <Input
+                                    <input
                                         type="text"
                                         placeholder={t("chat-page.placeholder-input")}
                                         value={newMessage}
                                         onChange={(e) => setNewMessage(e.target.value)}
                                         className="flex-1"
                                     />
-                                    <Button
+                                    <button
                                         type="submit"
-                                        className="p-3 rounded-xl shrink-0"
+                                        className="p-3 rounded-xl shrink-0 btn btn-primary"
                                     >
                                         <Send className="w-5 h-5" />
-                                    </Button>
+                                    </button>
                                 </div>
                             </form>
                         </>

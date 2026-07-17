@@ -1,6 +1,5 @@
 import { PlusCircle, Home, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
-import Button from "../components/ui/Button";
 import { Link } from "react-router";
 import { Card } from "../components/Card";
 import { useMyProperties } from "../hooks/apiHooks";
@@ -35,12 +34,10 @@ export function MyPropertiesPage() {
                         <p className="text-sm text-gray-500">{t("accommodation.management-accommodation")}</p>
                     </div>
 
-                    <Button asChild>
-                        <Link to={"/new-property"} viewTransition={true}>
-                            <PlusCircle className="w-5 h-5" />
-                            {t("accommodation.new-accommodation")}
-                        </Link>
-                    </Button>
+                    <Link className="btn" to={"/new-property"} viewTransition={true}>
+                        <PlusCircle className="w-5 h-5" />
+                        {t("accommodation.new-accommodation")}
+                    </Link>
                 </div>
 
                 {properties.length === 0 ? (

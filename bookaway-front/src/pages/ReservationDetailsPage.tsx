@@ -19,7 +19,6 @@ import api from "../api/axios";
 import { useBookingDetails } from "../hooks/apiHooks";
 import { Banner } from "../components/Banner";
 import { Card } from "../components/Card";
-import Button from "../components/ui/Button";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
@@ -94,9 +93,9 @@ export function ReservationDetailsPage() {
                 <Card className="flex flex-col items-center p-8 bg-red-50 border border-red-200 space-y-4">
                     <AlertTriangle className="w-12 h-12 text-red-500" />
                     <p className="text-red-700 font-semibold">{error || t("booking-details.not-found")}</p>
-                    <Button onClick={() => navigate("/my-reservations")}>
+                    <button className="btn btn-primary" onClick={() => navigate("/my-reservations")}>
                         <ArrowLeft className="w-4 h-4" /> {t("booking-details.back-btn")}
-                    </Button>
+                    </button>
                 </Card>
             </main>
         );
@@ -113,10 +112,10 @@ export function ReservationDetailsPage() {
 
             <main className="max-w-6xl mx-auto p-6 space-y-8">
                 <div className="flex justify-start">
-                    <Button variant="flat" onClick={() => navigate("/my-reservations")} className="group">
-                        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                    <button className="btn btn-ghost" onClick={() => navigate("/my-reservations")}>
+                        <ArrowLeft />
                         {t("booking-details.back-btn")}
-                    </Button>
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -179,20 +178,16 @@ export function ReservationDetailsPage() {
                                 </div>
 
                                 <div className="border-t border-gray-100 pt-4 flex flex-wrap gap-3">
-                                    <Button variant="outline" asChild size="sm">
-                                        <Link to={`/property/${property.id}`} className="flex items-center gap-2">
-                                            <Home className="w-4 h-4" /> {t("booking-details.view-property")}
-                                        </Link>
-                                    </Button>
+                                    <Link to={`/property/${property.id}`} className="btn btn-outline btn-sm flex items-center gap-2">
+                                        <Home className="w-4 h-4" /> {t("booking-details.view-property")}
+                                    </Link>
                                     {status !== "cancelled" && (
-                                        <Button
-                                            variant="danger"
-                                            size="sm"
+                                        <button
                                             onClick={() => setIsCancelModalOpen(true)}
-                                            className="ml-auto"
+                                            className="btn btn-error btn-sm ml-auto"
                                         >
                                             {t("booking-details.cancel-btn")}
-                                        </Button>
+                                        </button>
                                     )}
                                 </div>
                             </div>
@@ -227,19 +222,16 @@ export function ReservationDetailsPage() {
                             </div>
 
                             {property.latitude && property.longitude && (
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() =>
-                                        window.open(
-                                            `https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`,
-                                            "_blank"
-                                        )
-                                    }
-                                    className="w-full"
+                                <button onClick={() =>
+                                    window.open(
+                                        `https://www.google.com/maps/search/?api=1&query=${property.latitude},${property.longitude}`,
+                                        "_blank"
+                                    )
+                                }
+                                    className="btn btn-outline w-full"
                                 >
                                     {t("booking-details.view-maps")}
-                                </Button>
+                                </button>
                             )}
                         </Card>
 
@@ -260,13 +252,12 @@ export function ReservationDetailsPage() {
                                 </div>
                             </div>
 
-                            <Button
-                                variant="primary"
+                            <button
                                 onClick={handleContactHost}
-                                className="w-full"
+                                className="btn btn-primary w-full"
                             >
                                 <MessageSquare className="w-4 h-4" /> {t("booking-details.open-chat")}
-                            </Button>
+                            </button>
                         </Card>
                     </div>
                 </div>
@@ -287,8 +278,9 @@ export function ReservationDetailsPage() {
                             required
                         />
                         <div className="flex justify-end gap-3 pt-2">
-                            <Button
-                                variant="flat"
+                            <button
+
+                                className="btn btn-primary btn-outline"
                                 type="button"
                                 onClick={() => {
                                     setIsCancelModalOpen(false);
@@ -297,16 +289,15 @@ export function ReservationDetailsPage() {
                                 disabled={isCancelling}
                             >
                                 {t("booking-details.modal-keep")}
-                            </Button>
-                            <Button
-                                variant="danger"
+                            </button>
+                            <button
+                                className="btn btn-error"
                                 type="button"
                                 onClick={handleCancelReservation}
-                                isLoading={isCancelling}
                                 disabled={!cancellationReason.trim()}
                             >
                                 {t("booking-details.modal-confirm")}
-                            </Button>
+                            </button>
                         </div>
                     </Card>
                 </div>

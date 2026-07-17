@@ -1,9 +1,7 @@
 import { MapPin, Search, Loader2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { type PropertyFormStepProps } from "../form";
-import Input from "../../ui/Input";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
-import Button from "../../ui/Button";
 import toast from "react-hot-toast";
 
 // Helper component to center and animate the Leaflet map when coordinates change
@@ -23,7 +21,7 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
     const [results, setResults] = useState([]);
     const [isLoadingResults, setIsLoadingResults] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    
+
     const containerRef = useRef<HTMLDivElement>(null);
     const latitude = Number.parseFloat(location[0]);
     const longitude = Number.parseFloat(location[1]);
@@ -72,7 +70,7 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
             <div ref={containerRef} className="relative w-full flex flex-col gap-1.5">
                 <span className="text-sm font-medium text-gray-700">Adresse du logement</span>
                 <div className="flex gap-2">
-                    <Input
+                    <input
                         value={search}
                         type="search"
                         autoComplete="street-address"
@@ -92,13 +90,13 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
                             setSearch(e.target.value);
                             setIsOpen(false); // Clear older results visibility when query is edited
                         }}
-                        className="w-full"
+                        className="input w-full"
                     />
                     <button
                         onClick={handleSearch}
                         disabled={isLoadingResults || !search.trim()}
                         type="button"
-                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 cursor-pointer disabled:cursor-not-allowed px-4 py-2 text-white rounded-lg transition-colors flex items-center justify-center min-h-[42px] flex-shrink-0 shadow-sm"
+                        className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 cursor-pointer disabled:cursor-not-allowed px-4 py-2 text-white rounded-lg transition-colors flex items-center justify-center min-h-[42px] shrink-0 shadow-sm"
                     >
                         {isLoadingResults ? (
                             <Loader2 className="w-5 h-5 animate-spin" />
@@ -110,7 +108,7 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
 
                 {/* Absolutely positioned dropdown suggestions list */}
                 {isOpen && results.length > 0 && (
-                    <ul className="absolute top-[100%] left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl divide-y divide-gray-100">
+                    <ul className="absolute top-full left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-xl divide-y divide-gray-100">
                         {results.map((result: any) => {
                             const parts = result.display_name.split(",");
                             const title = parts[0];
@@ -165,9 +163,9 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
                             <Marker position={[latitude, longitude]} />
                         </MapContainer>
                     </div>
-                    <Button type="button" className="w-full py-2.5" onClick={onNext}>
+                    <button type="button" className="btn btn-primary w-full py-2.5" onClick={onNext}>
                         Continuer
-                    </Button>
+                    </button>
                 </div>
             ) : null}
         </>

@@ -3,7 +3,6 @@ import api from "../api/axios";
 import { useNavigate, Link } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
-import Input from "../components/ui/Input";
 import { useTranslation } from "react-i18next";
 
 export function RegisterPage() {
@@ -53,47 +52,43 @@ export function RegisterPage() {
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
 
                     <div className="flex flex-col gap-3">
-                        <Input
-                            label={t("register.firstname-label")}
-                            type="text"
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend">{t("register.firstname-label")}</legend>
+                            <input className="input" type="text"
+                                onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+                                required />
+                        </fieldset>
 
-                        <Input
-                            label={t("register.lastname-label")}
-                            type="text"
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend">{t("register.lastname-label")}</legend>
+                            <input className="input" type="text"
+                                onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                                required />
+                        </fieldset>
 
-                        <Input
-                            label={t("register.email-label")}
-                            type="email"
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend">{t("register.email-label")}</legend>
+                            <input className="input" type="email"
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                required />
+                        </fieldset>
 
-                        <Input
-                            label={t("register.password-label")}
-                            type="password"
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend">{t("register.password-label")}</legend>
+                            <input className="input" type="password"
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                required />
+                        </fieldset>
 
-                        <Input
-                            type="password"
-                            label={t("register.confirm-password-label")}
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <legend className="fieldset-legend">{t("register.confirm-password-label")}</legend>
+                            <input className="input" type="password"
+                                onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
+                                required />
+                        </fieldset>
 
-                        <button type="submit" className="bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition mt-4">
+
+                        <button type="submit" className="btn btn-success btn-lg">
                             S'inscrire
                         </button>
                     </div>

@@ -1,13 +1,10 @@
 import { useSearchParams } from "react-router";
-import { List, Map } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../SearchBar";
 import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
-import Button from "../components/ui/Button";
 import { useSearchProperties } from "../hooks/apiHooks";
-import { PropertyCard } from "../components/property/PropertyCard";
 import { SearchPropertyCardResult } from "../components/property/SearchPropertyCardResult";
 
 export function SearchPage() {
@@ -16,7 +13,6 @@ export function SearchPage() {
     const { data: propertiesData, isLoading } = useSearchProperties(searchParams);
     const properties = propertiesData || [];
 
-    const [view, setView] = useState<"list" | "map">("list");
     const [currentPage, setCurrentPage] = useState(1);
     const loading = isLoading;
 
@@ -99,32 +95,6 @@ export function SearchPage() {
                         {t("search.found-count", { count: nearbyProperties.length })}
                     </p>
                 </div>
-
-                <div className="inline-flex p-1 bg-gray-100 rounded-xl border border-gray-200">
-                    <Button
-                        variant="flat"
-                        onClick={() => setView("list")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-100 active:scale-100 shadow-none hover:shadow-none focus:ring-0 focus:ring-offset-0 focus:outline-none ${view === "list"
-                            ? "bg-white shadow-sm text-blue-600 hover:bg-white"
-                            : "text-gray-500 hover:text-gray-700 hover:bg-transparent"
-                            }`}
-                    >
-                        <List size={18} />
-                        {t("search.view-list")}
-                    </Button>
-
-                    <Button
-                        variant="flat"
-                        onClick={() => setView("map")}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:scale-100 active:scale-100 shadow-none hover:shadow-none focus:ring-0 focus:ring-offset-0 focus:outline-none ${view === "map"
-                            ? "bg-white shadow-sm text-blue-600 hover:bg-white"
-                            : "text-gray-500 hover:text-gray-700 hover:bg-transparent"
-                            }`}
-                    >
-                        <Map size={18} />
-                        {t("search.view-map")}
-                    </Button>
-                </div>
             </header>
 
             {loading ? (
@@ -148,30 +118,30 @@ export function SearchPage() {
 
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
-                            <Button
-                                variant="outline"
+                            <button
+                                className="btn btn-outline"
                                 onClick={() =>
                                     paginate(currentPage - 1)
                                 }
                                 disabled={currentPage === 1}
                             >
                                 {t("search.btn-prev")}
-                            </Button>
+                            </button>
 
                             {[...Array(totalPages)].map((_, i) => (
-                                <Button
+                                <button
                                     key={i + 1}
                                     onClick={() =>
                                         paginate(i + 1)
                                     }
-                                    variant={currentPage === i + 1 ? "primary" : "secondary"}
+                                    className={currentPage === i + 1 ? "btn btn-primary" : "btn btn-secondary"}
                                 >
                                     {i + 1}
-                                </Button>
+                                </button>
                             ))}
 
-                            <Button
-                                variant="outline"
+                            <button
+                                className="btn btn-outline"
                                 onClick={() =>
                                     paginate(currentPage + 1)
                                 }
@@ -180,7 +150,7 @@ export function SearchPage() {
                                 }
                             >
                                 {t("search.btn-next")}
-                            </Button>
+                            </button>
                         </div>
                     )}
                     <PropertiesMap properties={properties} />

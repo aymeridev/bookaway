@@ -87,7 +87,7 @@ export function SearchBar() {
             <FormDestinationPart
                 value={destination}
                 onChange={setDestination}
-                onLocationSelect={(coords, isDefault) => {
+                onLocationSelect={(coords, _) => {
                     setCoords(coords);
                 }}
                 coords={coords}

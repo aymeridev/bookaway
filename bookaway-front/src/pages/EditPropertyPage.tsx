@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import type { Property } from "../types";
 import { useParams, useNavigate } from "react-router";
 import { Card } from "../components/Card";
-import Button from "../components/ui/Button";
 import { Save, Loader2 } from "lucide-react";
 import { StepperList } from "../components/create_property/StepperList";
 import api from "../api/axios";
@@ -67,16 +66,16 @@ function EditPropertyForm({ property }: EditPropertyFormProps) {
                 }} />
                 <Card className="flex-1">
                     <CurrentStep form={form} property={property} />
-                    <Button>
+                    <button>
                         <Save />
                         {t("accommodation-edit.save")}
-                    </Button>
-                    <Button onClick={() => {
+                    </button>
+                    <button className="btn btn-error" onClick={() => {
                         if (confirm(t("accommodation-edit.delete-confirm"))) {
                             api.delete(`/properties/${property.id}`);
                             navigate("/my-properties");
                         }
-                    }} variant="danger">{t("accommodation-edit.delete")}</Button>
+                    }}>{t("accommodation-edit.delete")}</button>
                 </Card>
             </main>
         </>

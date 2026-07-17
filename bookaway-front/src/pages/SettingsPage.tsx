@@ -1,7 +1,6 @@
 import { Trash2 } from "lucide-react";
 import api from "../api/axios";
 import { Banner } from "../components/Banner";
-import Button from "../components/ui/Button";
 import useAuthStore from "../context/AuthStore";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -58,10 +57,10 @@ export function SettingsPage() {
 
                 <section>
 
-                    <Button onClick={handleDelete} variant="danger" className="flex items-center gap-2">
+                    <button onClick={handleDelete} className="btn btn-error flex items-center gap-2">
                         <Trash2 className="w-4 h-4" />
                         {t("disable-account")}
-                    </Button>
+                    </button>
                 </section>
             </main>
         </>

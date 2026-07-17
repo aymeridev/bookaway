@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from "react-router";
-import Button from "../components/ui/Button";
 import { useUserProfile, useUserProperties } from "../hooks/apiHooks";
 import { Loader2, ArrowLeft, Calendar, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -32,14 +31,13 @@ export function UserPage() {
     return (
         <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
             <div className="mb-6">
-                <Button
-                    variant="flat"
+                <button
                     onClick={() => navigate(-1)}
-                    className="group flex items-center gap-2 text-gray-500 hover:text-primary dark:hover:text-primary transition-colors text-sm font-semibold p-2"
+                    className="btn btn-ghost"
                 >
                     <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
                     {t("user-page.back")}
-                </Button>
+                </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -5,7 +5,6 @@ import toast from "react-hot-toast";
 import api from "../../../api/axios";
 import type { Property } from "../../../types";
 import { GripHorizontal, ImageDown, X } from "lucide-react";
-import Button from "../../ui/Button";
 
 export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyForm, any, PropertyForm>, property: Property }) {
     const { control } = form;
@@ -67,12 +66,12 @@ export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyFor
                             <li className="flex gap-2 items-center justify-center" draggable key={field.id}>
                                 <GripHorizontal />
                                 <div className="aspect-video bg-center bg-cover rounded w-32" style={{ backgroundImage: `url(${field.url})` }} />
-                                <Button onClick={async () => {
+                                <button className="btn btn-ghost" onClick={async () => {
                                     if (dbId) {
                                         await api.delete(`/properties/${property.id}/images/${dbId}`);
                                     }
                                     remove(originalIndex);
-                                }} variant="flat"><X /></Button>
+                                }}><X /></button>
                             </li>
                         );
                     })}

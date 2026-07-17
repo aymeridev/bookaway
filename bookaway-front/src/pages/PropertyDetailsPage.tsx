@@ -5,7 +5,6 @@ import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useParams, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO, eachDayOfInterval, formatDate } from "date-fns";
-import Button from '../components/ui/Button';
 import { ArrowLeft, Map, SquarePen, Star, Loader2 } from 'lucide-react';
 import { fr, enUS as dpEnUS } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
@@ -35,7 +34,6 @@ export function PropertyDetailsPage() {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [ratingStars, setRatingStars] = useState<number>(5);
     const [ratingComment, setRatingComment] = useState<string>('');
-    const [isSubmittingRating, setIsSubmittingRating] = useState<boolean>(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
     const handleOpenModal = () => {
@@ -56,7 +54,6 @@ export function PropertyDetailsPage() {
     const handleRatingSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!property) return;
-        setIsSubmittingRating(true);
         setSubmitError(null);
 
         try {
@@ -77,8 +74,6 @@ export function PropertyDetailsPage() {
             const errMsg = err.response?.data?.message || t("property-details.rating-error");
             setSubmitError(errMsg);
             toast.error(errMsg);
-        } finally {
-            setIsSubmittingRating(false);
         }
     };
 
@@ -171,11 +166,11 @@ export function PropertyDetailsPage() {
                 <ArrowLeft />
                 {t("property-details.back-results")}
             </button>
-            {isOwner && <Button onClick={() => {
+            {isOwner && <button onClick={() => {
                 navigate(`/property/${property.id}/edit`);
             }}>
                 <SquarePen />
-                {t("property-details.edit-property")}</Button>}
+                {t("property-details.edit-property")}</button>}
 
             <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
 
@@ -204,9 +199,9 @@ export function PropertyDetailsPage() {
                                     {t("property-details.hosted-by", { name: property.user.name })}
                                 </h3>
                                 <Link to={`/user/${property.user.id}`} viewTransition>
-                                    <Button variant="outline" size="sm">
+                                    <button className='btn btn-soft btn-primary'>
                                         {t("property-details.view-profile")}
-                                    </Button>
+                                    </button>
                                 </Link>
                             </div>
                         </Card>
@@ -235,7 +230,7 @@ export function PropertyDetailsPage() {
                                     return hasAlreadyReviewed ? (
                                         <span className="text-sm text-gray-500 italic">{t("property-details.already-reviewed")}</span>
                                     ) : (
-                                        <Button onClick={handleOpenModal}>{t("property-details.give-review")}</Button>
+                                        <button onClick={handleOpenModal}>{t("property-details.give-review")}</button>
                                     );
                                 })()
                             )}
@@ -283,19 +278,17 @@ export function PropertyDetailsPage() {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t("property-details.modal-rating-label")}</label>
                                     <div className="flex gap-2">
                                         {[1, 2, 3, 4, 5].map((star) => (
-                                            <Button
+                                            <button
                                                 key={star}
                                                 type="button"
-                                                variant="flat"
-                                                size="sm"
                                                 onClick={() => setRatingStars(star)}
-                                                className="p-0 border-0 bg-transparent hover:bg-transparent shadow-none hover:scale-100 active:scale-100 min-h-0 min-w-0 flex items-center justify-center focus:ring-0 focus:ring-offset-0 focus:outline-none transition-colors"
+                                                className='btn btn-soft'
                                             >
                                                 <Star
                                                     className={`size-8 ${star <= ratingStars ? 'text-yellow-400' : 'text-gray-300'}`}
                                                     fill={star <= ratingStars ? 'currentColor' : 'none'}
                                                 />
-                                            </Button>
+                                            </button>
                                         ))}
                                     </div>
                                 </div>
@@ -313,19 +306,17 @@ export function PropertyDetailsPage() {
                                     <p className="text-sm text-red-600 font-medium">{submitError}</p>
                                 )}
                                 <div className="flex justify-end gap-3 pt-2">
-                                    <Button
+                                    <button
                                         type="button"
-                                        variant="outline"
                                         onClick={() => dialogRef.current?.close()}
                                     >
                                         {t("property-details.modal-cancel")}
-                                    </Button>
-                                    <Button
+                                    </button>
+                                    <button
                                         type="submit"
-                                        isLoading={isSubmittingRating}
                                     >
                                         {t("property-details.modal-submit")}
-                                    </Button>
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -373,9 +364,9 @@ export function PropertyDetailsPage() {
 
                         {!user ? (
                             <>
-                                <Button className='text-xl py-3 w-full font-semibold' disabled>
+                                <button className='btn btn-primary btn-xl py-3 w-full font-semibold' disabled>
                                     {t("property-details.book-now")}
-                                </Button>
+                                </button>
                                 <p className="text-center text-sm text-amber-600 font-medium">{t("property-details.login-required")}</p>
                             </>
                         ) : (
@@ -397,9 +388,9 @@ export function PropertyDetailsPage() {
                                         }
                                     }}
                                 >
-                                    <Button className='text-xl py-3 w-full font-semibold' disabled={numberOfNights === 0}>
+                                    <button className='btn btn-xl btn-primary w-full' disabled={numberOfNights === 0}>
                                         {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}
-                                    </Button>
+                                    </button>
                                 </Link>
                                 <p className="text-center text-xs text-gray-400">{t("property-details.no-charge-yet")}</p>
                             </>

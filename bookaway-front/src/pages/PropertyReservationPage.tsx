@@ -3,8 +3,6 @@ import { format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import { useState } from "react";
 import useAuthStore from "../context/AuthStore";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
 import { Card } from "../components/Card";
 import { useTranslation } from "react-i18next";
 
@@ -130,58 +128,57 @@ export function PropertyReservationPage() {
                         <h2 className="text-xl font-semibold text-gray-800">{t("property-reservation.payment")}</h2>
 
                         <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                            <Input
-                                label={t("property-reservation.card-holder")}
-                                required
-                                autoComplete="cc-name"
-                                value={cardHolderName}
-                                onChange={(e) => setCardHolderName(e.target.value)}
-                                placeholder="John Doe"
-                            />
-
-                            <Input
-                                required
-                                autoComplete="cc-number"
-                                label={t("property-reservation.card-number")}
-                                type="text"
-                                inputMode="numeric"
-                                pattern="[\d ]{13,19}"
-                                value={cardNumber}
-                                onChange={(e) => setCardNumber(e.target.value)}
-                                placeholder="0000 0000 0000 0000"
-                            />
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <Input
-                                    label={t("property-reservation.expiration")}
-                                    autoComplete="cc-exp"
-                                    inputMode="numeric"
-                                    maxLength={5}
-                                    required
-                                    value={expirationDate}
-                                    onChange={(e) => setExpirationDate(e.target.value)}
-                                    placeholder="MM/AA"
-                                />
-                                <Input
-                                    required
-                                    label={t("property-reservation.cvc")}
-                                    autoComplete="cc-cvv"
+                            <fieldset className="fieldset">
+                                <label className="label" htmlFor="name">{t("property-reservation.card-holder")}</label>
+                                <input type="text" autoComplete="cc-name"
+                                    id="name" className="input" value={cardHolderName}
+                                    onChange={(e) => setCardHolderName(e.target.value)} placeholder="John Doe" required />
+                            </fieldset>
+                            <fieldset className="fieldset">
+                                <label className="label" htmlFor="name">{t("property-reservation.card-number")}</label>
+                                <input required
+                                    autoComplete="cc-number"
                                     type="text"
                                     inputMode="numeric"
-                                    pattern="[0-9]{3,4}"
-                                    maxLength={4}
-                                    value={cvv}
-                                    onChange={(e) => setCvv(e.target.value)}
-                                    placeholder="123"
-                                />
+                                    pattern="[\d ]{13,19}"
+                                    value={cardNumber}
+                                    onChange={(e) => setCardNumber(e.target.value)} className="input" />
+                            </fieldset>
+
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <fieldset className="fieldset">
+                                    <label className="label" htmlFor="name">{t("property-reservation.expiration")}</label>
+                                    <input autoComplete="cc-exp"
+                                        inputMode="numeric"
+                                        maxLength={5}
+                                        required
+                                        value={expirationDate}
+                                        onChange={(e) => setExpirationDate(e.target.value)}
+                                        placeholder="MM/AA"
+                                        className="input" />
+                                </fieldset>
+                                <fieldset className="fieldset">
+                                    <label className="label" htmlFor="name">{t("property-reservation.cvc")}</label>
+                                    <input required
+                                        autoComplete="cc-cvv"
+                                        type="text"
+                                        inputMode="numeric"
+                                        pattern="[0-9]{3,4}"
+                                        maxLength={4}
+                                        value={cvv}
+                                        onChange={(e) => setCvv(e.target.value)}
+                                        placeholder="123"
+                                        className="input" />
+                                </fieldset>
                             </div>
 
-                            <Button
+                            <button
                                 disabled={isSubmitting}
-                                isLoading={isSubmitting}
+                                className="btn btn-primary"
                             >
                                 {t("property-reservation.confirm-button", { total: totals.grandTotal })}
-                            </Button>
+                            </button>
                         </form>
                     </Card>
                 </div>

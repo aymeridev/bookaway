@@ -4,8 +4,6 @@ import { Link, useNavigate } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import { LogIn } from "lucide-react";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
 import { useTranslation } from "react-i18next";
 
 export function LoginPage() {
@@ -29,7 +27,7 @@ export function LoginPage() {
             login(userData, token);
 
             navigate("/", { viewTransition: true });
-        }catch {
+        } catch {
             setError(t("login-page.error-invalid"));
         }
     };
@@ -45,28 +43,29 @@ export function LoginPage() {
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
 
                     <div className="flex flex-col gap-4">
-                        <Input
-                            label={t("login-page.label-email")}
-                            type="email"
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <label className="label" htmlFor="name">{t("login-page.label-email")}</label>
+                            <input type="email"
+                                className="input"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required />
+                        </fieldset>
 
-                        <Input
-                            type="password"
-                            label={t("login-page.label-password")}
-                            className="border p-2 rounded-lg outline-blue-500 text-gray-900"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <fieldset className="fieldset">
+                            <label className="label" htmlFor="name">{t("login-page.label-password")}</label>
+                            <input type="password"
+                                value={password}
+                                className="input"
+                                onChange={(e) => setPassword(e.target.value)}
+                                required />
+                        </fieldset>
 
-                        <Button>
+
+                        <button className="btn btn-primary">
                             <LogIn />
                             {t("login-page.button-submit")}
-                        </Button>
+                        </button>
                         <div className="mt-6 text-center text-sm text-gray-600">
                             {t("login-page.no-account")}{" "}
                             <Link

@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
 import type { Property } from "../../types";
 import { Link, useSearchParams } from "react-router";
-import { ArrowRight, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { amenitiesIcon } from "../../amenities";
-import Button from "../ui/Button";
 
 export function PropertyCard({
     property, numberOfNights
@@ -102,10 +101,6 @@ export function PropertyCard({
                             </div>
                         )}
 
-                        <Button variant="flat" className="text-blue-600" noHoverActive>
-                            <ArrowRight />
-                            {t("search.card-view-btn")}
-                        </Button>
                     </div>
                 </div>
             </article>

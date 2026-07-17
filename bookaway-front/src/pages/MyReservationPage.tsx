@@ -3,7 +3,6 @@ import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { Calendar, MessageSquare, Receipt, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
-import Button from "../components/ui/Button";
 import { Card } from "../components/Card";
 import { useMyReservations } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
@@ -57,11 +56,10 @@ export function MyReservationsPage() {
                 {bookings.length === 0 ? (
                     <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
                         <p className="text-gray-500 text-lg">{t("reservations.no-reservations")}</p>
-                        <Button asChild>
-                            <Link to="/">
-                                {t("reservations.explore-properties")}
-                            </Link>
-                        </Button>
+
+                        <Link className="btn btn-primary" to="/">
+                            {t("reservations.explore-properties")}
+                        </Link>
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -110,19 +108,16 @@ export function MyReservationsPage() {
                                         </div>
 
                                         <div className="flex justify-end pt-2 border-t border-gray-50 gap-2">
-                                            <Button variant="flat" asChild>
-                                                <Link to={"/messages"} viewTransition={true}>
-                                                    <MessageSquare />
-                                                    {t("reservations.contact-host")}
-                                                </Link>
-                                            </Button>
-                                            <Button asChild>
-                                                <Link
-                                                    to={`/reservation/${booking.id}`} viewTransition={true}
-                                                >
-                                                    {t("reservations.view-booking")}
-                                                </Link>
-                                            </Button>
+                                            <Link className="btn btn-soft" to={"/messages"} viewTransition={true}>
+                                                <MessageSquare />
+                                                {t("reservations.contact-host")}
+                                            </Link>
+                                            <Link
+                                                className="btn btn-primary btn-soft"
+                                                to={`/reservation/${booking.id}`} viewTransition={true}
+                                            >
+                                                {t("reservations.view-booking")}
+                                            </Link>
                                         </div>
                                     </div>
                                 </Card>
@@ -130,7 +125,7 @@ export function MyReservationsPage() {
                         })}
                     </div>
                 )}
-            </main>
+            </main >
         </>
     );
 }

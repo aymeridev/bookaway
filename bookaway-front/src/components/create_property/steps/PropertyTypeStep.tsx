@@ -2,7 +2,6 @@ import type { PropertyFormStepProps } from "../form";
 import CampingIllustration from "../../../assets/illustrations/camping.svg";
 import HotelIllustration from "../../../assets/illustrations/hotel.svg";
 import { t } from "i18next";
-import Button from "../../ui/Button";
 import { useState } from "react";
 
 const PROPERTIES_TYPES = [
@@ -25,16 +24,16 @@ export function PropertyTypeStep({ form, onNext }: PropertyFormStepProps) {
             <ul className="flex flex-col gap-4">
                 {PROPERTIES_TYPES.map((type) => (
                     <li key={type.name}>
-                        <Button
+                        <button
                             onClick={() => {
                                 setType(type.name);
                                 form.setValue("type", type.name);
                                 onNext?.();
                             }}
-                            type="button" className="w-full flex-col gap-4" variant="outline">
+                            type="button" className="w-full flex-col gap-4 btn btn-outline">
                             <div className="min-h-32 w-full bg-center bg-contain bg-no-repeat" style={{ backgroundImage: `url(${type.illustration})` }} aria-hidden="true"></div>
                             <span className="text-xl">{t(type.name)}</span>
-                        </Button>
+                        </button>
                     </li>
                 ))}
             </ul>
