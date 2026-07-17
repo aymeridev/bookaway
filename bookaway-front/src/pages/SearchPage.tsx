@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useMemo, useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
-import { SearchBar } from "../SearchBar";
+import { SearchBar } from "../components/search_bar/SearchBar";
 import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
 import { useSearchProperties } from "../hooks/apiHooks";

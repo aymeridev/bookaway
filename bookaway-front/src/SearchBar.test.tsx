@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { SearchBar } from './SearchBar';
+import { SearchBar } from './components/search_bar/SearchBar';
 import api from './api/axios';
 
 // Mock react-day-picker to avoid render issues during tests

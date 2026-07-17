@@ -1,5 +1,5 @@
 import "react-day-picker/style.css";
-import { SearchBar } from "../SearchBar";
+import { SearchBar } from "../components/search_bar/SearchBar";
 import { useTranslation } from "react-i18next";
 
 export function HomePage() {

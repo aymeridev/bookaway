@@ -306,7 +306,6 @@
         "no-listings-desc": "{{name}} n'a pas encore proposé d'hébergements sur la plateforme."
     },
     "search-bar": {
-        "travelers-label": "Voyageurs",
         "search-btn": "Rechercher",
         "destination-label": "Destination",
         "destination-placeholder": "Rechercher une destination",
