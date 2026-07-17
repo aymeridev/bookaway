@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Property;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class PropertyController extends Controller
 {
@@ -20,7 +21,7 @@ class PropertyController extends Controller
             $query->where('user_id', '!=', $request->user()->id);
         }
 
-        if ($request->filled('travelers')) {
+        if ($request->filled('travelers') && $request->travelers > 0) {
             $query->where('capacity', '>=', $request->travelers);
         }
 

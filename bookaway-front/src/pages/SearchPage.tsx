@@ -86,16 +86,20 @@ export function SearchPage() {
                 <div>
                     <h1
                         id="page-title"
-                        className="text-3xl font-extrabold text-gray-900 tracking-tight"
+                        className="text-title-medium"
                     >
                         {t("search.page-title")}
                     </h1>
 
-                    <p className="text-gray-500 mt-1">
+                    <p className="text-base-content/60">
                         {t("search.found-count", { count: nearbyProperties.length })}
                     </p>
                 </div>
             </header>
+
+            {nearbyProperties.length === 0 && <div className="alert alert-error">
+                <span>Aucun logement trouvé.</span>
+            </div>}
 
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20">
@@ -106,7 +110,7 @@ export function SearchPage() {
                 </div>
             ) : (
                 <div className="flex">
-                    <div className="flex flex-1 flex-col gap-4">
+                    <div className="flex w-full min-w-md flex-1 flex-col gap-4">
                         {currentProperties.map((property) => (
                             <SearchPropertyCardResult
                                 key={property.id}
@@ -114,45 +118,47 @@ export function SearchPage() {
                                 numberOfNights={numberOfNights}
                             />
                         ))}
-                    </div>
 
-                    {totalPages > 1 && (
-                        <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
-                            <button
-                                className="btn btn-outline"
-                                onClick={() =>
-                                    paginate(currentPage - 1)
-                                }
-                                disabled={currentPage === 1}
-                            >
-                                {t("search.btn-prev")}
-                            </button>
+                        <div>
+                            {totalPages > 1 && (
+                                <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
+                                    <button
+                                        className="btn btn-outline"
+                                        onClick={() =>
+                                            paginate(currentPage - 1)
+                                        }
+                                        disabled={currentPage === 1}
+                                    >
+                                        {t("search.btn-prev")}
+                                    </button>
 
-                            {[...Array(totalPages)].map((_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() =>
-                                        paginate(i + 1)
-                                    }
-                                    className={currentPage === i + 1 ? "btn btn-primary" : "btn btn-secondary"}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
+                                    {[...Array(totalPages)].map((_, i) => (
+                                        <button
+                                            key={i + 1}
+                                            onClick={() =>
+                                                paginate(i + 1)
+                                            }
+                                            className={currentPage === i + 1 ? "btn btn-primary" : "btn btn-secondary"}
+                                        >
+                                            {i + 1}
+                                        </button>
+                                    ))}
 
-                            <button
-                                className="btn btn-outline"
-                                onClick={() =>
-                                    paginate(currentPage + 1)
-                                }
-                                disabled={
-                                    currentPage === totalPages
-                                }
-                            >
-                                {t("search.btn-next")}
-                            </button>
+                                    <button
+                                        className="btn btn-outline"
+                                        onClick={() =>
+                                            paginate(currentPage + 1)
+                                        }
+                                        disabled={
+                                            currentPage === totalPages
+                                        }
+                                    >
+                                        {t("search.btn-next")}
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
                     <PropertiesMap properties={properties} />
                 </div>
             )}
