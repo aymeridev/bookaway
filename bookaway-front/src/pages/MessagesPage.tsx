@@ -3,14 +3,12 @@ import { useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
-import { useConversations } from "../hooks/apiHooks";
 import type { Conversation, ChatMessage } from "../types";
 import { useTranslation } from "react-i18next";
 import { fr, enUS } from "date-fns/locale";
-import { ChatCircleIcon, ChatIcon, HouseIcon, PaperPlaneRightIcon, SpinnerIcon, XCircleIcon } from "@phosphor-icons/react";
+import { ChatCircleIcon, ChatIcon, HouseIcon, PaperPlaneRightIcon, XCircleIcon } from "@phosphor-icons/react";
 
 export function MessagesPage() {
-    const { data: conversationsData, isLoading } = useConversations();
     const currentUser = useAuthStore((state) => state.user);
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
@@ -30,17 +28,6 @@ export function MessagesPage() {
 
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (conversationsData) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setConversations(
-                conversationsData.map(conv =>
-                    conv.id === activeChatId ? { ...conv, unread_count: 0 } : conv
-                )
-            );
-        }
-    }, [conversationsData, activeChatId]);
 
     // Trouver la conversation actuellement sélectionnée
     const activeConversation = conversations.find(c => c.id === activeChatId);
@@ -94,14 +81,6 @@ export function MessagesPage() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
-                <p className="text-gray-500 font-medium">{t("chat-page.loading")}</p>
-            </div>
-        );
-    }
 
     return (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-6">

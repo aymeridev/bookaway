@@ -3,7 +3,6 @@ import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
-import { useConversations } from "../hooks/apiHooks";
 import { BuildingsIcon, CalendarIcon, CaretDownIcon, ChatCircleIcon, EyeIcon, GearFineIcon, ListIcon, MoonIcon, SignInIcon, SignOutIcon, SunIcon, UserIcon, XIcon } from "@phosphor-icons/react";
 
 export function NavbarLayout() {
@@ -14,16 +13,8 @@ export function NavbarLayout() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const { data: conversations, refetch } = useConversations(isAuthenticated ? 30000 : undefined);
 
     useEffect(() => {
-        if (isAuthenticated) {
-            refetch();
-        }
-    }, [location, isAuthenticated, refetch]);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobileMenuOpen(false);
     }, [location.pathname]);
 
@@ -42,10 +33,6 @@ export function NavbarLayout() {
         };
     }, [isMobileMenuOpen]);
 
-    const unreadCount = conversations
-        ? conversations.reduce((acc, conv) => acc + (conv.unread_count || 0), 0)
-        : 0;
-
     const noBannerRoutes = [
         "/search",
         "/messages",
@@ -59,12 +46,8 @@ export function NavbarLayout() {
         <div className="flex flex-col h-svh relative">
             <nav ref={navRef} className="navbar shadow-sm bg-primary">
                 <div className="flex items-center gap-6">
-                    <Link to={"/"} className="block" viewTransition>
-                        <div
-                            className="h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
-                            aria-label="Retour à l'accueil"
-                        ></div>
-                    </Link>
+                    <Link to={"/"} className="block h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
+                        aria-label="Retour à l'accueil" viewTransition />
                     {isAuthenticated && (
                         <ul className="hidden md:flex gap-1 list-none p-0 m-0">
                             <ListNavLink to={"/my-reservations"}>
@@ -76,15 +59,8 @@ export function NavbarLayout() {
                                 {t("header.accommodation")}
                             </ListNavLink>
                             <ListNavLink to={"/messages"}>
-                                <div className="relative flex items-center gap-2">
-                                    <ChatCircleIcon />
-                                    <span>{t("header.messaging")}</span>
-                                    {unreadCount > 0 && (
-                                        <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
-                                            {unreadCount}
-                                        </span>
-                                    )}
-                                </div>
+                                <ChatCircleIcon />
+                                Messagerie
                             </ListNavLink>
                         </ul>
                     )}
@@ -132,22 +108,6 @@ export function NavbarLayout() {
                                     to={"/my-properties"} viewTransition>
                                     <BuildingsIcon />
                                     {t("header.accommodation")}
-                                </NavLink>
-                            </li>
-                            <li className="list-none">
-                                <NavLink
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
-                                    to={"/messages"} viewTransition>
-                                    <div className="relative flex items-center gap-3 w-full">
-                                        <ChatCircleIcon />
-                                        <span className="flex-1 text-left">{t("header.messaging")}</span>
-                                        {unreadCount > 0 && (
-                                            <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
-                                                {unreadCount}
-                                            </span>
-                                        )}
-                                    </div>
                                 </NavLink>
                             </li>
                         </ul>

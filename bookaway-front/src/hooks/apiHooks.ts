@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
 import { useApiGet } from './useApiGet';
-import type { Property, User, Booking, Conversation } from '../types';
+import type { Property, User, Booking } from '../types';
 
 // Fetch details of a user profile (which includes bookings)
 export function useUserProfile(userId: string | number | undefined) {
@@ -17,21 +16,6 @@ export function useBookingDetails(bookingId: string | number | undefined) {
     return useApiGet<Booking>(bookingId ? `/bookings/${bookingId}` : null);
 }
 
-// Fetch all conversations (with optional polling interval)
-export function useConversations(intervalMs?: number) {
-    const result = useApiGet<Conversation[]>('/conversations');
-    const { refetch } = result;
-
-    useEffect(() => {
-        if (!intervalMs) return;
-        const interval = setInterval(() => {
-            refetch();
-        }, intervalMs);
-        return () => clearInterval(interval);
-    }, [intervalMs, refetch]);
-
-    return result;
-}
 
 // Search for properties based on search params
 export function useSearchProperties(params: URLSearchParams) {

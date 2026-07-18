@@ -30,14 +30,6 @@ vi.mock('../context/AuthStore', () => ({
   })),
 }));
 
-// Mock API hook for conversations
-vi.mock('../hooks/apiHooks', () => ({
-  useConversations: () => ({
-    data: [],
-    refetch: vi.fn(),
-  }),
-}));
-
 // Mock dark mode hook
 vi.mock('../hooks/useDarkMode', () => ({
   useDarkMode: () => ({
