@@ -1,10 +1,10 @@
-import { PlusCircle, Home, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
 import { Link } from "react-router";
 import { Card } from "../components/Card";
 import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { PropertyCard } from "../components/property/PropertyCard";
+import { CircleIcon, HouseIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function MyPropertiesPage() {
     const { t } = useTranslation();
@@ -15,7 +15,7 @@ export function MyPropertiesPage() {
             <div className="min-h-screen bg-gray-50/50 pb-12">
                 <Banner title="Mes logements" />
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                    <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                    <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
                     <p className="text-gray-500 font-medium">{t("accommodation.loading")}</p>
                 </div>
             </div>
@@ -35,7 +35,7 @@ export function MyPropertiesPage() {
                     </div>
 
                     <Link className="btn" to={"/new-property"} viewTransition={true}>
-                        <PlusCircle className="w-5 h-5" />
+                        <CircleIcon className="w-5 h-5" />
                         {t("accommodation.new-accommodation")}
                     </Link>
                 </div>
@@ -43,7 +43,7 @@ export function MyPropertiesPage() {
                 {properties.length === 0 ? (
                     <Card className="flex flex-col items-center justify-center text-center max-w-md mx-auto mt-8 space-y-4">
                         <div className="p-4 bg-blue-50 rounded-full text-blue-600">
-                            <Home className="w-8 h-8" />
+                            <HouseIcon className="w-8 h-8" />
                         </div>
                         <div className="space-y-1">
                             <h3 className="font-semibold text-gray-900 text-lg">{t("accommodation.none-accommodation")}</h3>

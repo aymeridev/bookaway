@@ -2,8 +2,7 @@ import { type DateRange } from "react-day-picker";
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { useNavigate, useSearchParams } from "react-router";
-import { Search } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { FormDestinationPart } from "./FormDestinationPart";
 import { FormDatePart } from "./FormDatePart";
 import { FormTravelersPart } from "./FormTravelersPart";
@@ -11,7 +10,6 @@ import { FormTravelersPart } from "./FormTravelersPart";
 export function SearchBar() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const { t } = useTranslation();
 
     const initialTravelers = Number(
         searchParams.get("travelers") || 0
@@ -108,8 +106,8 @@ export function SearchBar() {
 
 
             <button type="submit" className="bg-primary text-primary-content rounded-xl md:rounded-full p-4 font-semibold cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 hover:bg-primary-hover active:scale-95 transition-all duration-150">
-                <Search className="size-5" />
-                <span>{t("search-bar.search-btn")}</span>
+                <MagnifyingGlassIcon className="size-6" alt="Rechercher" />
+                <span>Lancer la recherche</span>
             </button>
         </form>
     );

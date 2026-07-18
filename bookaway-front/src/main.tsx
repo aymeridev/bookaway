@@ -23,71 +23,72 @@ import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
 import { MessagesPage } from './pages/MessagesPage.tsx'
 import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
- 
- 
- 
- const router = createBrowserRouter([
-   {
-     Component: NavbarLayout,
-     errorElement: <ErrorPage />,
-     children: [
-       {
-         path: "/",
-         Component: HomePage,
-       },
-       {
-         path: "/search",
-         Component: SearchPage,
-       },
-       {
-         path: "bookings",
-         middleware: [authMiddleware],
-         Component: BookingsPage
-       },
-       {
-         path: "reservation/:id",
-         middleware: [authMiddleware],
-         Component: ReservationDetailsPage
-       },
-       {
-         path: "my-reservations",
-         middleware: [authMiddleware],
-         Component: MyReservationsPage,
-       },
-       {
-         path: "settings",
-         middleware: [authMiddleware],
-         Component: SettingsPage
-       },
-       {
-         path: "/new-property",
-         middleware: [authMiddleware],
-         Component: CreatePropertyPage
-       },
-       {
-         path: "my-properties",
-         middleware: [authMiddleware],
-         Component: MyPropertiesPage,
-       },
-       {
-         path: "/property/:id",
-         Component: PropertyDetailsPage,
-       },
-       {
-         path: "/property/:id/edit",
-         Component: EditPropertyPage,
-       },
-       {
-         path: "messages",
-         middleware: [authMiddleware],
-         Component: MessagesPage,
-       },
-       {
-         path: "/user/:id",
-         Component: UserPage,
-       },
-       {
-         path: "/reservation",
+import { IconContext } from '@phosphor-icons/react'
+
+
+
+const router = createBrowserRouter([
+  {
+    Component: NavbarLayout,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        Component: HomePage,
+      },
+      {
+        path: "/search",
+        Component: SearchPage,
+      },
+      {
+        path: "bookings",
+        middleware: [authMiddleware],
+        Component: BookingsPage
+      },
+      {
+        path: "reservation/:id",
+        middleware: [authMiddleware],
+        Component: ReservationDetailsPage
+      },
+      {
+        path: "my-reservations",
+        middleware: [authMiddleware],
+        Component: MyReservationsPage,
+      },
+      {
+        path: "settings",
+        middleware: [authMiddleware],
+        Component: SettingsPage
+      },
+      {
+        path: "/new-property",
+        middleware: [authMiddleware],
+        Component: CreatePropertyPage
+      },
+      {
+        path: "my-properties",
+        middleware: [authMiddleware],
+        Component: MyPropertiesPage,
+      },
+      {
+        path: "/property/:id",
+        Component: PropertyDetailsPage,
+      },
+      {
+        path: "/property/:id/edit",
+        Component: EditPropertyPage,
+      },
+      {
+        path: "messages",
+        middleware: [authMiddleware],
+        Component: MessagesPage,
+      },
+      {
+        path: "/user/:id",
+        Component: UserPage,
+      },
+      {
+        path: "/reservation",
         Component: PropertyReservationPage,
       },
       {
@@ -109,8 +110,13 @@ import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-    <Toaster />
+    <IconContext.Provider value={{
+      size: 24,
+      weight: "duotone"
+    }}>
+      <RouterProvider router={router} />
+      <Toaster />
+    </IconContext.Provider>
   </StrictMode>,
 )
 

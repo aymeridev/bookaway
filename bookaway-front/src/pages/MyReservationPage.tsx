@@ -1,11 +1,11 @@
 import { Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
-import { Calendar, MessageSquare, Receipt, Loader2 } from "lucide-react";
 import { Banner } from "../components/Banner";
 import { Card } from "../components/Card";
 import { useMyReservations } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
+import { CalendarIcon, ChatCircleIcon, ReceiptIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function MyReservationsPage() {
     const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ export function MyReservationsPage() {
             <>
                 <Banner title={t("reservations.reservations")} />
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                    <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                    <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
                     <p className="text-gray-500 font-medium">{t("reservations.loading")}</p>
                 </div>
             </>
@@ -95,13 +95,13 @@ export function MyReservationsPage() {
 
                                             <div className="flex flex-col space-y-1.5 text-sm text-gray-600">
                                                 <div className="flex items-center gap-2">
-                                                    <Calendar className="w-4 h-4 text-gray-400" />
+                                                    <CalendarIcon className="w-4 h-4 text-gray-400" />
                                                     <span>
                                                         {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: currentLocale })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: currentLocale })}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <Receipt className="w-4 h-4 text-gray-400" />
+                                                    <ReceiptIcon className="w-4 h-4 text-gray-400" />
                                                     <span>{t("reservations.total-amount")} : <strong className="text-gray-900">{booking.total_price}€</strong></span>
                                                 </div>
                                             </div>
@@ -109,7 +109,7 @@ export function MyReservationsPage() {
 
                                         <div className="flex justify-end pt-2 border-t border-gray-50 gap-2">
                                             <Link className="btn btn-soft" to={"/messages"} viewTransition={true}>
-                                                <MessageSquare />
+                                                <ChatCircleIcon />
                                                 {t("reservations.contact-host")}
                                             </Link>
                                             <Link

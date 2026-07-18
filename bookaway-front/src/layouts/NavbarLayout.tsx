@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
-import { Calendar, ChevronDown, Eye, LandPlot, LogIn, LogOut, Moon, Settings, Sun, User, MessageSquare, Menu, X } from "lucide-react";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
 import { useConversations } from "../hooks/apiHooks";
+import { BuildingsIcon, CalendarIcon, CaretDownIcon, ChatCircleIcon, EyeIcon, GearFineIcon, ListIcon, MoonIcon, SignInIcon, SignOutIcon, SunIcon, UserIcon, XIcon } from "@phosphor-icons/react";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
@@ -68,16 +68,16 @@ export function NavbarLayout() {
                     {isAuthenticated && (
                         <ul className="hidden md:flex gap-1 list-none p-0 m-0">
                             <ListNavLink to={"/my-reservations"}>
-                                <Calendar />
+                                <CalendarIcon />
                                 {t("header.reservations")}
                             </ListNavLink>
                             <ListNavLink to={"/my-properties"}>
-                                <LandPlot />
+                                <BuildingsIcon />
                                 {t("header.accommodation")}
                             </ListNavLink>
                             <ListNavLink to={"/messages"}>
                                 <div className="relative flex items-center gap-2">
-                                    <MessageSquare />
+                                    <ChatCircleIcon />
                                     <span>{t("header.messaging")}</span>
                                     {unreadCount > 0 && (
                                         <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-sm">
@@ -100,13 +100,13 @@ export function NavbarLayout() {
                                     className="flex items-center justify-center p-2 rounded-xl hover:bg-white/10 active:bg-white/20 transition-all text-white cursor-pointer"
                                     aria-label="Toggle menu"
                                 >
-                                    {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                                    {isMobileMenuOpen ? <XIcon /> : <ListIcon />}
                                 </button>
                             </li>
                         </>
                     ) : (
                         <ListNavLink to={"/login"}>
-                            <LogIn />
+                            <SignInIcon />
                             <span>{t('connexion')}</span>
                         </ListNavLink>
                     )}
@@ -121,7 +121,7 @@ export function NavbarLayout() {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
                                     to={"/my-reservations"} viewTransition>
-                                    <Calendar />
+                                    <CalendarIcon />
                                     {t("header.reservations")}
                                 </NavLink>
                             </li>
@@ -130,7 +130,7 @@ export function NavbarLayout() {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
                                     to={"/my-properties"} viewTransition>
-                                    <LandPlot />
+                                    <BuildingsIcon />
                                     {t("header.accommodation")}
                                 </NavLink>
                             </li>
@@ -140,7 +140,7 @@ export function NavbarLayout() {
                                     className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
                                     to={"/messages"} viewTransition>
                                     <div className="relative flex items-center gap-3 w-full">
-                                        <MessageSquare />
+                                        <ChatCircleIcon />
                                         <span className="flex-1 text-left">{t("header.messaging")}</span>
                                         {unreadCount > 0 && (
                                             <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce shadow-sm">
@@ -212,7 +212,7 @@ function ProfileButton() {
                         className="size-full object-cover"
                     />
                 </div>
-                <ChevronDown className={`size-4 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
+                <CaretDownIcon className={`size-4 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
             </button>
             {showDetails && (
                 <div className="bg-white dark:bg-base-200 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl absolute top-12 right-0 min-w-[240px] z-50 border border-gray-100 dark:border-gray-800 p-2 animate-in fade-in slide-in-from-top-2 duration-150">
@@ -228,7 +228,7 @@ function ProfileButton() {
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
-                                <User className="size-4" />
+                                <UserIcon className="size-4" />
                                 <span>{t('profil.my-profil')}</span>
                             </Link>
                         </li>
@@ -239,7 +239,7 @@ function ProfileButton() {
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
-                                <Eye className="size-4" />
+                                <EyeIcon className="size-4" />
                                 <span>{t('profil.public-profil')}</span>
                             </Link>
                         </li>
@@ -250,7 +250,7 @@ function ProfileButton() {
                                 onClick={() => setShowDetails(false)}
                                 viewTransition
                             >
-                                <Settings className="size-4" />
+                                <GearFineIcon className="size-4" />
                                 <span>{t('profil.settings')}</span>
                             </Link>
                         </li>
@@ -262,7 +262,7 @@ function ProfileButton() {
                                 }}
                                 className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full text-left cursor-pointer"
                             >
-                                {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+                                {isDark ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}
                                 <span>Mode {isDark ? "clair" : "sombre"}</span>
                             </button>
                         </li>
@@ -272,7 +272,7 @@ function ProfileButton() {
                                 className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full text-left cursor-pointer"
                                 onClick={handleLogout}
                             >
-                                <LogOut className="size-4" />
+                                <SignOutIcon className="size-4" />
                                 <span>{t('deconnexion')}</span>
                             </button>
                         </li>

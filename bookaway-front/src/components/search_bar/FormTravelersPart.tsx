@@ -1,4 +1,4 @@
-import { Minus, Plus, Users } from "lucide-react";
+import { MinusIcon, PlusIcon, UsersIcon } from "@phosphor-icons/react";
 
 
 export function FormTravelersPart({
@@ -10,7 +10,7 @@ export function FormTravelersPart({
 }) {
     return (
         <div className="flex items-center justify-center bg-base-100 px-4 py-2 md:py-2 rounded-xl gap-1">
-            <Users />
+            <UsersIcon />
             <div className="flex flex-col items-center">
                 <div className="flex items-center gap-2">
                     <div className="flex flex-col">
@@ -30,7 +30,7 @@ export function FormTravelersPart({
                         className="btn btn-circle btn-sm btn-ghost"
                         type="button"
                     >
-                        <Minus className="size-4" />
+                        <MinusIcon className="size-4" />
                     </button>}
 
                     <span className="font-medium text-sm">
@@ -46,7 +46,7 @@ export function FormTravelersPart({
                         className="btn btn-circle btn-sm btn-ghost"
                         type="button"
                     >
-                        <Plus className="size-4" />
+                        <PlusIcon className="size-4" />
                     </button>
                 </div>
             </div>

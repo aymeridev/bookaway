@@ -1,8 +1,8 @@
-import { MapPin, Search, Loader2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { type PropertyFormStepProps } from "../form";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import toast from "react-hot-toast";
+import { MagnifyingGlassIcon, MapPinIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 // Helper component to center and animate the Leaflet map when coordinates change
 function ChangeView({ center }: { center: [number, number] }) {
@@ -99,9 +99,9 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
                         className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 cursor-pointer disabled:cursor-not-allowed px-4 py-2 text-white rounded-lg transition-colors flex items-center justify-center min-h-[42px] shrink-0 shadow-sm"
                     >
                         {isLoadingResults ? (
-                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <SpinnerIcon className="w-5 h-5 animate-spin" />
                         ) : (
-                            <Search className="w-5 h-5" />
+                            <MagnifyingGlassIcon className="w-5 h-5" />
                         )}
                     </button>
                 </div>
@@ -128,7 +128,7 @@ export function PropertyLocationStep({ form, onNext }: PropertyFormStepProps) {
                                         }}
                                     >
                                         <div className="mt-0.5 flex-shrink-0 text-slate-400 bg-slate-100 p-1.5 rounded-md">
-                                            <MapPin className="w-4 h-4 text-slate-500" />
+                                            <MapPinIcon className="w-4 h-4 text-slate-500" />
                                         </div>
                                         <div className="flex flex-col min-w-0">
                                             <span className="text-sm font-semibold text-slate-800 truncate">

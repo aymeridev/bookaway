@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import type { Property } from "../types";
 import { useParams, useNavigate } from "react-router";
 import { Card } from "../components/Card";
-import { Save, Loader2 } from "lucide-react";
 import { StepperList } from "../components/create_property/StepperList";
 import api from "../api/axios";
 import { usePropertyDetails } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
+import { FloppyDiskIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function EditPropertyPage() {
     const { id } = useParams<{ id: string }>();
@@ -18,7 +18,7 @@ export function EditPropertyPage() {
     if (isLoading || !property) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
                 <p className="text-gray-500 font-medium">Chargement des données du logement...</p>
             </div>
         );
@@ -67,7 +67,7 @@ function EditPropertyForm({ property }: EditPropertyFormProps) {
                 <Card className="flex-1">
                     <CurrentStep form={form} property={property} />
                     <button>
-                        <Save />
+                        <FloppyDiskIcon />
                         {t("accommodation-edit.save")}
                     </button>
                     <button className="btn btn-error" onClick={() => {

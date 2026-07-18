@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import type { Property } from "../../types";
 import { Link, useSearchParams } from "react-router";
-import { Star } from "lucide-react";
 import { amenitiesIcon } from "../../amenities";
+import { StarIcon } from "@phosphor-icons/react";
 
 export function SearchPropertyCardResult({
     property, numberOfNights
@@ -54,7 +54,7 @@ export function SearchPropertyCardResult({
                         <h2 className="card-title flex-1">{property.title}</h2>
                         {property.ratings_avg !== null && property.ratings_avg !== undefined ? (
                             <span className="badge">
-                                <Star fill="currentColor" className="text-yellow-500 size-4" />
+                                <StarIcon weight="fill" className="text-yellow-500 size-4" />
                                 <span>{property.ratings_avg}</span>
                                 <span className="text-base-content/80 text-xs">({property.ratings?.length || 0})</span>
                             </span>

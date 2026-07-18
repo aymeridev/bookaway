@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import type { Property } from "../../types";
 import { Link, useSearchParams } from "react-router";
-import { Star } from "lucide-react";
 import { amenitiesIcon } from "../../amenities";
+import { StarIcon } from "@phosphor-icons/react";
 
 export function PropertyCard({
     property, numberOfNights
@@ -52,7 +52,7 @@ export function PropertyCard({
                             </h3>
                             {property.ratings_avg !== null && property.ratings_avg !== undefined ? (
                                 <div className="flex items-center gap-1 shrink-0 text-sm font-bold text-gray-800 bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100/80 hover:bg-yellow-50/50 transition-colors">
-                                    <Star className="size-4 text-yellow-500 fill-yellow-500" />
+                                    <StarIcon className="size-4 text-yellow-500 fill-yellow-500" />
                                     <span>{property.ratings_avg}</span>
                                     <span className="text-gray-400 font-normal text-xs">({property.ratings?.length || 0})</span>
                                 </div>

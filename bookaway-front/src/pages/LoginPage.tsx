@@ -3,8 +3,8 @@ import api from "../api/axios";
 import { Link, useNavigate } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
-import { LogIn } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { SignInIcon } from "@phosphor-icons/react";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
@@ -63,7 +63,7 @@ export function LoginPage() {
 
 
                         <button className="btn btn-primary">
-                            <LogIn />
+                            <SignInIcon />
                             {t("login-page.button-submit")}
                         </button>
                         <div className="mt-6 text-center text-sm text-gray-600">

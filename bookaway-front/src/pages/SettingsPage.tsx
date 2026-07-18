@@ -1,10 +1,10 @@
-import { Trash2 } from "lucide-react";
 import api from "../api/axios";
 import { Banner } from "../components/Banner";
 import useAuthStore from "../context/AuthStore";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { TrashIcon } from "@phosphor-icons/react";
 
 export function SettingsPage() {
     const user = useAuthStore((state) => state.user);
@@ -58,7 +58,7 @@ export function SettingsPage() {
                 <section>
 
                     <button onClick={handleDelete} className="btn btn-error flex items-center gap-2">
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                         {t("disable-account")}
                     </button>
                 </section>

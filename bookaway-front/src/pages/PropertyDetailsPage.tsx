@@ -5,7 +5,6 @@ import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useParams, useSearchParams, useNavigate } from "react-router";
 import { differenceInDays, parseISO, eachDayOfInterval, formatDate } from "date-fns";
-import { ArrowLeft, Map, SquarePen, Star, Loader2 } from 'lucide-react';
 import { fr, enUS as dpEnUS } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
@@ -17,6 +16,7 @@ import { usePropertyDetails } from '../hooks/apiHooks';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from "react-i18next";
+import { ArrowLeftIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon } from '@phosphor-icons/react';
 
 export function PropertyDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -95,7 +95,7 @@ export function PropertyDetailsPage() {
     if (isLoading || !property) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
                 <p className="text-gray-500 font-medium">{t("property-details.loading")}</p>
             </div>
         );
@@ -163,13 +163,13 @@ export function PropertyDetailsPage() {
                 className='btn'
                 onClick={() => navigate(-1)}
             >
-                <ArrowLeft />
+                <ArrowLeftIcon />
                 {t("property-details.back-results")}
             </button>
             {isOwner && <button onClick={() => {
                 navigate(`/property/${property.id}/edit`);
             }}>
-                <SquarePen />
+                <PenIcon />
                 {t("property-details.edit-property")}</button>}
 
             <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
@@ -209,7 +209,7 @@ export function PropertyDetailsPage() {
 
                     <div>
                         <h2 className="flex gap-2 items-center text-2xl font-semibold mb-4 text-gray-800">
-                            <Map />
+                            <MapTrifoldIcon />
                             {t("property-details.where-title")}
                         </h2>
                         <p>{t("property-details.where-info")}</p>
@@ -222,7 +222,7 @@ export function PropertyDetailsPage() {
                         <div className="flex justify-between items-center mb-4">
                             <div>
                                 <h2 className='text-title-medium'>{t("property-details.reviews")} ({property.ratings.length})</h2>
-                                <h3 className='text-title-large flex gap-1 items-center'><Star fill="currentColor" size={40} /> {property.ratings_avg}</h3>
+                                <h3 className='text-title-large flex gap-1 items-center'><StarIcon weight='fill' size={40} /> {property.ratings_avg}</h3>
                             </div>
                             {!isOwner && (
                                 (() => {
@@ -245,7 +245,7 @@ export function PropertyDetailsPage() {
                                                     <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
                                                     <span className='font-semibold'>{rating.author.name}</span>
                                                 </div>
-                                                <span className='flex items-center gap-1 text-yellow-500 font-semibold'><Star className="size-4" fill="currentColor" /> {rating.stars}/5</span>
+                                                <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
                                             </div>
                                             {rating.comment ? (
                                                 <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
@@ -284,9 +284,9 @@ export function PropertyDetailsPage() {
                                                 onClick={() => setRatingStars(star)}
                                                 className='btn btn-soft'
                                             >
-                                                <Star
+                                                <StarIcon
+                                                    weight={star <= ratingStars ? 'fill' : 'regular'}
                                                     className={`size-8 ${star <= ratingStars ? 'text-yellow-400' : 'text-gray-300'}`}
-                                                    fill={star <= ratingStars ? 'currentColor' : 'none'}
                                                 />
                                             </button>
                                         ))}

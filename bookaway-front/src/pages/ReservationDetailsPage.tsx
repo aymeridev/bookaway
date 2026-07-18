@@ -2,25 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { format, parseISO } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
-import {
-    Calendar,
-    MapPin,
-    MessageSquare,
-    Home,
-    ArrowLeft,
-    AlertTriangle,
-    Loader2,
-    CheckCircle2,
-    XCircle,
-    Receipt,
-    Users
-} from "lucide-react";
 import api from "../api/axios";
 import { useBookingDetails } from "../hooks/apiHooks";
 import { Banner } from "../components/Banner";
 import { Card } from "../components/Card";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
+import { ArrowLeftIcon, CalendarIcon, ChatCircleIcon, CheckCircleIcon, HouseIcon, MapPinIcon, ReceiptIcon, SpinnerIcon, UsersIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react";
 
 export function ReservationDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -80,7 +68,7 @@ export function ReservationDetailsPage() {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                <SpinnerIcon className="w-10 h-10 animate-spin text-primary" />
                 <p className="text-gray-500 font-medium">{t("booking-details.loading-text")}</p>
             </div>
         );
@@ -91,10 +79,10 @@ export function ReservationDetailsPage() {
             <main className="max-w-4xl mx-auto p-6 text-center space-y-6">
                 <Banner title={t("booking-details.page-title")} />
                 <Card className="flex flex-col items-center p-8 bg-red-50 border border-red-200 space-y-4">
-                    <AlertTriangle className="w-12 h-12 text-red-500" />
+                    <WarningIcon className="w-12 h-12 text-red-500" />
                     <p className="text-red-700 font-semibold">{error || t("booking-details.not-found")}</p>
                     <button className="btn btn-primary" onClick={() => navigate("/my-reservations")}>
-                        <ArrowLeft className="w-4 h-4" /> {t("booking-details.back-btn")}
+                        <ArrowLeftIcon className="w-4 h-4" /> {t("booking-details.back-btn")}
                     </button>
                 </Card>
             </main>
@@ -113,7 +101,7 @@ export function ReservationDetailsPage() {
             <main className="max-w-6xl mx-auto p-6 space-y-8">
                 <div className="flex justify-start">
                     <button className="btn btn-ghost" onClick={() => navigate("/my-reservations")}>
-                        <ArrowLeft />
+                        <ArrowLeftIcon />
                         {t("booking-details.back-btn")}
                     </button>
                 </div>
@@ -139,11 +127,11 @@ export function ReservationDetailsPage() {
                                         </h2>
                                         {status === "confirmed" ? (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-700 border border-green-200 flex items-center gap-1 shrink-0">
-                                                <CheckCircle2 className="w-3.5 h-3.5" /> {t("booking-details.status-confirmed")}
+                                                <CheckCircleIcon className="w-3.5 h-3.5" /> {t("booking-details.status-confirmed")}
                                             </span>
                                         ) : status === "cancelled" ? (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-700 border border-red-200 flex items-center gap-1 shrink-0">
-                                                <XCircle className="w-3.5 h-3.5" /> {t("booking-details.status-cancelled")}
+                                                <XCircleIcon className="w-3.5 h-3.5" /> {t("booking-details.status-cancelled")}
                                             </span>
                                         ) : (
                                             <span className="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200 flex items-center gap-1 shrink-0">
@@ -154,7 +142,7 @@ export function ReservationDetailsPage() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-600">
                                         <div className="flex items-center gap-2">
-                                            <Calendar className="w-4 h-4 text-gray-400" />
+                                            <CalendarIcon className="w-4 h-4 text-gray-400" />
                                             <span>
                                                 {t("booking-details.dates-range", {
                                                     start: format(start, "dd MMMM yyyy", { locale: dfLocale }),
@@ -163,13 +151,13 @@ export function ReservationDetailsPage() {
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Users className="w-4 h-4 text-gray-400" />
+                                            <UsersIcon className="w-4 h-4 text-gray-400" />
                                             <span>
                                                 {t("booking-details.guests-count", { count: number_persons })}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Receipt className="w-4 h-4 text-gray-400" />
+                                            <ReceiptIcon className="w-4 h-4 text-gray-400" />
                                             <span>
                                                 {t("booking-details.total-amount")}<strong className="text-gray-900">{total_price}€</strong>
                                             </span>
@@ -179,7 +167,7 @@ export function ReservationDetailsPage() {
 
                                 <div className="border-t border-gray-100 pt-4 flex flex-wrap gap-3">
                                     <Link to={`/property/${property.id}`} className="btn btn-outline btn-sm flex items-center gap-2">
-                                        <Home className="w-4 h-4" /> {t("booking-details.view-property")}
+                                        <HouseIcon className="w-4 h-4" /> {t("booking-details.view-property")}
                                     </Link>
                                     {status !== "cancelled" && (
                                         <button
@@ -196,7 +184,7 @@ export function ReservationDetailsPage() {
                         {status === "cancelled" && (
                             <Card className="bg-red-50/50 border border-red-200 p-6 space-y-3">
                                 <h3 className="text-lg font-bold text-red-800 flex items-center gap-2">
-                                    <XCircle className="w-5 h-5 text-red-600" /> {t("booking-details.status-cancelled")}
+                                    <XCircleIcon className="w-5 h-5 text-red-600" /> {t("booking-details.status-cancelled")}
                                 </h3>
                                 <div className="bg-white border border-red-100 rounded-xl p-4 text-sm text-gray-700">
                                     <p className="font-semibold text-gray-800 mb-1">{t("booking-details.reason-label")}</p>
@@ -211,7 +199,7 @@ export function ReservationDetailsPage() {
                     <div className="space-y-6">
                         <Card className="bg-white border border-gray-100 p-6 space-y-4">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-3">
-                                <MapPin className="w-5 h-5 text-blue-600" /> {t("booking-details.go-to-property-title")}
+                                <MapPinIcon className="w-5 h-5 text-blue-600" /> {t("booking-details.go-to-property-title")}
                             </h3>
 
                             <div className="space-y-1">
@@ -237,7 +225,7 @@ export function ReservationDetailsPage() {
 
                         <Card className="bg-white border border-gray-100 p-6 space-y-4">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-3">
-                                <MessageSquare className="w-5 h-5 text-blue-600" /> {t("booking-details.host-title")}
+                                <ChatCircleIcon className="w-5 h-5 text-blue-600" /> {t("booking-details.host-title")}
                             </h3>
 
                             <div className="flex items-center gap-3">
@@ -256,7 +244,7 @@ export function ReservationDetailsPage() {
                                 onClick={handleContactHost}
                                 className="btn btn-primary w-full"
                             >
-                                <MessageSquare className="w-4 h-4" /> {t("booking-details.open-chat")}
+                                <ChatCircleIcon className="w-4 h-4" /> {t("booking-details.open-chat")}
                             </button>
                         </Card>
                     </div>

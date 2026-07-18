@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Map, MapPin, Loader2 } from "lucide-react";
 import { useDebounce } from "../../hooks/useDebounce";
-import { Card } from "../Card";
 import api from "../../api/axios";
 import { useTranslation } from "react-i18next";
+import { MapPinIcon, MapTrifoldIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 interface FormDestinationProps {
     value: string;
@@ -183,7 +182,7 @@ export
             setIsOpen(true);
         }} className="relative w-full md:w-auto md:flex-1" ref={containerRef}>
             <div className="flex items-center justify-start gap-2 bg-base-100 text-base-content px-4 py-2.5 md:py-2 rounded-xl focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-base-200 transition-all duration-200 w-full">
-                <Map className="text-gray-600 shrink-0" />
+                <MapTrifoldIcon className="text-gray-600 shrink-0" />
 
                 <div className="flex flex-col min-w-0 w-full">
                     <span className="font-bold text-sm">
@@ -224,7 +223,7 @@ export
                 <div className="absolute w-full md:min-w-md card bg-base-200 shadow-2xl top-18 z-50 left-0 right-0">
                     {isLoading && results.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-6 gap-2 text-base-content/60">
-                            <Loader2 className="size-8 animate-spin text-primary" />
+                            <SpinnerIcon className="size-8 animate-spin text-primary" />
                             <span className="text-sm font-medium">{t("search-bar.searching-box")}</span>
                         </div>
                     )}
@@ -248,7 +247,7 @@ export
                                         type="button"
                                     >
                                         <div className="size-10 flex shrink-0 items-center justify-center text-error bg-error-content rounded-xl shadow-sm">
-                                            <MapPin />
+                                            <MapPinIcon />
                                         </div>
 
                                         <div className="flex flex-col items-start min-w-0">

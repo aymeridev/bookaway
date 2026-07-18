@@ -4,8 +4,8 @@ import { fr, enUS } from "date-fns/locale";
 import { Banner } from "../components/Banner";
 import { useUserProfile } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
-import { Mail, Calendar, MapPin, Ticket, Building, ArrowRight, User } from "lucide-react";
 import { Link } from "react-router";
+import { ArrowRightIcon, BuildingIcon, CalendarIcon, MailboxIcon, MapPinIcon, TicketIcon, UserIcon } from "@phosphor-icons/react";
 
 export function ProfilePage() {
     const { t, i18n } = useTranslation();
@@ -30,7 +30,7 @@ export function ProfilePage() {
         return (
             <div className="max-w-md mx-auto text-center py-20 px-4">
                 <div className="size-16 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
-                    <User className="size-8" />
+                    <UserIcon className="size-8" />
                 </div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">{t("profile-page.unauthenticated")}</h2>
                 <Link to="/login" className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all">
@@ -53,7 +53,7 @@ export function ProfilePage() {
                     <div className="lg:col-span-1">
                         <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col items-center text-center relative overflow-hidden transition-all duration-300 hover:shadow-2xl">
                             {/* Decorative top background gradient */}
-                            <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-primary/80 opacity-90" />
+                            <div className="absolute top-0 inset-x-0 h-24 bg-linear-to-r from-blue-500 via-indigo-500 to-primary/80 opacity-90" />
 
                             {/* Avatar */}
                             <div className="relative z-10 mt-6 mb-4">
@@ -77,7 +77,7 @@ export function ProfilePage() {
                             <div className="w-full space-y-4 text-left">
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 shrink-0">
-                                        <Mail className="size-4" />
+                                        <MailboxIcon className="size-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
@@ -91,7 +91,7 @@ export function ProfilePage() {
 
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shrink-0">
-                                        <Calendar className="size-4" />
+                                        <CalendarIcon className="size-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
@@ -108,7 +108,7 @@ export function ProfilePage() {
 
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 shrink-0">
-                                        <Ticket className="size-4" />
+                                        <TicketIcon className="size-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
@@ -127,7 +127,7 @@ export function ProfilePage() {
                     <div className="lg:col-span-2">
                         <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl">
                             <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 flex items-center gap-2 pb-4 border-b border-base-300 dark:border-gray-800">
-                                <Ticket className="size-6 text-primary" />
+                                <TicketIcon className="size-6 text-primary" />
                                 {t("profile-page.my-bookings")}
                             </h2>
 
@@ -156,7 +156,7 @@ export function ProfilePage() {
                                                         <img src={propertyImg} alt={booking.property?.title} className="size-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                                     ) : (
                                                         <div className="size-full flex items-center justify-center text-gray-400 dark:text-gray-600">
-                                                            <Building className="size-8" />
+                                                            <BuildingIcon className="size-8" />
                                                         </div>
                                                     )}
                                                 </div>
@@ -174,13 +174,13 @@ export function ProfilePage() {
                                                     </h3>
 
                                                     <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                                                        <Calendar className="size-3.5" />
+                                                        <CalendarIcon className="size-3.5" />
                                                         {t("profile-page.from")} {new Date(booking.start_date).toLocaleDateString(i18n.language)} {t("profile-page.to")} {new Date(booking.end_date).toLocaleDateString(i18n.language)}
                                                     </p>
 
                                                     {booking.property?.address && (
                                                         <p className="text-sm text-gray-400 dark:text-gray-500 flex items-center gap-1.5 truncate">
-                                                            <MapPin className="size-3.5" />
+                                                            <MapPinIcon className="size-3.5" />
                                                             {booking.property.address}
                                                         </p>
                                                     )}
@@ -195,7 +195,7 @@ export function ProfilePage() {
 
                                                     <Link to={`/reservation/${booking.id}`} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors p-2 bg-primary/5 hover:bg-primary/10 rounded-lg">
                                                         {t("profile-page.details")}
-                                                        <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+                                                        <ArrowRightIcon className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
                                                     </Link>
                                                 </div>
 
@@ -205,7 +205,7 @@ export function ProfilePage() {
                                 ) : (
                                     <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-base-300 dark:border-gray-800 rounded-2xl p-8">
                                         <div className="size-16 rounded-full bg-gray-50 dark:bg-base-300 flex items-center justify-center text-gray-400 mb-4">
-                                            <Ticket className="size-8" />
+                                            <TicketIcon className="size-8" />
                                         </div>
                                         <p className="text-gray-800 dark:text-gray-200 font-semibold mb-1">
                                             {t("profile-page.no-bookings")}

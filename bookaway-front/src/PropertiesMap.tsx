@@ -3,7 +3,12 @@ import 'leaflet/dist/leaflet.css';
 import type { Property } from './types';
 import { Link } from "react-router";
 
-export function PropertiesMap({ properties }: { properties: Property[] }) {
+interface PropertiesMapProps {
+    properties: Property[];
+    onMarkerClick: (property: Property) => void;
+}
+
+export function PropertiesMap({ properties, onMarkerClick }: PropertiesMapProps) {
     // On centre sur la première propriété si elle existe, sinon Paris
     const center: [number, number] = properties.length > 0
         ? [parseFloat(properties[0].latitude), parseFloat(properties[0].longitude)]
@@ -20,12 +25,11 @@ export function PropertiesMap({ properties }: { properties: Property[] }) {
                 {properties.map((property) => (
                     <Marker
                         key={property.id}
+                        eventHandlers={{
+                            click: (_) => onMarkerClick(property)
+                        }}
                         position={[parseFloat(property.latitude), parseFloat(property.longitude)]}
-                    >
-                        <Popup maxWidth={260} minWidth={260} className="property-popup">
-                            <PropertyMiniCard property={property} />
-                        </Popup>
-                    </Marker>
+                    />
                 ))}
             </MapContainer>
         </div>

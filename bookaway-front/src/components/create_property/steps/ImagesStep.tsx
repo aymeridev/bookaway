@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import toast from "react-hot-toast";
 import api from "../../../api/axios";
 import type { Property } from "../../../types";
-import { GripHorizontal, ImageDown, X } from "lucide-react";
+import { DotsSixIcon, ImageIcon, XIcon } from "@phosphor-icons/react";
 
 export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyForm, any, PropertyForm>, property: Property }) {
     const { control } = form;
@@ -51,7 +51,7 @@ export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyFor
         <>
             <div {...getRootProps({ className: 'bg-gray-200 border-4 border-dashed rounded-xl border-gray-600 p-4 dropzone aspect-video max-w-sm flex items-center justify-center flex-col' })}>
                 <input {...getInputProps()} />
-                <ImageDown className="animate-pulse size-12" />
+                <ImageIcon className="animate-pulse size-12" />
                 <p className="text-lg font-semibold">Glisser-déposer des images ou cliquer pour les sélectionner</p>
                 <em className="text-sm font-medium text-gray-700">(Seuls les fichiers *.jpeg et *.png sont acceptés)</em>
             </div>
@@ -64,14 +64,14 @@ export function ImagesStep({ form, property }: { form: UseFormReturn<PropertyFor
 
                         return (
                             <li className="flex gap-2 items-center justify-center" draggable key={field.id}>
-                                <GripHorizontal />
+                                <DotsSixIcon />
                                 <div className="aspect-video bg-center bg-cover rounded w-32" style={{ backgroundImage: `url(${field.url})` }} />
                                 <button className="btn btn-ghost" onClick={async () => {
                                     if (dbId) {
                                         await api.delete(`/properties/${property.id}/images/${dbId}`);
                                     }
                                     remove(originalIndex);
-                                }}><X /></button>
+                                }}><XIcon /></button>
                             </li>
                         );
                     })}

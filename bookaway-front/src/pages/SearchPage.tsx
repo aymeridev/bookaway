@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
 import { useSearchProperties } from "../hooks/apiHooks";
 import { SearchPropertyCardResult } from "../components/property/SearchPropertyCardResult";
+import { SidebarIcon } from "@phosphor-icons/react";
 
 export function SearchPage() {
     const { t } = useTranslation();
@@ -14,6 +15,7 @@ export function SearchPage() {
     const properties = propertiesData || [];
 
     const [currentPage, setCurrentPage] = useState(1);
+    const [mapVisibility, setMapVisibility] = useState(true);
     const loading = isLoading;
 
     const from = searchParams.get("from");
@@ -97,6 +99,16 @@ export function SearchPage() {
                 </div>
             </header>
 
+            <div className="flex justify-end">
+                <button onClick={() => {
+                    setMapVisibility(!mapVisibility);
+                }} className="btn btn-secondary btn-soft">
+                    <SidebarIcon />
+                    Masquer la carte
+                </button>
+
+            </div>
+
             {nearbyProperties.length === 0 && <div className="alert alert-error">
                 <span>Aucun logement trouvé.</span>
             </div>}
@@ -110,7 +122,7 @@ export function SearchPage() {
                 </div>
             ) : (
                 <div className="flex">
-                    <div className="flex w-full min-w-md flex-1 flex-col gap-4">
+                    <div className={`grid w-full min-w-md flex-1 gap-4 ${mapVisibility ? "grid-cols-1" : "grid-cols-3"}`}>
                         {currentProperties.map((property) => (
                             <SearchPropertyCardResult
                                 key={property.id}
@@ -159,7 +171,11 @@ export function SearchPage() {
                             )}
                         </div>
                     </div>
-                    <PropertiesMap properties={properties} />
+                    {mapVisibility && <div className="flex-1">
+                        <PropertiesMap onMarkerClick={(p) => {
+                            console.log(p);
+                        }} properties={properties} />
+                    </div>}
                 </div>
             )}
         </main>

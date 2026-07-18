@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { Send, Home, MessageSquare, Loader2, XCircle } from "lucide-react";
 import api from "../api/axios";
 import useAuthStore from "../context/AuthStore";
 import { useConversations } from "../hooks/apiHooks";
 import type { Conversation, ChatMessage } from "../types";
 import { useTranslation } from "react-i18next";
 import { fr, enUS } from "date-fns/locale";
+import { ChatCircleIcon, ChatIcon, HouseIcon, PaperPlaneRightIcon, SpinnerIcon, XCircleIcon } from "@phosphor-icons/react";
 
 export function MessagesPage() {
     const { data: conversationsData, isLoading } = useConversations();
@@ -97,7 +97,7 @@ export function MessagesPage() {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+                <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
                 <p className="text-gray-500 font-medium">{t("chat-page.loading")}</p>
             </div>
         );
@@ -110,7 +110,7 @@ export function MessagesPage() {
                 <div className="w-full md:w-80 lg:w-96 border-r border-gray-200 flex flex-col bg-gray-50/50">
                     <div className="p-4 border-b border-gray-200 bg-white">
                         <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <MessageSquare className="w-5 h-5 text-blue-600" />
+                            <ChatIcon className="w-5 h-5 text-blue-600" />
                             {t("chat-page.title")}
                         </h1>
                     </div>
@@ -159,7 +159,7 @@ export function MessagesPage() {
                                             </div>
                                             <p className={`text-xs font-medium truncate flex items-center gap-1 ${conv.booking?.status === "cancelled" ? "text-red-500 line-through" : "text-indigo-600"
                                                 }`}>
-                                                <Home className="w-3 h-3 shrink-0" /> {conv.property?.title}
+                                                <HouseIcon className="w-3 h-3 shrink-0" /> {conv.property?.title}
                                             </p>
                                             <p className={`text-sm truncate ${conv.booking?.status === "cancelled" ? "text-red-400/80 italic" : "text-gray-500"
                                                 }`}>
@@ -193,7 +193,7 @@ export function MessagesPage() {
                             {activeConversation.booking?.status === "cancelled" && (
                                 <div className="bg-red-50 border-b border-red-200 p-4 flex items-start gap-3">
                                     <div className="p-1.5 bg-red-100 rounded-lg text-red-600 shrink-0">
-                                        <XCircle className="w-5 h-5" />
+                                        <XCircleIcon className="w-5 h-5" />
                                     </div>
                                     <div className="flex-1 text-sm text-red-800">
                                         <p className="font-bold">{t("chat-page.booking-cancelled")}</p>
@@ -247,14 +247,14 @@ export function MessagesPage() {
                                         type="submit"
                                         className="p-3 rounded-xl shrink-0 btn btn-primary"
                                     >
-                                        <Send className="w-5 h-5" />
+                                        <PaperPlaneRightIcon className="w-5 h-5" />
                                     </button>
                                 </div>
                             </form>
                         </>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-gray-400 bg-gray-50/20 p-8">
-                            <MessageSquare className="w-16 h-16 text-gray-200 mb-2" />
+                            <ChatCircleIcon className="w-16 h-16 text-gray-200 mb-2" />
                             <p className="font-medium">{t("chat-page.select-discussion")}</p>
                         </div>
                     )}

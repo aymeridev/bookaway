@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from "react-router";
 import { useUserProfile, useUserProperties } from "../hooks/apiHooks";
-import { Loader2, ArrowLeft, Calendar, Building } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import { PropertyCard } from "../components/property/PropertyCard";
+import { ArrowLeftIcon, BuildingIcon, CalendarIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function UserPage() {
     const { id } = useParams<{ id: string }>();
@@ -20,7 +20,7 @@ export function UserPage() {
     if (isUserLoading || isPropertiesLoading || !user) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin text-primary" />
+                <SpinnerIcon className="w-12 h-12 animate-spin text-primary" />
                 <p className="text-gray-500 dark:text-gray-400 font-medium">
                     {t("user-page.loading")}
                 </p>
@@ -35,7 +35,7 @@ export function UserPage() {
                     onClick={() => navigate(-1)}
                     className="btn btn-ghost"
                 >
-                    <ArrowLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
+                    <ArrowLeftIcon className="size-4 group-hover:-translate-x-1 transition-transform" />
                     {t("user-page.back")}
                 </button>
             </div>
@@ -69,7 +69,7 @@ export function UserPage() {
                         <div className="w-full space-y-4 text-left">
                             <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                 <div className="p-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shrink-0">
-                                    <Calendar className="size-4" />
+                                    <CalendarIcon className="size-4" />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                     <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
@@ -84,7 +84,7 @@ export function UserPage() {
                             {properties.length > 0 && (
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shrink-0">
-                                        <Building className="size-4" />
+                                        <BuildingIcon className="size-4" />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
@@ -104,7 +104,7 @@ export function UserPage() {
                 <div className="lg:col-span-2">
                     <div className="bg-white dark:bg-base-200 border border-base-300 dark:border-gray-800 rounded-3xl p-6 md:p-8 shadow-xl h-full flex flex-col">
                         <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-6 flex items-center gap-2 pb-4 border-b border-base-300 dark:border-gray-800">
-                            <Building className="size-6 text-primary" />
+                            <BuildingIcon className="size-6 text-primary" />
                             {t("user-page.user-listings", { name: user.name })}
                         </h2>
 
@@ -117,7 +117,7 @@ export function UserPage() {
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-base-300 dark:border-gray-800 rounded-2xl p-8 my-auto">
                                 <div className="size-16 rounded-full bg-gray-50 dark:bg-base-300 flex items-center justify-center text-gray-400 mb-4">
-                                    <Building className="size-8" />
+                                    <BuildingIcon className="size-8" />
                                 </div>
                                 <p className="text-gray-800 dark:text-gray-200 font-semibold mb-1">
                                     {t("user-page.no-listings-title")}
