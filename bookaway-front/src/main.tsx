@@ -35,6 +35,9 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: HomePage,
+        loader: () => {
+          console.log("test");
+        }
       },
       {
         path: "/search",
@@ -112,7 +115,6 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <IconContext.Provider value={{
       size: 24,
-      weight: "duotone"
     }}>
       <RouterProvider router={router} />
       <Toaster />

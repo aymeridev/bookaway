@@ -16,7 +16,7 @@ export function HomePage() {
                     <h2 className="font-display text-3xl font-medium">{t("home-page.title")}</h2>
                     <h3 className="text-2xl font-medium text-white/70 tracking-wide">{t("home-page.subtitle")}</h3>
                     <div className="h-0.5 bg-white/50 w-full"></div>
-                    <p className="text-lg">{t("home-page.search-label")}</p>
+                    <p className="text-lg">Rechercher parmis nos X logements :</p>
                     <SearchBar />
                 </div>
             </div>

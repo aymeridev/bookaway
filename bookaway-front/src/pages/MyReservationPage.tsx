@@ -54,12 +54,15 @@ export function MyReservationsPage() {
 
             <main className="max-w-6xl mx-auto p-6">
                 {bookings.length === 0 ? (
-                    <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
-                        <p className="text-gray-500 text-lg">{t("reservations.no-reservations")}</p>
+                    <div className="card bg-base-100 shadow-xl">
+                        <div className="card-body">
+                            <p className="text-base-content/70 text-lg">{t("reservations.no-reservations")}</p>
 
-                        <Link className="btn btn-primary" to="/">
-                            {t("reservations.explore-properties")}
-                        </Link>
+                            <Link className="btn btn-wide m-auto btn-primary" to="/">
+                                {t("reservations.explore-properties")}
+                            </Link>
+
+                        </div>
                     </div>
                 ) : (
                     <div className="space-y-6">

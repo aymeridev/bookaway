@@ -18,6 +18,7 @@ Route::get('/trips', function () {
 });
 
 
+Route::get('/properties/count', [PropertyController::class, 'count']);
 Route::apiResource('properties', PropertyController::class)->only(['index', 'show']);
 Route::apiResource('properties', PropertyController::class)->only(['store', 'update', 'destroy'])->middleware('auth:sanctum');
 Route::apiResource('bookings', BookingController::class);

@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router";
 import { Card } from "../components/Card";
 import useAuthStore from "../context/AuthStore";
 import { useTranslation } from "react-i18next";
+import { CheckCircleIcon } from "@phosphor-icons/react";
 
 export function RegisterPage() {
     const { t } = useTranslation();
@@ -45,37 +46,50 @@ export function RegisterPage() {
         <main className="relative flex items-center justify-center h-full bg-cover bg-center bg-no-repeat bg-hero">
             <div className="absolute inset-0 bg-black/65 pointer-events-none"></div>
 
-            <Card className="z-10">
+            <div className="card bg-base-100 p-8 shadow-2xl">
                 <form onSubmit={handleRegister}>
                     <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">{t("register.title")}</h2>
 
                     {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</p>}
 
                     <div className="flex flex-col gap-3">
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">{t("register.firstname-label")}</legend>
-                            <input className="input" type="text"
-                                onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-                                required />
-                        </fieldset>
+                        <div className="flex gap-2">
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">{t("register.firstname-label")}</legend>
+                                <input className="input" type="text"
+                                    onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+                                    placeholder="Jean"
+                                    name="first-name"
+                                    autoComplete="name"
+                                    required />
+                            </fieldset>
 
-                        <fieldset className="fieldset">
-                            <legend className="fieldset-legend">{t("register.lastname-label")}</legend>
-                            <input className="input" type="text"
-                                onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-                                required />
-                        </fieldset>
+                            <fieldset className="fieldset">
+                                <legend className="fieldset-legend">{t("register.lastname-label")}</legend>
+                                <input className="input" type="text"
+                                    autoComplete="family-name"
+                                    name="last-name"
+                                    onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                                    placeholder="Dupont"
+                                    required />
+                            </fieldset>
+
+                        </div>
 
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">{t("register.email-label")}</legend>
                             <input className="input" type="email"
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                placeholder="jean.dupont@..."
+                                autoComplete="email"
                                 required />
                         </fieldset>
 
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">{t("register.password-label")}</legend>
                             <input className="input" type="password"
+                                placeholder="********"
+                                autoComplete="new-password"
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 required />
                         </fieldset>
@@ -83,12 +97,15 @@ export function RegisterPage() {
                         <fieldset className="fieldset">
                             <legend className="fieldset-legend">{t("register.confirm-password-label")}</legend>
                             <input className="input" type="password"
+                                placeholder="********"
+                                autoComplete="new-password"
                                 onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
                                 required />
                         </fieldset>
 
 
-                        <button type="submit" className="btn btn-success btn-lg">
+                        <button type="submit" className="btn btn-primary btn-lg">
+                            <CheckCircleIcon />
                             S'inscrire
                         </button>
                     </div>
@@ -100,7 +117,7 @@ export function RegisterPage() {
                         </Link>
                     </div>
                 </form>
-            </Card>
+            </div>
         </main>
     );
 }

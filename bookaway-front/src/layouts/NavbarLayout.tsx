@@ -33,14 +33,6 @@ export function NavbarLayout() {
         };
     }, [isMobileMenuOpen]);
 
-    const noBannerRoutes = [
-        "/search",
-        "/messages",
-        "/reservation",
-    ];
-    const isNoBannerRoute = noBannerRoutes.includes(location.pathname) ||
-        (location.pathname.startsWith("/property/") && !location.pathname.endsWith("/edit")) ||
-        location.pathname.startsWith("/user/");
 
     return (
         <div className="flex flex-col h-svh relative">
@@ -48,23 +40,28 @@ export function NavbarLayout() {
                 <div className="flex items-center gap-6">
                     <Link to={"/"} className="block h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
                         aria-label="Retour à l'accueil" viewTransition />
-                    {isAuthenticated && (
-                        <ul className="hidden md:flex gap-1 list-none p-0 m-0">
-                            <ListNavLink to={"/my-reservations"}>
-                                <CalendarIcon />
-                                {t("header.reservations")}
-                            </ListNavLink>
-                            <ListNavLink to={"/my-properties"}>
-                                <BuildingsIcon />
-                                {t("header.accommodation")}
-                            </ListNavLink>
-                            <ListNavLink to={"/messages"}>
-                                <ChatCircleIcon />
-                                Messagerie
-                            </ListNavLink>
-                        </ul>
-                    )}
                 </div>
+                <div className="flex-1"></div>
+
+                {isAuthenticated && (
+                    <ul className="menu menu-horizontal">
+                        <ListNavLink to={"/my-reservations"}>
+                            <CalendarIcon />
+                            {t("header.reservations")}
+                        </ListNavLink>
+                        <ListNavLink to={"/my-properties"}>
+                            <BuildingsIcon />
+                            {t("header.accommodation")}
+                        </ListNavLink>
+                        <ListNavLink to={"/messages"}>
+                            <ChatCircleIcon />
+                            Messagerie
+                        </ListNavLink>
+                    </ul>
+                )}
+                <div className="flex-1"></div>
+
+
 
                 <ul className="flex items-center gap-3 list-none p-0 m-0">
                     {isAuthenticated ? (
@@ -114,9 +111,17 @@ export function NavbarLayout() {
                     </div>
                 )}
             </nav>
-            <main className={`flex-1 overflow-y-auto ${isNoBannerRoute ? "pt-24" : "pt-0"}`}>
+            <main className="flex-1">
                 <Outlet />
             </main>
+
+            <footer className="footer bg-neutral text-neutral-content p-10">
+                <aside>
+                    <ul>
+                        <li>BookAway</li>
+                    </ul>
+                </aside>
+            </footer>
         </div>
     );
 }
@@ -245,7 +250,7 @@ function ProfileButton() {
 
 function ListNavLink({ to, children }: { to: string, children: React.ReactNode }) {
     return (
-        <li className="list-none">
+        <li >
             <NavLink
                 className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-2 px-4 rounded-xl font-semibold flex gap-2 items-center justify-center transition-all duration-200`}
                 to={to} viewTransition>

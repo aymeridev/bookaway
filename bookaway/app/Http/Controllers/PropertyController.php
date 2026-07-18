@@ -64,6 +64,13 @@ class PropertyController extends Controller
         return response()->json($properties);
     }
 
+    public function count()
+    {
+        return response()->json([
+            "properties" => Property::count()
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -192,7 +199,7 @@ class PropertyController extends Controller
                     return $response->json();
                 }
             } catch (\Exception $e) {
-                \Log::error("Geocoding API error: " . $e->getMessage());
+                Log::error("Geocoding API error: " . $e->getMessage());
             }
 
             return [];

@@ -4,7 +4,7 @@ import { Card } from "../components/Card";
 import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { PropertyCard } from "../components/property/PropertyCard";
-import { CircleIcon, HouseIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { CircleIcon, HouseIcon, PlusIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function MyPropertiesPage() {
     const { t } = useTranslation();
@@ -34,24 +34,26 @@ export function MyPropertiesPage() {
                         <p className="text-sm text-gray-500">{t("accommodation.management-accommodation")}</p>
                     </div>
 
-                    <Link className="btn" to={"/new-property"} viewTransition={true}>
-                        <CircleIcon className="w-5 h-5" />
+                    <Link className="btn btn-primary btn-soft" to={"/new-property"} viewTransition>
+                        <PlusIcon className="w-5 h-5" />
                         {t("accommodation.new-accommodation")}
                     </Link>
                 </div>
 
                 {properties.length === 0 ? (
-                    <Card className="flex flex-col items-center justify-center text-center max-w-md mx-auto mt-8 space-y-4">
-                        <div className="p-4 bg-blue-50 rounded-full text-blue-600">
-                            <HouseIcon className="w-8 h-8" />
-                        </div>
-                        <div className="space-y-1">
-                            <h3 className="font-semibold text-gray-900 text-lg">{t("accommodation.none-accommodation")}</h3>
+                    <div className="card bg-base-100 m-auto max-w-sm shadow-xl">
+                        <div className="card-body items-center">
+                            <div className=" bg-blue-50 size-12 flex items-center justify-center rounded-full text-blue-600">
+                                <HouseIcon className="size-8" />
+                            </div>
+                            <h2 className="card-title">{t("accommodation.none-accommodation")}</h2>
+
                             <p className="text-sm text-gray-500 max-w-xs">
                                 {t("accommodation.none-location-platform")}
                             </p>
+
                         </div>
-                    </Card>
+                    </div>
                 ) : (
                     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {properties.map((property) => (
