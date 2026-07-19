@@ -9,6 +9,10 @@ export interface UseApiGetResult<T> {
     setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
+export function apiGet<T>(url: string) {
+    return api.get<T>(url);
+}
+
 export function useApiGet<T>(url: string | null, config?: any): UseApiGetResult<T> {
     const [data, setData] = useState<T | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(!!url);

@@ -1,4 +1,4 @@
-import { AlarmIcon, BathtubIcon, BedIcon, BookIcon, CameraIcon, CheckerboardIcon, ChefHatIcon, CoffeeIcon, CookingPotIcon, DropIcon, FanIcon, HandSoapIcon, LetterCirclePIcon, OvenIcon, ParkIcon, SwimmingPoolIcon, TableIcon, TelevisionIcon, ThermometerColdIcon, ThermometerHotIcon, ThermometerIcon, WashingMachineIcon, WifiHighIcon } from "@phosphor-icons/react";
+import { AlarmIcon, BathtubIcon, BedIcon, BookIcon, CameraIcon, CheckerboardIcon, ChefHatIcon, CoffeeIcon, CookingPotIcon, DropIcon, FanIcon, HandSoapIcon, LetterCirclePIcon, OvenIcon, SwimmingPoolIcon, TableIcon, TelevisionIcon, ThermometerColdIcon, ThermometerHotIcon, ThermometerIcon, WashingMachineIcon, WifiHighIcon } from "@phosphor-icons/react";
 
 export const amenitiesIcon = {
     "bathub": BathtubIcon,

@@ -24,7 +24,9 @@ import { UserPage } from './pages/UserPage.tsx'
 import { MessagesPage } from './pages/MessagesPage.tsx'
 import { ReservationDetailsPage } from './pages/ReservationDetailsPage.tsx'
 import { IconContext } from '@phosphor-icons/react'
-
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './queryClient.ts'
+import { fetchPropertiesCount } from './services/properties.ts'
 
 
 const router = createBrowserRouter([
@@ -35,8 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: HomePage,
-        loader: () => {
-          console.log("test");
+        loader: async () => {
+          const data = await queryClient.ensureQueryData({ queryKey: ['properties-count'], queryFn: fetchPropertiesCount });
+
+          return data;
         }
       },
       {
@@ -111,14 +115,18 @@ const router = createBrowserRouter([
   }
 ])
 
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <IconContext.Provider value={{
-      size: 24,
-    }}>
-      <RouterProvider router={router} />
-      <Toaster />
-    </IconContext.Provider>
+    <QueryClientProvider client={queryClient}>
+
+      <IconContext.Provider value={{
+        size: 24,
+      }}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </IconContext.Provider>
+    </QueryClientProvider>
   </StrictMode>,
 )
 

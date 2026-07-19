@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Property } from './types';
 import { Link } from "react-router";
@@ -37,7 +37,7 @@ export function PropertiesMap({ properties, onMarkerClick }: PropertiesMapProps)
 }
 
 // Un composant dédié pour l'affichage dans la bulle de la carte
-function PropertyMiniCard({ property }: { property: Property }) {
+export function PropertyMiniCard({ property }: { property: Property }) {
     return (
         <Link to={`/property/${property.id}`} className="block no-underline text-inherit group">
             <div className="flex flex-col gap-2">

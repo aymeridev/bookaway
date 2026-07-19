@@ -1,4 +1,4 @@
-import { useApiGet } from './useApiGet';
+import { apiGet, useApiGet } from './useApiGet';
 import type { Property, User, Booking } from '../types';
 
 // Fetch details of a user profile (which includes bookings)
@@ -32,6 +32,13 @@ export function useMyReservations() {
 export function useMyProperties() {
     return useApiGet<Property[]>('/my-properties');
 }
+
+
+// Return all properties in API
+export function usePropertiesCount() {
+    return apiGet("/properties/count")
+}
+
 
 // Fetch property details
 export function usePropertyDetails(propertyId: string | number | undefined) {

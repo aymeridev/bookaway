@@ -64,6 +64,7 @@ class PropertyController extends Controller
         return response()->json($properties);
     }
 
+    // TODO: renvoyer les logements publiés uniquement
     public function count()
     {
         return response()->json([

@@ -1,10 +1,9 @@
 import { Banner } from "../components/Banner";
 import { Link } from "react-router";
-import { Card } from "../components/Card";
 import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { PropertyCard } from "../components/property/PropertyCard";
-import { CircleIcon, HouseIcon, PlusIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { HouseIcon, PlusIcon, SpinnerIcon } from "@phosphor-icons/react";
 
 export function MyPropertiesPage() {
     const { t } = useTranslation();
