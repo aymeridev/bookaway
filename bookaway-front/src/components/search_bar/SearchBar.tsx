@@ -7,7 +7,11 @@ import { FormDestinationPart } from "./FormDestinationPart";
 import { FormDatePart } from "./FormDatePart";
 import { FormTravelersPart } from "./FormTravelersPart";
 
-export function SearchBar() {
+interface SearchBarProps {
+    action?: string;
+}
+
+export function SearchBar({ action = "Lancer la recherche" }: SearchBarProps) {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
@@ -107,7 +111,7 @@ export function SearchBar() {
 
             <button type="submit" className="bg-primary text-primary-content rounded-xl md:rounded-full p-4 font-semibold cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 hover:bg-primary-hover active:scale-95 transition-all duration-150">
                 <MagnifyingGlassIcon className="size-6" alt="Rechercher" />
-                <span>Lancer la recherche</span>
+                <span>{action}</span>
             </button>
         </form>
     );

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import api from "../api/axios";
+import api from "../../api/axios";
 import { Link, useNavigate } from "react-router";
-import { Card } from "../components/Card";
-import useAuthStore from "../context/AuthStore";
+import { Card } from "../../components/Card";
+import useAuthStore from "../../context/AuthStore";
 import { useTranslation } from "react-i18next";
 import { SignInIcon } from "@phosphor-icons/react";
 

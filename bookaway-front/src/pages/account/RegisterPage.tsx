@@ -1,7 +1,7 @@
 import { useState } from "react";
-import api from "../api/axios";
+import api from "../../api/axios";
 import { useNavigate, Link } from "react-router";
-import useAuthStore from "../context/AuthStore";
+import useAuthStore from "../../context/AuthStore";
 import { useTranslation } from "react-i18next";
 import { CheckCircleIcon } from "@phosphor-icons/react";
 

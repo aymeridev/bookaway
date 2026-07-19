@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Banner } from "../components/Banner";
-import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
+import { Banner } from "../../components/Banner";
+import { PROPERTY_STEPS, type PropertyForm } from "../../components/create_property/form";
 import { useForm } from "react-hook-form";
-import type { Property } from "../types";
+import type { Property } from "../../types";
 import { useParams, useNavigate } from "react-router";
-import { Card } from "../components/Card";
-import { StepperList } from "../components/create_property/StepperList";
-import api from "../api/axios";
-import { usePropertyDetails } from "../hooks/apiHooks";
+import { Card } from "../../components/Card";
+import { StepperList } from "../../components/create_property/StepperList";
+import api from "../../api/axios";
+import { usePropertyDetails } from "../../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { FloppyDiskIcon, SpinnerIcon } from "@phosphor-icons/react";
 

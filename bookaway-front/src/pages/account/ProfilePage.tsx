@@ -1,8 +1,8 @@
-import useAuthStore from "../context/AuthStore";
+import useAuthStore from "../../context/AuthStore";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
-import { Banner } from "../components/Banner";
-import { useUserProfile } from "../hooks/apiHooks";
+import { Banner } from "../../components/Banner";
+import { useUserProfile } from "../../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { ArrowRightIcon, BuildingIcon, CalendarIcon, MailboxIcon, MapPinIcon, TicketIcon, UserIcon } from "@phosphor-icons/react";

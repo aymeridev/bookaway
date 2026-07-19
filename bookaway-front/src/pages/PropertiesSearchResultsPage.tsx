@@ -83,7 +83,7 @@ export function SearchPage() {
 
     return (
         <main className="max-w-6xl mx-auto p-4 md:p-8">
-            <SearchBar />
+            <SearchBar action="Mettre à jour" />
             <header className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
                 <div>
                     <h1

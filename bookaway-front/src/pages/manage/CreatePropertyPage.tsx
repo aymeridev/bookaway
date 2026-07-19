@@ -1,13 +1,13 @@
 
 import { useState } from "react"
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { Banner } from "../components/Banner";
-import { PROPERTY_STEPS, type PropertyForm } from "../components/create_property/form";
-import { Stepper } from "../components/create_property/Stepper";
-import { PropertyLocationStep } from "../components/create_property/steps/PropertyLocationStep";
-import { PropertyTypeStep } from "../components/create_property/steps/PropertyTypeStep";
-import { type Property } from "../types";
-import api from "../api/axios";
+import { Banner } from "../../components/Banner";
+import { PROPERTY_STEPS, type PropertyForm } from "../../components/create_property/form";
+import { Stepper } from "../../components/create_property/Stepper";
+import { PropertyLocationStep } from "../../components/create_property/steps/PropertyLocationStep";
+import { PropertyTypeStep } from "../../components/create_property/steps/PropertyTypeStep";
+import { type Property } from "../../types";
+import api from "../../api/axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
