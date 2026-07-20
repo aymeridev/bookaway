@@ -67,7 +67,7 @@ export interface Booking {
     start_date: string;
     end_date: string;
     total_price: number;
-    number_persons: number;
+    travelers: number;
     status: 'confirmed' | 'pending' | 'cancelled';
     cancellation_reason?: string | null;
     property: Property;

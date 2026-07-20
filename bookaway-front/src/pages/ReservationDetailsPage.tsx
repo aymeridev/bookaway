@@ -89,7 +89,7 @@ export function ReservationDetailsPage() {
         );
     }
 
-    const { property, start_date, end_date, total_price, number_persons, status, cancellation_reason } = booking;
+    const { property, start_date, end_date, total_price, travelers, status, cancellation_reason } = booking;
     const start = parseISO(start_date);
     const end = parseISO(end_date);
     const firstImage = property.images?.[0]?.url;
@@ -153,7 +153,7 @@ export function ReservationDetailsPage() {
                                         <div className="flex items-center gap-2">
                                             <UsersIcon className="w-4 h-4 text-gray-400" />
                                             <span>
-                                                {t("booking-details.guests-count", { count: number_persons })}
+                                                {t("booking-details.guests-count", { count: travelers })}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2">

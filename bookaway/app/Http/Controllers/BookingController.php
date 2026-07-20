@@ -31,11 +31,11 @@ class BookingController extends Controller
             // Infos Réservation
             'user_id'          => 'required|exists:users,id',
             'property_id'      => 'required|exists:properties,id',
-            'number_persons'   => 'required|integer|min:1',
+            'travelers'   => 'required|integer|min:1',
             'start_date'       => 'required|date|after_or_equal:today',
             'end_date'         => 'required|date|after:start_date',
             'total_price'      => 'required|numeric|min:0',
-            
+
             // Infos Paiement requis pour le traitement
             'card_holder_name' => 'required|string|max:255',
             'card_number'      => 'required|string',
@@ -46,7 +46,7 @@ class BookingController extends Controller
         // 2. On utilise une transaction DB pour s'assurer que si l'un échoue, rien n'est enregistré
         try {
             $booking = DB::transaction(function () use ($validated) {
-                
+
                 // Récupération du logement pour identifier le propriétaire (owner_id)
                 $property = Property::findOrFail($validated['property_id']);
 
@@ -66,7 +66,7 @@ class BookingController extends Controller
                     'user_id'        => $validated['user_id'],
                     'property_id'    => $validated['property_id'],
                     'payment_id'     => $payment->id, // On lie le paiement fraîchement créé
-                    'number_persons' => $validated['number_persons'],
+                    'travelers' => $validated['travelers'],
                     'start_date'     => $validated['start_date'],
                     'end_date'       => $validated['end_date'],
                     'total_price'    => $validated['total_price'],
@@ -97,7 +97,6 @@ class BookingController extends Controller
             });
 
             return response()->json($booking->load(['property', 'payment']), 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Une erreur est survenue lors du traitement de la réservation.',
@@ -126,7 +125,7 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
 
         $validated = $request->validate([
-            'number_persons' => 'sometimes|integer|min:1',
+            'travelers' => 'sometimes|integer|min:1',
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after:start_date',
             'status' => 'sometimes|string|in:confirmed,pending,cancelled',

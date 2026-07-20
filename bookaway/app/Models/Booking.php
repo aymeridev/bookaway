@@ -14,7 +14,7 @@ class Booking extends Model
         'user_id',
         'property_id',
         'payment_id',
-        'number_persons',
+        'travelers',
         'start_date',
         'end_date',
         'total_price',

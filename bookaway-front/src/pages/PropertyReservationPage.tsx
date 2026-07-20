@@ -57,7 +57,7 @@ export function PropertyReservationPage() {
         const payload = {
             user_id: user.id,
             property_id: property.id,
-            number_persons: 1,
+            travelers: 1,
             start_date: format(fromDate, "yyyy-MM-dd"),
             end_date: format(toDate, "yyyy-MM-dd"),
             total_price: totals.grandTotal,

@@ -24,7 +24,7 @@ class BookingFactory extends Factory
             'user_id' => \App\Models\User::factory(),
             'property_id' => \App\Models\Property::factory(),
             'payment_id' => \App\Models\Payment::factory(),
-            'number_persons' => fake()->numberBetween(1, 6),
+            'travelers' => fake()->numberBetween(1, 6),
             'start_date' => $startDate,
             'end_date' => $endDate,
             'total_price' => fake()->randomFloat(2, 100, 1000),

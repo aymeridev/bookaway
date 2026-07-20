@@ -153,7 +153,7 @@ class PropertyFactory extends Factory
         return [
             'title' => '',
             'type' => $type,
-            'capacity' => fake()->numberBetween(2, 8),
+            'capacity' => fake()->numberBetween(2, 12),
             'description' => '',
             'base_price' => fake()->numberBetween(20, 60),
             'price_per_night' => fake()->numberBetween(15, 50),

@@ -24,7 +24,7 @@ class BookingTest extends TestCase
         $booking = Booking::create([
             'user_id' => $user->id,
             'property_id' => $property->id,
-            'number_persons' => 2,
+            'travelers' => 2,
             'start_date' => '2026-08-01',
             'end_date' => '2026-08-10',
             'total_price' => 500,

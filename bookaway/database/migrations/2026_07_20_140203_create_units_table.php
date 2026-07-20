@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('properties', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string("title", 100);
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->enum("type", ['camping', 'hotel', 'other']);
             $table->integer("capacity");
             $table->text("description");
-            $table->integer("base_price");
-            $table->integer("price_per_night");
             $table->json('amenities');
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
+            $table->foreignId("property_id")->constrained()->onDelete("cascade");
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('properties');
+        Schema::dropIfExists('units');
     }
 };
