@@ -7,17 +7,19 @@ export interface LaravelPaginator<T> {
     data: T[];
 }
 
-export interface User {
-    id: string;
+export interface Entity {
+    id: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface User extends Entity {
     email: string;
     name: string;
     email_verified_at: string;
-    updated_at: string;
-    created_at: string;
 }
 
-export interface Property {
-    id: number;
+export interface Property extends Entity {
     title: string;
     type: string;
     capacity: number;
@@ -28,28 +30,34 @@ export interface Property {
     latitude: string;
     longitude: string;
     price_per_night: number;
-    created_at: string;
-    updated_at: string;
     distance?: number;
     bookings?: any[];
     user_id?: number;
     user?: User;
     address?: string;
     ratings_avg: number;
-    ratings: {
-        id: number;
-        created_at: string;
-        stars: number;
-        comment?: string;
-        user_id: number;
-        author: {
-            id: number;
-            name: string;
-        }
-    }[]
+    units: Unit[];
+    ratings: Rating[]
 }
 
-export interface PropertyImage {
+export interface Rating extends Entity {
+    stars: number;
+    comment?: string;
+    user_id: number;
+    author: Omit<User, 'id' | 'name'>
+}
+
+export interface Unit extends Entity {
+    title: string;
+    type: string;
+    capacity: number;
+    description: string;
+    amenities: string[];
+    base_fee: number;
+    price_per_night: number;
+}
+
+export interface PropertyImage extends Entity {
     id: number;
     path: string;
     url: string;
@@ -62,8 +70,7 @@ export interface ApiResponse<T> {
     code?: string;
 }
 
-export interface Booking {
-    id: number;
+export interface Booking extends Entity {
     start_date: string;
     end_date: string;
     total_price: number;
@@ -77,20 +84,16 @@ export interface Booking {
     };
 }
 
-export interface ChatMessage {
-    id: number;
+export interface ChatMessage extends Entity {
     conversation_id: number;
     sender_id: number;
     content: string;
-    created_at: string;
 }
 
-export interface Conversation {
-    id: number;
+export interface Conversation extends Entity {
     user_id: number;
     owner_id: number;
     property_id: number;
-    updated_at: string;
     user: { id: number; name: string };
     owner: { id: number; name: string };
     property: { id: number; title: string; images: { url: string }[] };
