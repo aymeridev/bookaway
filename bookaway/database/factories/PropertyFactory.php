@@ -14,6 +14,7 @@ class PropertyFactory extends Factory
 {
     private static int $campingIndex = 0;
     private static int $hotelIndex = 0;
+    private static int $othersIndex = 0;
 
     private static array $campings = [
         [
@@ -141,6 +142,13 @@ class PropertyFactory extends Factory
         ],
     ];
 
+    private static array $others = [
+        [
+            'title' => 'Chambre chez l\'habitant',
+            'description' => 'Près de la plage'
+        ]
+    ];
+
     /**
      * Define the model's default state.
      *
@@ -148,16 +156,38 @@ class PropertyFactory extends Factory
      */
     public function definition(): array
     {
-        $type = fake()->randomElement(['camping', 'hotel']);
+
+        $type = fake()->randomElement(['camping', 'hotel', 'other']);
+
+        $title = '';
+        $description = '';
+        $amenities = [];
+
+        if ($type === 'camping') {
+            $item = self::$campings[self::$campingIndex % count(self::$campings)];
+            $amenities = fake()->randomElements(['paid-wifi', "public-toilets", 'parking', 'pool'], 3);
+            self::$campingIndex++;
+        } elseif ($type === 'hotel') {
+            $item = self::$hotels[self::$hotelIndex % count(self::$hotels)];
+            $amenities = fake()->randomElements(['wifi', 'parking', 'pool', 'microwave', 'climatisation', 'television'], 3);
+            self::$hotelIndex++;
+        } else { // other
+            $item = self::$others[self::$othersIndex % count(self::$others)];
+            $amenities = fake()->randomElements(['wifi', 'kitchen', 'books', 'climatisation'], 3);
+            self::$othersIndex++;
+        }
+        $title = $item['title'];
+        $description = $item['description'];
 
         return [
-            'title' => '',
+            'title' => $title,
             'type' => $type,
+            'description' => $description,
+            'amenities' => $amenities,
+            'published' => true,
             'capacity' => fake()->numberBetween(2, 12),
-            'description' => '',
             'base_price' => fake()->numberBetween(20, 60),
             'price_per_night' => fake()->numberBetween(15, 50),
-            'amenities' => fake()->randomElements(['wifi', 'kitchen', 'parking', 'pool'], 3),
             'latitude' => fake()->randomFloat(8, 42.5, 51),
             'longitude' => fake()->randomFloat(8, -5, 9),
             'user_id' => function () {
@@ -174,19 +204,7 @@ class PropertyFactory extends Factory
      */
     public function configure()
     {
-        return $this->afterMaking(function (Property $property) {
-            if (empty($property->title)) {
-                if ($property->type === 'camping') {
-                    $item = self::$campings[self::$campingIndex % count(self::$campings)];
-                    self::$campingIndex++;
-                } else {
-                    $item = self::$hotels[self::$hotelIndex % count(self::$hotels)];
-                    self::$hotelIndex++;
-                }
-                $property->title = $item['title'];
-                $property->description = $item['description'];
-            }
-        })->afterCreating(function (Property $property) {
+        return $this->afterCreating(function (Property $property) {
             $user = User::find($property->user_id) ?: (User::first() ?: User::factory()->create());
             $type = $property->type;
             $images = [];
