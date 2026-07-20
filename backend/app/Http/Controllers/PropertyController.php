@@ -17,22 +17,22 @@ class PropertyController extends Controller
     {
         $query = Property::query();
 
-        if ($request->user()) {
-            $query->where('user_id', '!=', $request->user()->id);
-        }
+        $query->when($request->user(), function ($query, $user) {
+            $query->where('user_id', '!=', $user->id);
+        });
 
-        if ($request->filled('travelers') && $request->travelers > 0) {
-            $query->where('capacity', '>=', $request->travelers);
-        }
+        $query->when($request->filled('travelers') && $request->travelers > 0, function ($query, $travelers) {
+            $query->whereHas('units', fn($query) => $query->where('capacity', '>=', $travelers));
+        });
 
-        if ($request->filled(['from', 'to'])) {
-            $query->whereDoesntHave('bookings', function ($q) use ($request) {
-                $q->where(function ($inner) use ($request) {
-                    $inner->where('start_date', '<', $request->to)
-                        ->where('end_date', '>', $request->from);
-                });
-            });
-        }
+        // if ($request->filled(['from', 'to'])) {
+        //     $query->whereDoesntHave('bookings', function ($q) use ($request) {
+        //         $q->where(function ($inner) use ($request) {
+        //             $inner->where('start_date', '<', $request->to)
+        //                 ->where('end_date', '>', $request->from);
+        //         });
+        //     });
+        // }
 
         if ($request->filled(['lat', 'lon'])) {
             $latitude = (float) $request->lat;
@@ -46,10 +46,9 @@ class PropertyController extends Controller
         }
 
         $query->with([
-            'images' => function ($q) {
-                $q->orderBy('sort_order', 'asc');
-            },
+            'images' => fn($query) => $query->orderBy('sort_order', 'asc'),
             'ratings',
+            'units',
             'user'
         ]);
 
@@ -62,7 +61,7 @@ class PropertyController extends Controller
     public function count()
     {
         return response()->json([
-            "properties" => Property::where('published', true)->count()
+            "properties" => Property::published()->count()
         ]);
     }
 
