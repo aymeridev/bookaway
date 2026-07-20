@@ -8,7 +8,7 @@ export function PriceStep({ form }: { form: UseFormReturn<PropertyForm, any, Pro
         <>
             <fieldset className="fieldset">
                 <legend className="fieldset-legend">Prix de base</legend>
-                <input type="number" className="input" placeholder="Type here"                 {...register('base_price', { required: "Le prix de base est requis" })}
+                <input type="number" className="input" placeholder="Type here"                 {...register('base_fee', { required: "Le prix de base est requis" })}
                     min={1} max={999}
                 />
                 <p className="label">Optional</p>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean("published")->default(false);
             $table->integer("capacity");
             $table->text("description");
-            $table->integer("base_price");
+            $table->integer("base_fee");
             $table->integer("price_per_night");
             $table->json('amenities');
             $table->decimal('latitude', 10, 8)->nullable();

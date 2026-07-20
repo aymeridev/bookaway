@@ -25,7 +25,7 @@ class Property extends Model
         'type',
         'capacity',
         'description',
-        'base_price',
+        'base_fee',
         'price_per_night',
         'amenities',
         'latitude',
@@ -86,4 +86,3 @@ class Property extends Model
         });
     }
 }
-

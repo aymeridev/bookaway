@@ -186,7 +186,7 @@ class PropertyFactory extends Factory
             'amenities' => $amenities,
             'published' => true,
             'capacity' => fake()->numberBetween(2, 12),
-            'base_price' => fake()->numberBetween(20, 60),
+            'base_fee' => fake()->numberBetween(20, 60),
             'price_per_night' => fake()->numberBetween(15, 50),
             'latitude' => fake()->randomFloat(8, 42.5, 51),
             'longitude' => fake()->randomFloat(8, -5, 9),

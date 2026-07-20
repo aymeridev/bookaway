@@ -12,7 +12,7 @@ export type PropertyForm = {
     images: { id: string; sort_order: number; url: string }[],
     amenities: { value: string }[],
     description: string,
-    base_price: string,
+    base_fee: string,
     price_per_night: string,
     latitude: string,
     longitude: string

@@ -23,7 +23,7 @@ export interface Property {
     capacity: number;
     description: string;
     amenities: string[];
-    base_price: number;
+    base_fee: number;
     images: PropertyImage[];
     latitude: string;
     longitude: string;

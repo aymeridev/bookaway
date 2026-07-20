@@ -12,7 +12,7 @@ export function PropertyCard({
 }) {
     const { t } = useTranslation();
     const totalPrice =
-        property.base_price + property.price_per_night * numberOfNights;
+        property.base_fee + property.price_per_night * numberOfNights;
     const [searchParams] = useSearchParams();
     const from = searchParams.get("from");
     const to = searchParams.get("to");

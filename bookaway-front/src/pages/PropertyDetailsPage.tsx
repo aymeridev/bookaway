@@ -148,7 +148,7 @@ export function PropertyDetailsPage() {
         ? differenceInDays(range.to, range.from)
         : 0;
 
-    const basePrice = property.base_price || 0;
+    const basePrice = property.base_fee || 0;
     const pricePerNight = property.price_per_night || 0;
     const nightsTotal = pricePerNight * numberOfNights;
     const grandTotal = basePrice + nightsTotal;

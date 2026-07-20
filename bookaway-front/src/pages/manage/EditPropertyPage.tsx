@@ -40,7 +40,7 @@ function EditPropertyForm({ property }: EditPropertyFormProps) {
             type: property.type || "",
             description: property.description || "",
             capacity: String(property.capacity ?? ""),
-            base_price: String(property.base_price ?? ""),
+            base_fee: String(property.base_fee ?? ""),
             price_per_night: String(property.price_per_night ?? ""),
             latitude: String(property.latitude ?? ""),
             longitude: String(property.longitude ?? ""),
