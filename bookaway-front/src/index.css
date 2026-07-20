@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import 'tailwind-animations';
 @plugin "daisyui";
-@plugin "@tailwindcss/forms";
 @import '@fontsource/sriracha';
 
 /* react-day-picker dark mode overrides */
