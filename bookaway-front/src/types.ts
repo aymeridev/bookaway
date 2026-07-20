@@ -1,4 +1,13 @@
-export type User = {
+export interface LaravelPaginator<T> {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number;
+    data: T[];
+}
+
+export interface User {
     id: string;
     email: string;
     name: string;
@@ -7,7 +16,7 @@ export type User = {
     created_at: string;
 }
 
-export type Property = {
+export interface Property {
     id: number;
     title: string;
     type: string;
@@ -40,14 +49,14 @@ export type Property = {
     }[]
 }
 
-export type PropertyImage = {
+export interface PropertyImage {
     id: number;
     path: string;
     url: string;
     sort_order: number
 }
 
-export type ApiResponse<T> = {
+export interface ApiResponse<T> {
     data: T;
     message: string;
     code?: string;

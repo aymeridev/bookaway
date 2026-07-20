@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 class PropertyController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Recherche dans les logements
      */
     public function index(Request $request)
     {
@@ -53,13 +53,7 @@ class PropertyController extends Controller
             'user'
         ]);
 
-        $properties = $query->get();
-
-        foreach ($properties as $property) {
-            $property->ratings_avg = $property->ratings->isEmpty()
-                ? null
-                : round($property->ratings->avg('stars'), 1);
-        }
+        $properties = $query->withAvg('ratings', 'stars')->paginate(15);
 
         return response()->json($properties);
     }

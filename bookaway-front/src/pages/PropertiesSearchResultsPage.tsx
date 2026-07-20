@@ -1,20 +1,20 @@
 import { useSearchParams } from "react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../components/search_bar/SearchBar";
 import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
 import { useSearchProperties } from "../hooks/apiHooks";
 import { SearchPropertyCardResult } from "../components/property/SearchPropertyCardResult";
-import { SidebarIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, MapTrifoldIcon, SidebarIcon } from "@phosphor-icons/react";
 
-export function SearchPage() {
+export function PropertiesSearchResultsPage() {
     const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const { data: propertiesData, isLoading } = useSearchProperties(searchParams);
-    const properties = propertiesData || [];
+    const properties = propertiesData?.data || [];
 
-    const [currentPage, setCurrentPage] = useState(1);
+    // const [currentPage, setCurrentPage] = useState(1);
     const [mapVisibility, setMapVisibility] = useState(true);
     const loading = isLoading;
 
@@ -32,54 +32,26 @@ export function SearchPage() {
             )
             : 1;
 
-    const itemsPerPage = 18;
 
-    const radius = Number(searchParams.get("radius") || 50);
+    // const paginate = (pageNumber: number) => {
+    //     setCurrentPage(pageNumber);
 
-    // Seulement les logements dans le rayon spécifié
-    const nearbyProperties = useMemo(() => {
-        const list = propertiesData || [];
-        return list.filter((property) => {
-            if (property.distance === undefined) {
-                return true;
-            }
+    //     setTimeout(() => {
+    //         const element = document.getElementById("page-title");
 
-            return property.distance <= radius;
-        });
-    }, [propertiesData, radius]);
-
-    // Pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-    const currentProperties = nearbyProperties.slice(
-        indexOfFirstItem,
-        indexOfLastItem
-    );
-
-    const totalPages = Math.ceil(
-        nearbyProperties.length / itemsPerPage
-    );
-
-    const paginate = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-
-        setTimeout(() => {
-            const element = document.getElementById("page-title");
-
-            if (element) {
-                element.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-            } else {
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                });
-            }
-        }, 10);
-    };
+    //         if (element) {
+    //             element.scrollIntoView({
+    //                 behavior: "smooth",
+    //                 block: "start",
+    //             });
+    //         } else {
+    //             window.scrollTo({
+    //                 top: 0,
+    //                 behavior: "smooth",
+    //             });
+    //         }
+    //     }, 10);
+    // };
 
     return (
         <main className="max-w-6xl mx-auto p-4 md:p-8">
@@ -90,11 +62,14 @@ export function SearchPage() {
                         id="page-title"
                         className="text-title-medium"
                     >
-                        {t("search.page-title")}
+                        Résultats de votre <span className="flex items-center -rotate-5 gap-2 shadow-xl p-1 rounded-xl border-2 border-secondary">
+                            <MagnifyingGlassIcon />
+                            recherche
+                        </span>
                     </h1>
 
                     <p className="text-base-content/60">
-                        {t("search.found-count", { count: nearbyProperties.length })}
+                        Nous avons trouvées {propertiesData?.total} logements.
                     </p>
                 </div>
             </header>
@@ -109,7 +84,7 @@ export function SearchPage() {
 
             </div>
 
-            {nearbyProperties.length === 0 && <div className="alert alert-error">
+            {propertiesData?.data.length === 0 && <div className="alert alert-error">
                 <span>Aucun logement trouvé.</span>
             </div>}
 
@@ -121,9 +96,9 @@ export function SearchPage() {
                     </p>
                 </div>
             ) : (
-                <div className="flex">
+                <div className="flex gap-4">
                     <div className={`grid w-full min-w-md flex-1 gap-4 ${mapVisibility ? "grid-cols-1" : "grid-cols-3"}`}>
-                        {currentProperties.map((property) => (
+                        {propertiesData?.data.map((property) => (
                             <SearchPropertyCardResult
                                 key={property.id}
                                 property={property}
@@ -131,8 +106,8 @@ export function SearchPage() {
                             />
                         ))}
 
-                        <div>
-                            {totalPages > 1 && (
+                        {/* <div>
+                            {propertiesData?.total > 1 && (
                                 <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
                                     <button
                                         className="btn btn-outline"
@@ -169,9 +144,13 @@ export function SearchPage() {
                                     </button>
                                 </div>
                             )}
-                        </div>
+                        </div> */}
                     </div>
                     {mapVisibility && <div className="flex-1">
+                        <h2 className="text-title-medium">
+                            <MapTrifoldIcon />
+                            Carte interactive
+                        </h2>
                         <PropertiesMap onMarkerClick={(p) => {
                             console.log(p);
                         }} properties={properties} />

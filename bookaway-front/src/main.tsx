@@ -7,7 +7,7 @@ import { NavbarLayout } from './layouts/NavbarLayout.tsx'
 import './i18n/config'
 import { LoginPage } from './pages/account/LoginPage.tsx'
 import { RegisterPage } from './pages/account/RegisterPage.tsx'
-import { SearchPage } from './pages/PropertiesSearchResultsPage.tsx'
+import { PropertiesSearchResultsPage } from './pages/PropertiesSearchResultsPage.tsx'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage.tsx'
 import { CreatePropertyPage } from './pages/manage/CreatePropertyPage.tsx'
 import { ProfilePage } from './pages/account/ProfilePage.tsx'
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/search",
-        Component: SearchPage,
+        Component: PropertiesSearchResultsPage,
       },
       {
         path: "bookings",
