@@ -15,7 +15,7 @@ export function PropertiesMap({ properties, onMarkerClick }: PropertiesMapProps)
         : [48.8566, 2.3522];
 
     return (
-        <div className='h-[50vh] sticky top-0 w-full rounded-2xl overflow-hidden shadow-inner border border-gray-200'>
+        <div className='h-[50vh] w-full rounded-2xl overflow-hidden shadow-inner border border-gray-200'>
             <MapContainer
                 center={center}
                 zoom={10}

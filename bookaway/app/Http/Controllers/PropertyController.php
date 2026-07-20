@@ -38,7 +38,7 @@ class PropertyController extends Controller
             $latitude = (float) $request->lat;
             $longitude = (float) $request->lon;
 
-            $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(lat)) * cos(radians(lon) - radians(?)) + sin(radians(?)) * sin(radians(lat))))";
+            $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
             $query->selectRaw("*, {$haversine} as distance", [$latitude, $longitude, $latitude])
                 ->whereRaw("{$haversine} <= ?", [$latitude, $longitude, $latitude, 200])

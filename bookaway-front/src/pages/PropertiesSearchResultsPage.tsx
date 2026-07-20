@@ -4,22 +4,22 @@ import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../components/search_bar/SearchBar";
 import { useTranslation } from "react-i18next";
 import { differenceInDays, parseISO } from "date-fns";
-import { useSearchProperties } from "../hooks/apiHooks";
 import { SearchPropertyCardResult } from "../components/property/SearchPropertyCardResult";
 import { MagnifyingGlassIcon, MapTrifoldIcon, SidebarIcon } from "@phosphor-icons/react";
+import { useSearchProperties } from "../services/properties";
+import { validatePropertiesSearchParams } from "../schemas/properties";
+
+
 
 export function PropertiesSearchResultsPage() {
     const { t } = useTranslation();
     const [searchParams] = useSearchParams();
-    const { data: propertiesData, isLoading } = useSearchProperties(searchParams);
-    const properties = propertiesData?.data || [];
+    const params = validatePropertiesSearchParams(searchParams);
+    const { from, to } = params;
+    const { data: res, isPending, isError, error } = useSearchProperties(params);
 
     // const [currentPage, setCurrentPage] = useState(1);
     const [mapVisibility, setMapVisibility] = useState(true);
-    const loading = isLoading;
-
-    const from = searchParams.get("from");
-    const to = searchParams.get("to");
 
     const numberOfNights =
         from && to
@@ -69,7 +69,7 @@ export function PropertiesSearchResultsPage() {
                     </h1>
 
                     <p className="text-base-content/60">
-                        Nous avons trouvées {propertiesData?.total} logements.
+                        Nous avons trouvées {res?.total} logements.
                     </p>
                 </div>
             </header>
@@ -84,11 +84,13 @@ export function PropertiesSearchResultsPage() {
 
             </div>
 
-            {propertiesData?.data.length === 0 && <div className="alert alert-error">
+            {isError && <div className="alert alert-error"><span>Erreur : {error.message}</span></div>}
+
+            {res?.total === 0 && <div className="alert alert-info">
                 <span>Aucun logement trouvé.</span>
             </div>}
 
-            {loading ? (
+            {isPending ? (
                 <div className="flex flex-col items-center justify-center py-20">
                     <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     <p className="mt-4 text-gray-500">
@@ -98,7 +100,7 @@ export function PropertiesSearchResultsPage() {
             ) : (
                 <div className="flex gap-4">
                     <div className={`grid w-full min-w-md flex-1 gap-4 ${mapVisibility ? "grid-cols-1" : "grid-cols-3"}`}>
-                        {propertiesData?.data.map((property) => (
+                        {res?.data.map((property) => (
                             <SearchPropertyCardResult
                                 key={property.id}
                                 property={property}
@@ -146,14 +148,17 @@ export function PropertiesSearchResultsPage() {
                             )}
                         </div> */}
                     </div>
-                    {mapVisibility && <div className="flex-1">
-                        <h2 className="text-title-medium">
-                            <MapTrifoldIcon />
-                            Carte interactive
-                        </h2>
-                        <PropertiesMap onMarkerClick={(p) => {
-                            console.log(p);
-                        }} properties={properties} />
+                    {res?.data && mapVisibility && <div className="flex-1">
+                        <div className="sticky top-0">
+                            <h2 className="text-title-medium">
+                                <MapTrifoldIcon />
+                                Carte interactive
+                            </h2>
+                            <PropertiesMap onMarkerClick={(p) => {
+                                console.log(p);
+                            }} properties={res?.data} />
+
+                        </div>
                     </div>}
                 </div>
             )}

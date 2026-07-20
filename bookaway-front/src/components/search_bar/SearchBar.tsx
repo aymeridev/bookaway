@@ -57,7 +57,7 @@ export function SearchBar({ action = "Lancer la recherche" }: SearchBarProps) {
     const [destination, setDestination] =
         useState(initialDestination);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const params = new URLSearchParams({
