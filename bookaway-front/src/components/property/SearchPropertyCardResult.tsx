@@ -3,13 +3,20 @@ import type { Property } from "../../types";
 import { Link, useSearchParams } from "react-router";
 import { amenitiesIcon } from "../../amenities";
 import { StarIcon } from "@phosphor-icons/react";
+import type { Ref } from "react";
+
+interface SearchPropertyCardResultProps {
+    property: Property;
+    focus?: boolean;
+    numberOfNights: number;
+    onPointerEnter?: () => void;
+    ref?: Ref<HTMLAnchorElement>
+}
 
 export function SearchPropertyCardResult({
-    property, numberOfNights
-}: {
-    property: Property;
-    numberOfNights: number;
-}) {
+    property, focus, numberOfNights, ref,
+    onPointerEnter
+}: SearchPropertyCardResultProps) {
     const { t } = useTranslation();
     const totalPrice =
         property.base_price + property.price_per_night * numberOfNights;
@@ -20,10 +27,12 @@ export function SearchPropertyCardResult({
     const url = (from && to) ? `/property/${property.id}?from=${from}&to=${to}` : `/property/${property.id}`;
     return (
         <Link
+            ref={ref}
             to={url}
             className="group w-full block"
+            onPointerEnter={onPointerEnter}
         >
-            <article className="card hover:bg-base-300 hover:text-primary transition-colors bg-base-200 shadow-sm">
+            <article className={`card hover:bg-base-300 hover:text-primary transition-colors bg-base-200 shadow-sm ${focus && "ring-4 bg-primary/25 ring-primary"}`}>
                 <div className="relative">
                     <figure>
                         <img
@@ -35,10 +44,10 @@ export function SearchPropertyCardResult({
 
                     {property.user && (
                         <div
-                            className="absolute bottom-3 right-3 avatar"
-                            title={`Hôte: ${property.user.name}`}
+                            className="absolute bottom-4 tooltip tooltip-left right-4 avatar"
+                            data-tip={property.user.name}
                         >
-                            <div className="w-10 rounded-full">
+                            <div className="w-8 rounded-full">
                                 <img
                                     src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${property.user.id}`}
                                     alt={property.user.name}
@@ -59,7 +68,7 @@ export function SearchPropertyCardResult({
                                 <span className="text-base-content/80 text-xs">({property.ratings?.length || 0})</span>
                             </span>
                         ) : (
-                            <span className="text-xs font-semibold text-blue-600 bg-blue-50/50 border border-blue-100/50 px-2 py-0.5 rounded-lg shrink-0">
+                            <span className="badge badge-soft badge-accent">
                                 Nouveau
                             </span>
                         )}
@@ -70,9 +79,9 @@ export function SearchPropertyCardResult({
                     <div className="flex flex-col flex-1 justify-between">
                         <div className="space-y-2">
                             {property.distance !== undefined && (
-                                <p className="text-sm text-blue-600 font-medium">
-                                    {t("search.card-distance", { distance: Number(property.distance).toFixed(1) })}
-                                </p>
+                                <span className="badge badge-soft badge-primary">
+                                    À {Number(property.distance).toFixed(1)} km de votre point de recherche
+                                </span>
                             )}
 
                             <div className="flex flex-wrap gap-2">

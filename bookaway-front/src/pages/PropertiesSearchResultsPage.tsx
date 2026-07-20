@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useState } from "react";
+import { useRef, useState, type Ref } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../components/search_bar/SearchBar";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,9 @@ export function PropertiesSearchResultsPage() {
     const { from, to } = params;
     const { data: res, isPending, isError, error } = useSearchProperties(params);
 
+    const [focusedProperty, setFocusedProperty] = useState<number>();
+    const propertiesRefs = useRef(new Map<number, HTMLAnchorElement>());
+
     // const [currentPage, setCurrentPage] = useState(1);
     const [mapVisibility, setMapVisibility] = useState(true);
 
@@ -32,6 +35,15 @@ export function PropertiesSearchResultsPage() {
             )
             : 1;
 
+    const getPropertyRef = (id: number) => {
+        return (el: HTMLAnchorElement) => {
+            if (el) {
+                propertiesRefs.current.set(id, el);
+            } else {
+                propertiesRefs.current.delete(id);
+            }
+        }
+    }
 
     // const paginate = (pageNumber: number) => {
     //     setCurrentPage(pageNumber);
@@ -103,8 +115,13 @@ export function PropertiesSearchResultsPage() {
                         {res?.data.map((property) => (
                             <SearchPropertyCardResult
                                 key={property.id}
+                                ref={getPropertyRef(property.id)}
+                                focus={mapVisibility && focusedProperty === property.id}
                                 property={property}
                                 numberOfNights={numberOfNights}
+                                onPointerEnter={() => {
+                                    console.log("test");
+                                }}
                             />
                         ))}
 
@@ -154,8 +171,13 @@ export function PropertiesSearchResultsPage() {
                                 <MapTrifoldIcon />
                                 Carte interactive
                             </h2>
+                            <p>Cliquez sur un marqueur pour accéder aux détails du logement.</p>
                             <PropertiesMap onMarkerClick={(p) => {
-                                console.log(p);
+                                setFocusedProperty(p.id);
+                                propertiesRefs.current.get(p.id)?.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
                             }} properties={res?.data} />
 
                         </div>
