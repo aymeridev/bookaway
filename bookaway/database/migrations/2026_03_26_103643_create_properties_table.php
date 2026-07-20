@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("title", 100);
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum("type", ['camping', 'hotel', 'other']);
+            $table->boolean("published")->default(false);
             $table->integer("capacity");
             $table->text("description");
             $table->integer("base_price");

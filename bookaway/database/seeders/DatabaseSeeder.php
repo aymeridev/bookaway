@@ -15,15 +15,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $testUser = User::factory()->create([
+            'name' => 'Jean Dupont',
+            'email' => 'jean.dupont@bookaway.com',
+            'password' => bcrypt('password'),
+        ]);
+
         $this->call([
             PropertySeeder::class,
         ]);
 
-        $testUser = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
 
         $property = \App\Models\Property::first();
 

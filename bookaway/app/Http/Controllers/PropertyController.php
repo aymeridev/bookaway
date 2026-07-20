@@ -62,7 +62,7 @@ class PropertyController extends Controller
     public function count()
     {
         return response()->json([
-            "properties" => Property::count()
+            "properties" => Property::where('published', true)->count()
         ]);
     }
 
