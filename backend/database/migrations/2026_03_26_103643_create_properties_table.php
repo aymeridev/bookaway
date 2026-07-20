@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\PropertyType;
 
 return new class extends Migration
 {
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string("title", 100);
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->enum("type", ['camping', 'hotel', 'other']);
+            $table->enum("type", PropertyType::cases());
             $table->boolean("published")->default(false);
             $table->integer("capacity");
             $table->text("description");

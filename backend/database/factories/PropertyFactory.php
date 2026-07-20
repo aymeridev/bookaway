@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Property;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Storage;
@@ -165,11 +166,11 @@ class PropertyFactory extends Factory
 
         if ($type === 'camping') {
             $item = self::$campings[self::$campingIndex % count(self::$campings)];
-            $amenities = fake()->randomElements(['paid-wifi', "public-toilets", 'parking', 'pool'], 3);
+            $amenities = fake()->randomElements(['restaurant', 'bar', "public-toilets", 'parking', 'pool'], 3);
             self::$campingIndex++;
         } elseif ($type === 'hotel') {
             $item = self::$hotels[self::$hotelIndex % count(self::$hotels)];
-            $amenities = fake()->randomElements(['wifi', 'parking', 'pool', 'microwave', 'climatisation', 'television'], 3);
+            $amenities = fake()->randomElements(['elevator', 'bar', 'restaurant', 'wifi', 'parking', 'pool',], 3);
             self::$hotelIndex++;
         } else { // other
             $item = self::$others[self::$othersIndex % count(self::$others)];
@@ -245,6 +246,17 @@ class PropertyFactory extends Factory
                     'sort_order' => $index + 1,
                     'user_id' => $user->id,
                 ]);
+            }
+
+            $count = fake()->numberBetween(3, 6);
+            if ($property->type === 'camping') {
+                Unit::factory()
+                    ->count($count)->forCamping()->for($property)->create();
+            } elseif ($property->type === 'hotel') {
+                Unit::factory()
+                    ->count($count)->forHotel()->for($property)->create();
+            } else {
+                Unit::factory()->for($property)->create();
             }
         });
     }
