@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
-import { MapContainer, TileLayer, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
 import { Link, useParams, useSearchParams, useNavigate } from "react-router";
-import { differenceInDays, parseISO, eachDayOfInterval, formatDate } from "date-fns";
+import { differenceInDays, parseISO, eachDayOfInterval, formatDate, format } from "date-fns";
 import { fr, enUS as dpEnUS } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
@@ -12,11 +12,11 @@ import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
 import { Card } from '../components/Card';
 import useAuthStore from '../context/AuthStore';
 import { fr as dfFr, enUS as dfEnUS } from 'date-fns/locale';
-import { usePropertyDetails } from '../hooks/apiHooks';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from "react-i18next";
-import { ArrowLeftIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon } from '@phosphor-icons/react';
+import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon, UserCircleIcon } from '@phosphor-icons/react';
+import { usePropertyDetails } from '../services/properties';
 
 export function PropertyDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -25,7 +25,8 @@ export function PropertyDetailsPage() {
     const dfLocale = isFrench ? dfFr : dfEnUS;
 
     const { id } = useParams<{ id: string }>();
-    const { data: property, isLoading, refetch } = usePropertyDetails(id);
+    const { data, isPending, refetch } = usePropertyDetails(id!);
+    const property = data?.data;
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -92,7 +93,7 @@ export function PropertyDetailsPage() {
     const [month, setMonth] = useState<Date>(range?.from || new Date());
     const galleryRef = useRef<ImageGalleryRef>(null);
 
-    if (isLoading || !property) {
+    if (!property || isPending) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
                 <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
@@ -184,87 +185,104 @@ export function PropertyDetailsPage() {
                             slideInterval={2000}
                         />
                     </div> : <p>{t("property-details.no-image")}</p>}
-                    <div className="border-b pb-8">
-                        <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t("property-details.about-title")}</h2>
-                        <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-line">
-                            {property.description}
-                        </p>
+                    <div className="card bg-base-200 shadow-md">
+                        <div className="card-body">
+                            <h2 className="text-title-small flex items-center gap-2">
+                                <InfoIcon />
+                                {t("property-details.about-title")}
+                            </h2>
+                            <p className="text-lg leading-relaxed">
+                                {property.description}
+                            </p>
+                        </div>
                     </div>
 
                     {property.user && (
-                        <Card className="p-6">
-                            <div className="flex items-center justify-between">
-                                <h3 className="flex items-center gap-4 text-lg font-semibold text-gray-800">
-                                    <div aria-hidden="true" className="rounded-full size-8 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${property.id}")` }}></div>
-                                    {t("property-details.hosted-by", { name: property.user.name })}
-                                </h3>
-                                <Link to={`/user/${property.user.id}`} viewTransition>
-                                    <button className='btn btn-soft btn-primary'>
-                                        {t("property-details.view-profile")}
-                                    </button>
-                                </Link>
+                        <div className="card bg-base-200 shadow-md">
+                            <div className="card-body">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="flex items-center gap-4 text-lg font-semibold text-gray-800">
+                                        <div aria-hidden="true" className="rounded-full size-8 mx-auto" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${property.id}")` }}></div>
+                                        {t("property-details.hosted-by", { name: property.user.name })}
+                                    </h3>
+                                    <Link to={`/user/${property.user.id}`} viewTransition>
+                                        <button className='btn btn-soft btn-primary'>
+                                            <UserCircleIcon />
+                                            {t("property-details.view-profile")}
+                                        </button>
+                                    </Link>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className='badge badge-primary badge-soft'>Membre depuis {format(property.user.created_at, "MMMM yyyy", { locale: dfLocale })}</span>
+                                    <span className='badge badge-neutral badge-soft'>Compte validé</span>
+
+                                </div>
                             </div>
-                        </Card>
+                        </div>
                     )}
 
-                    <div>
-                        <h2 className="flex gap-2 items-center text-2xl font-semibold mb-4 text-gray-800">
-                            <MapTrifoldIcon />
-                            {t("property-details.where-title")}
-                        </h2>
-                        <p>{t("property-details.where-info")}</p>
-                        <div className="rounded-2xl overflow-hidden shadow-md border border-gray-100">
-                            <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
+                    <div className='card bg-base-200 shadow-md'>
+                        <div className="card-body">
+                            <h2 className="text-title-small">
+                                <MapTrifoldIcon />
+                                {t("property-details.where-title")}
+                            </h2>
+                            <p>{t("property-details.where-info")}</p>
+                            <div className="rounded-2xl overflow-hidden">
+                                <PropertyLocation longitude={parseFloat(property.longitude)} latitude={parseFloat(property.latitude)} />
+                            </div>
                         </div>
                     </div>
 
-                    <Card>
-                        <div className="flex justify-between items-center mb-4">
-                            <div>
-                                <h2 className='text-title-medium'>{t("property-details.reviews")} ({property.ratings.length})</h2>
-                                <h3 className='text-title-large flex gap-1 items-center'><StarIcon weight='fill' size={40} /> {property.ratings_avg}</h3>
+                    <div className='card bg-base-200'>
+                        <div className="card-body">
+                            <div className="flex justify-between items-center mb-4">
+                                <div>
+                                    <h2 className='text-title-medium'>{t("property-details.reviews")} ({property.ratings.length})</h2>
+                                    <h3 className='text-title-small flex items-center gap-2'><StarIcon weight='fill' className='size-6' /> {property.ratings_avg}</h3>
+                                </div>
+                                {!isOwner && (
+                                    (() => {
+                                        const hasAlreadyReviewed = user && property.ratings.some((r: any) => r.author?.id === user.id || r.user_id === user.id);
+                                        return hasAlreadyReviewed ? (
+                                            <span className="text-sm text-gray-500 italic">{t("property-details.already-reviewed")}</span>
+                                        ) : (
+                                            <button onClick={handleOpenModal}>{t("property-details.give-review")}</button>
+                                        );
+                                    })()
+                                )}
                             </div>
-                            {!isOwner && (
-                                (() => {
-                                    const hasAlreadyReviewed = user && property.ratings.some((r: any) => r.author?.id === user.id || r.user_id === user.id);
-                                    return hasAlreadyReviewed ? (
-                                        <span className="text-sm text-gray-500 italic">{t("property-details.already-reviewed")}</span>
-                                    ) : (
-                                        <button onClick={handleOpenModal}>{t("property-details.give-review")}</button>
-                                    );
-                                })()
+                            {property.ratings.length > 0 ? (
+                                <ul className='grid grid-cols-2 gap-4'>
+                                    {property.ratings.map((rating) => (
+                                        <li key={rating.id} className='max-w-xs'>
+                                            <Card>
+                                                <div className="flex items-center gap-2 justify-between mb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
+                                                        <span className='font-semibold'>{rating.author.name}</span>
+                                                    </div>
+                                                    <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
+                                                </div>
+                                                {rating.comment ? (
+                                                    <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
+                                                ) : (
+                                                    <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
+                                                )}
+                                                <span className='text-xs text-gray-500 block'>
+                                                    {t("property-details.review-date", {
+                                                        date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
+                                                    })}
+                                                </span>
+                                            </Card>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-gray-500 italic">{t("property-details.no-reviews")}</p>
                             )}
                         </div>
-                        {property.ratings.length > 0 ? (
-                            <ul className='grid grid-cols-2 gap-4'>
-                                {property.ratings.map((rating) => (
-                                    <li key={rating.id} className='max-w-xs'>
-                                        <Card>
-                                            <div className="flex items-center gap-2 justify-between mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
-                                                    <span className='font-semibold'>{rating.author.name}</span>
-                                                </div>
-                                                <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
-                                            </div>
-                                            {rating.comment ? (
-                                                <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
-                                            ) : (
-                                                <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
-                                            )}
-                                            <span className='text-xs text-gray-500 block'>
-                                                {t("property-details.review-date", {
-                                                    date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
-                                                })}
-                                            </span>
-                                        </Card>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-gray-500 italic">{t("property-details.no-reviews")}</p>
-                        )}
-                    </Card>
+                    </div>
 
                     <dialog
                         ref={dialogRef}
@@ -324,14 +342,14 @@ export function PropertyDetailsPage() {
                 </div>
 
                 {!isOwner && <div className="flex-1">
-                    <Card className="sticky top-8 p-6 space-y-6">
-                        <div className="flex justify-between items-baseline">
-                            <div>
-                                <span className="text-2xl font-bold">{property.price_per_night}€</span>
-                                <span className="text-gray-500"> {t("property-details.per-night")}</span>
+                    <div className="card shadow-md bg-base-200 sticky top-8">
+                        <div className="card-body">
+                            <div className="flex justify-between items-baseline">
+                                <div>
+                                    <span className="text-2xl font-bold">{property.price_per_night}€</span>
+                                    <span className="text-gray-500"> {t("property-details.per-night")}</span>
+                                </div>
                             </div>
-                        </div>
-                        <Card className='bg-base-300'>
                             <DayPicker
                                 mode="range"
                                 selected={range}
@@ -340,62 +358,61 @@ export function PropertyDetailsPage() {
                                 month={month}
                                 locale={dpLocale}
                                 onMonthChange={setMonth}
-                                className="m-0"
+                                className="react-day-picker"
                             />
-                        </Card>
 
-                        <div className="space-y-3 pt-2">
-                            <div className="flex justify-between text-gray-600">
-                                <span className="underline">
-                                    {t("property-details.price-nights", { price: property.price_per_night, count: numberOfNights })}
-                                </span>
-                                <span>{nightsTotal}€</span>
+                            <div className="space-y-3 pt-2">
+                                <div className="flex justify-between text-base-content/80">
+                                    <span className="underline">
+                                        {t("property-details.price-nights", { price: property.price_per_night, count: numberOfNights })}
+                                    </span>
+                                    <span className='font-medium'>{nightsTotal}€</span>
+                                </div>
+                                <div className="flex justify-between text-base-content/80">
+                                    <span className="underline">{t("property-details.service-fees")}</span>
+                                    <span className='font-medium'>{basePrice}€</span>
+                                </div>
+                                <hr className="border-gray-100" />
+                                <div className="flex justify-between font-bold text-lg">
+                                    <span>{t("property-details.total")}</span>
+                                    <span>{grandTotal}€</span>
+                                </div>
                             </div>
-                            <div className="flex justify-between text-gray-600">
-                                <span className="underline">{t("property-details.service-fees")}</span>
-                                <span>{basePrice}€</span>
-                            </div>
-                            <hr className="border-gray-100" />
-                            <div className="flex justify-between font-bold text-lg">
-                                <span>{t("property-details.total")}</span>
-                                <span>{grandTotal}€</span>
-                            </div>
-                        </div>
 
-                        {!user ? (
-                            <>
-                                <button className='btn btn-primary btn-xl py-3 w-full font-semibold' disabled>
-                                    {t("property-details.book-now")}
-                                </button>
-                                <p className="text-center text-sm text-amber-600 font-medium">{t("property-details.login-required")}</p>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    to="/reservation"
-                                    state={{
-                                        property,
-                                        dateRange: {
-                                            from: range?.from?.toISOString(),
-                                            to: range?.to?.toISOString()
-                                        },
-                                        totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
-                                    }}
-                                    viewTransition
-                                    onClick={(e) => {
-                                        if (numberOfNights === 0) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <button className='btn btn-xl btn-primary w-full' disabled={numberOfNights === 0}>
-                                        {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}
+                            {!user ? (
+                                <>
+                                    <button className='btn btn-primary btn-xl py-3 w-full font-semibold' disabled>
+                                        {t("property-details.book-now")}
                                     </button>
-                                </Link>
-                                <p className="text-center text-xs text-gray-400">{t("property-details.no-charge-yet")}</p>
-                            </>
-                        )}
-                    </Card>
+                                    <p className="text-center text-sm text-amber-600 font-medium">{t("property-details.login-required")}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/reservation"
+                                        state={{
+                                            property,
+                                            dateRange: {
+                                                from: range?.from?.toISOString(),
+                                                to: range?.to?.toISOString()
+                                            },
+                                            totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
+                                        }}
+                                        viewTransition
+                                        onClick={(e) => {
+                                            if (numberOfNights === 0) {
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        className={`btn btn-xl btn-primary w-full ${numberOfNights === 0 && "btn-disabled"}`}
+                                    >
+                                        <CheckCircleIcon />
+                                        {numberOfNights > 0 ? t("property-details.book-now") : t("property-details.select-dates")}
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>}
             </div>
         </div>
@@ -410,15 +427,9 @@ function PropertyLocation({ longitude, latitude }: { longitude: number, latitude
             scrollWheelZoom={false}
             style={{ height: "100%", width: "100%" }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <CircleMarker
-                center={[latitude, longitude]}
-                radius={25}
-                pathOptions={{
-                    color: '#4f46e5',
-                    fillColor: '#818cf8',
-                    fillOpacity: 0.25,
-                    weight: 2,
-                }}
+            <Marker
+                position={[latitude, longitude]}
+                interactive={false}
             />
         </MapContainer>
     </div>

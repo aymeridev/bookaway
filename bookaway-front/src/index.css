@@ -1,7 +1,12 @@
 @import "tailwindcss";
 @import 'tailwind-animations';
-@plugin "daisyui";
 @import '@fontsource/sriracha';
+
+
+@plugin "daisyui" {
+    themes: nord --default, dark --prefersdark;
+    logs: false;
+}
 
 /* react-day-picker dark mode overrides */
 .dark .rdp-root {
@@ -33,7 +38,7 @@
 }
 
 .text-title-small {
-    @apply mt-2 mb-1 text-2xl font-semibold tracking-tight;
+    @apply mt-2 mb-1 flex items-center gap-2 text-2xl font-semibold tracking-tight;
 }
 
 .text-title-xsmall {

@@ -38,9 +38,3 @@ export function useMyProperties() {
 export function usePropertiesCount() {
     return apiGet("/properties/count")
 }
-
-
-// Fetch property details
-export function usePropertyDetails(propertyId: string | number | undefined) {
-    return useApiGet<Property>(propertyId ? `/properties/${propertyId}` : null);
-}

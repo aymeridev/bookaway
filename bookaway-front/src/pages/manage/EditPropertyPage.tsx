@@ -7,15 +7,16 @@ import { useParams, useNavigate } from "react-router";
 import { Card } from "../../components/Card";
 import { StepperList } from "../../components/create_property/StepperList";
 import api from "../../api/axios";
-import { usePropertyDetails } from "../../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { FloppyDiskIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { usePropertyDetails } from "../../services/properties";
 
 export function EditPropertyPage() {
     const { id } = useParams<{ id: string }>();
-    const { data: property, isLoading } = usePropertyDetails(id);
+    const { data, isPending } = usePropertyDetails(id!);
+    const property = data?.data;
 
-    if (isLoading || !property) {
+    if (isPending || !property) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
                 <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />

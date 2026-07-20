@@ -20,15 +20,26 @@ export function usePropertiesCount() {
 }
 
 
-export async function fetchSearchProperties(params: PropertiesSearchValues): Promise<LaravelPaginator<Property>> {
+async function fetchSearchProperties(params: PropertiesSearchValues): Promise<LaravelPaginator<Property>> {
     const queryString = objectToSearchParams(params).toString();
     return (await apiGet<LaravelPaginator<Property>>(`/properties?${queryString}`)).data;
 }
 
 export function useSearchProperties(params: PropertiesSearchValues) {
-    console.log(params);
     return useQuery({
         queryKey: ['search-properties', params],
         queryFn: () => fetchSearchProperties(params)
+    })
+}
+
+
+function fetchPropertyDetails(propertyId: number | string) {
+    return apiGet<Property>(`/properties/${propertyId.toString()}`);
+}
+
+export function usePropertyDetails(propertyId: number | string) {
+    return useQuery({
+        queryKey: ['property-details', propertyId],
+        queryFn: () => fetchPropertyDetails(propertyId)
     })
 }
