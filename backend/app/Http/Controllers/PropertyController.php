@@ -189,7 +189,7 @@ class PropertyController extends Controller
                 ])->timeout(3)->get('https://nominatim.openstreetmap.org/search', [
                     'format' => 'json',
                     'q' => $query,
-                    'email' => 'ulco@ulco.fr',
+                    'email' => 'contact@aymeri.dev',
                 ]);
 
                 if ($response->successful()) {

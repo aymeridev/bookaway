@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Booking;
+use App\Models\Property;
+use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Jean Dupont',
             'email' => 'jean.dupont@bookaway.com',
             'password' => bcrypt('password'),
+            'balance' => 100000,
         ]);
 
         $this->call([
@@ -27,20 +31,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $property = \App\Models\Property::first();
+        $property = Property::first();
 
         if ($property) {
-            \App\Models\Booking::factory(3)->create([
+            Booking::factory(3)->create([
                 'user_id' => $testUser->id,
                 'property_id' => $property->id,
             ]);
         }
 
-        \App\Models\Booking::factory(10)->create();
+        Booking::factory(10)->create();
 
         // création avis pour les logements
-        $properties = \App\Models\Property::all();
-        $users = \App\Models\User::all();
+        $properties = Property::all();
+        $users = User::all();
 
         if ($properties->count() > 0 && $users->count() > 0) {
             foreach ($properties as $prop) {
@@ -56,9 +60,9 @@ class DatabaseSeeder extends Seeder
                 $selectedAuthors = $potentialAuthors->random($numRatings);
 
                 foreach ($selectedAuthors as $author) {
-                    \App\Models\Rating::factory()->create([
+                    Rating::factory()->create([
                         'user_id' => $author->id,
-                        'ratable_type' => \App\Models\Property::class,
+                        'ratable_type' => Property::class,
                         'ratable_id' => $prop->id,
                     ]);
                 }

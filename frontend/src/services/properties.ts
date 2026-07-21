@@ -8,7 +8,7 @@ export interface PropertiesCountResponse {
     properties: number;
 }
 
-export async function fetchPropertiesCount(): Promise<PropertiesCountResponse> {
+export async function fetchPropertiesCount() {
     return (await apiGet<PropertiesCountResponse>('/properties/count')).data
 }
 
@@ -20,7 +20,7 @@ export function usePropertiesCount() {
 }
 
 
-async function fetchSearchProperties(params: PropertiesSearchValues): Promise<LaravelPaginator<Property>> {
+async function fetchSearchProperties(params: PropertiesSearchValues) {
     const queryString = objectToSearchParams(params).toString();
     return (await apiGet<LaravelPaginator<Property>>(`/properties?${queryString}`)).data;
 }

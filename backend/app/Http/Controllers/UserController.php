@@ -42,6 +42,17 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function addFunds(Request $request)
+    {
+
+        $validated = $request->validate([
+            'amount' => 'numeric|min:1|max:10000'
+        ]);
+        $request->user()->increment('balance', $validated['amount']);
+
+        return response()->json(['balance' => $request->user()->balance]);
+    }
+
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);

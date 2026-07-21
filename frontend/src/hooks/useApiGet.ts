@@ -9,13 +9,13 @@ export interface UseApiGetResult<T> {
     setData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
-export function apiGet<T>(url: string) {
-    return api.get<T>(url);
+export function apiGet<T>(endpoint: string) {
+    return api.get<T>(endpoint);
 }
 
-export function useApiGet<T>(url: string | null, config?: any): UseApiGetResult<T> {
+export function useApiGet<T>(endpoint: string | null, config?: any): UseApiGetResult<T> {
     const [data, setData] = useState<T | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(!!url);
+    const [isLoading, setIsLoading] = useState<boolean>(!!endpoint);
     const [error, setError] = useState<any>(null);
 
     // Keep dynamic config references stable using a ref to prevent unnecessary refetches
@@ -25,10 +25,10 @@ export function useApiGet<T>(url: string | null, config?: any): UseApiGetResult<
     }, [config]);
 
     const fetchData = useCallback(async () => {
-        if (!url) return;
+        if (!endpoint) return;
         try {
             setIsLoading(true);
-            const res = await api.get<T>(url, configRef.current);
+            const res = await api.get<T>(endpoint, configRef.current);
             setData(res.data);
             setError(null);
         } catch (err) {
@@ -36,17 +36,17 @@ export function useApiGet<T>(url: string | null, config?: any): UseApiGetResult<
         } finally {
             setIsLoading(false);
         }
-    }, [url]);
+    }, [endpoint]);
 
     useEffect(() => {
-        if (url) {
+        if (endpoint) {
             fetchData();
         } else {
             setData(null);
             setIsLoading(false);
             setError(null);
         }
-    }, [url, fetchData]);
+    }, [endpoint, fetchData]);
 
     return { data, isLoading, error, refetch: fetchData, setData };
 }

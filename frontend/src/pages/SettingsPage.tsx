@@ -5,12 +5,15 @@ import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { TrashIcon } from "@phosphor-icons/react";
+import { numberFormatter } from "../i18n/config";
+import { useAddFunds } from "../services/users";
 
 export function SettingsPage() {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const { isPending, mutate } = useAddFunds();
 
     const handleDelete = () => {
         if (confirm(t("settings-page.delete-confirm"))) {
@@ -35,7 +38,7 @@ export function SettingsPage() {
         <>
             <Banner title={t("settings")} />
 
-            <main className="p-8 space-y-8">
+            {user && <main className="p-8 space-y-8">
                 <section>
                     <h2 className="text-title-medium">{t("profil.my-profil")}</h2>
                     <p>{t("profil.name")} : {user?.name}</p>
@@ -55,6 +58,19 @@ export function SettingsPage() {
                     </select>
                 </section>
 
+                <section className="card bg-base-200 shadow-lg">
+                    <div className="card-body">
+                        <h3 className="text-title-small">Porte-monnaie</h3>
+                        <p>Montant actuel : <strong>{numberFormatter.format(user.balance / 100)}€</strong></p>
+                        <span>Recharger le compte :</span>
+                        {isPending ? <span className="loading"></span> : <ul className="flex gap-1">
+                            <button onClick={() => {
+                                mutate(100_00);
+                            }} className="btn btn-primary">Recharger de 100€</button>
+                        </ul>}
+                    </div>
+                </section>
+
                 <section>
 
                     <button onClick={handleDelete} className="btn btn-error flex items-center gap-2">
@@ -62,7 +78,7 @@ export function SettingsPage() {
                         {t("disable-account")}
                     </button>
                 </section>
-            </main>
+            </main>}
         </>
     );
 }
