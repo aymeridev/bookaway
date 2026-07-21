@@ -16,7 +16,7 @@ import { ErrorPage } from './pages/ErrorPage.tsx'
 import toast, { Toaster } from 'react-hot-toast';
 import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
-import { MyReservationsPage } from './pages/MyBookingsPage.tsx'
+import { MyBookingsPage } from './pages/MyBookingsPage.tsx'
 import useAuthStore from './context/AuthStore.tsx'
 import { EditPropertyPage } from './pages/manage/EditPropertyPage.tsx'
 import { SettingsPage } from './pages/SettingsPage.tsx'
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
       {
         path: "my-bookings",
         middleware: [authMiddleware],
-        Component: MyReservationsPage,
+        Component: MyBookingsPage,
       },
       {
         path: "settings",

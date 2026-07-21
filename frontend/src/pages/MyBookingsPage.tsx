@@ -2,25 +2,24 @@ import { Link } from "react-router";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { Banner } from "../components/Banner";
-import { Card } from "../components/Card";
-import { useMyReservations } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
-import { CalendarIcon, ChatCircleIcon, ReceiptIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { CalendarIcon, ChatCircleIcon, ReceiptIcon } from "@phosphor-icons/react";
+import { useMyBookings } from "../services/bookings";
 
-export function MyReservationsPage() {
+export function MyBookingsPage() {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
 
-    const { data: bookingsData, isLoading } = useMyReservations();
+    const { data: bookingsData, isPending } = useMyBookings();
     const bookings = bookingsData || [];
 
-    if (isLoading) {
+    if (isPending) {
         return (
             <>
                 <Banner title={t("reservations.reservations")} />
                 <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-                    <SpinnerIcon className="w-12 h-12 animate-spin text-blue-600" />
-                    <p className="text-gray-500 font-medium">{t("reservations.loading")}</p>
+                    <div className="loading size-8"></div>
+                    <span className="font-medium">{t("reservations.loading")}</span>
                 </div>
             </>
         );
@@ -65,52 +64,56 @@ export function MyReservationsPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="grid grid-cols-3 gap-4">
                         {bookings.map((booking) => {
                             const start = parseISO(booking.start_date);
                             const end = parseISO(booking.end_date);
                             const firstImage = booking.property.images?.[0]?.url;
 
                             return (
-                                <Card
+                                <div
                                     key={booking.id}
-                                    className="flex flex-col sm:flex-row overflow-hidden"
+                                    className="card bg-base-200 shadow-lg"
                                 >
-                                    <div className="sm:w-64 h-48 sm:h-auto relative shrink-0">
+                                    <figure>
                                         <img
                                             src={firstImage}
                                             alt={booking.property.title}
                                             className="w-full h-full rounded-2xl object-cover"
                                         />
-                                    </div>
-
-                                    <div className="flex-1 p-6 flex flex-col justify-between space-y-4">
-                                        <div className="space-y-2">
-                                            <div className="flex items-start justify-between gap-4">
-                                                <Link
-                                                    to={`/property/${booking.property.id}`}
-                                                    className="text-xl font-bold text-gray-900 hover:text-blue-600 transition line-clamp-1"
-                                                >
-                                                    {booking.property.title}
-                                                </Link>
-                                                {getStatusBadge(booking.status, booking.start_date, booking.end_date)}
-                                            </div>
-
-                                            <div className="flex flex-col space-y-1.5 text-sm text-gray-600">
-                                                <div className="flex items-center gap-2">
-                                                    <CalendarIcon className="w-4 h-4 text-gray-400" />
-                                                    <span>
-                                                        {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: currentLocale })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: currentLocale })}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <ReceiptIcon className="w-4 h-4 text-gray-400" />
-                                                    <span>{t("reservations.total-amount")} : <strong className="text-gray-900">{booking.total_price}€</strong></span>
-                                                </div>
-                                            </div>
+                                    </figure>
+                                    <div className="card-body">
+                                        <div className="sm:w-64 h-48 sm:h-auto relative shrink-0">
                                         </div>
 
-                                        <div className="flex justify-end pt-2 border-t border-gray-50 gap-2">
+                                        <div className="flex-1 p-6 flex flex-col justify-between space-y-4">
+                                            <div className="space-y-2">
+                                                <div className="flex items-start justify-between gap-4">
+                                                    <Link
+                                                        to={`/property/${booking.property.id}`}
+                                                        className="text-xl font-bold text-gray-900 hover:text-blue-600 transition line-clamp-1"
+                                                    >
+                                                        {booking.property.title}
+                                                    </Link>
+                                                    {getStatusBadge(booking.status, booking.start_date, booking.end_date)}
+                                                </div>
+
+                                                <div className="flex flex-col space-y-1.5 text-sm text-gray-600">
+                                                    <div className="flex items-center gap-2">
+                                                        <CalendarIcon className="w-4 h-4 text-gray-400" />
+                                                        <span>
+                                                            {t("reservations.from")} {format(start, "dd MMMM yyyy", { locale: currentLocale })} {t("reservations.to")} {format(end, "dd MMMM yyyy", { locale: currentLocale })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <ReceiptIcon className="w-4 h-4 text-gray-400" />
+                                                        <span>{t("reservations.total-amount")} : <strong className="text-gray-900">{booking.total_price}€</strong></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="card-actions justify-end">
                                             <Link className="btn btn-soft" to={"/messages"} viewTransition={true}>
                                                 <ChatCircleIcon />
                                                 {t("reservations.contact-host")}
@@ -123,7 +126,7 @@ export function MyReservationsPage() {
                                             </Link>
                                         </div>
                                     </div>
-                                </Card>
+                                </div>
                             );
                         })}
                     </div>

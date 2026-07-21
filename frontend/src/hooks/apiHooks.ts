@@ -23,11 +23,6 @@ export function useSearchProperties(params: URLSearchParams) {
     return useApiGet<LaravelPaginator<Property>>(`/properties?${queryString}`);
 }
 
-// Fetch user's reservations
-export function useMyReservations() {
-    return useApiGet<Booking[]>('/my-bookings');
-}
-
 // Fetch user's properties
 export function useMyProperties() {
     return useApiGet<Property[]>('/my-properties');

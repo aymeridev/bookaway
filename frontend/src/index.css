@@ -4,7 +4,7 @@
 
 
 @plugin "daisyui" {
-    themes: nord --default, dark --prefersdark;
+    themes: winter --default, dark --prefersdark;
     logs: false;
 }
 

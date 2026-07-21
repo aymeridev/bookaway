@@ -157,7 +157,7 @@ class BookingController extends Controller
     /**
      * Récupérer uniquement les réservations de l'utilisateur connecté.
      */
-    public function myReservations(Request $request)
+    public function MyBookings(Request $request)
     {
         // On récupère l'utilisateur connecté via le Token
         $bookings = $request->user()->bookings()
