@@ -84,7 +84,7 @@ export function SearchBar({ action = "Lancer la recherche" }: SearchBarProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex rounded-[3em] flex-col border shadow-xl p-4 md:pt-2 px-4 md:px-4 bg-base-200 border-base-300 text-base-content mb-8 w-full max-w-4xl mx-auto relative"
+            className="flex rounded-[3em] flex-col border shadow-xl p-4 md:pt-2 px-4 md:px-4 bg-base-200 border-base-300 text-base-content mb-8 w-full max-w-4xl mx-auto relative" style={{ '--tag': 'search-bar' } as React.CSSProperties}
         >
             <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-center">
                 <FormDestinationPart

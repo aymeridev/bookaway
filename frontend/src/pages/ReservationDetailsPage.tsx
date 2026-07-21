@@ -122,7 +122,8 @@ export function ReservationDetailsPage() {
                             <div className="flex-1 flex flex-col justify-between space-y-4">
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-start gap-4">
-                                        <h2 className="text-2xl font-bold text-gray-900 line-clamp-2">
+                                        <h2 className="text-2xl font-bold text-gray-900 line-clamp-2" style={{ '--tag': `property-title-${booking.property.id}` } as React.CSSProperties}
+                                        >
                                             {property.title}
                                         </h2>
                                         {status === "confirmed" ? (

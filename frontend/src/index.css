@@ -19,6 +19,13 @@
     background-color: var(--base-100);
 }
 
+
+@media (prefers-reduced-motion: no-preference) {
+    [style*='--tag'] {
+        view-transition-name: var(--tag);
+    }
+}
+
 @theme {
     --background-image-logo: url('/bookaway_logo.png');
     --background-image-hero: url('/background.jpg');

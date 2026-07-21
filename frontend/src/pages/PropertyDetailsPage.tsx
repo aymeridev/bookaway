@@ -13,7 +13,7 @@ import { fr as dfFr, enUS as dfEnUS } from 'date-fns/locale';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { useTranslation } from "react-i18next";
-import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon, UserCircleIcon } from '@phosphor-icons/react';
+import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, SpadeIcon, SpinnerIcon, StarIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { usePropertyDetails } from '../services/properties';
 import { Helmet } from 'react-helmet-async';
 import { amenitiesIcon } from '../amenities';
@@ -212,7 +212,7 @@ export function PropertyDetailsPage() {
                             <h2 className='text-title-small'>{property.type === 'camping' ? "Emplacements disponibles" : "Chambres disponibles"}</h2>
                             <div className="grid gap-4 grid-cols-2">
                                 {property.units.map(({ id, price_per_night, amenities, capacity, base_fee, title, description }) => (
-                                    <Link key={id} to={`/property/${propertyId}/${id}`} replace={true} className={`card ${unitId == id.toString() ? "bg-primary text-primary-content" : "bg-base-100"}`} viewTransition>
+                                    <Link key={id} to={`/property/${propertyId}/${id}`} replace={true} preventScrollReset={true} className={`card ${unitId == id.toString() ? "bg-primary text-primary-content" : "bg-base-100"}`} viewTransition>
                                         <div className="card-body">
                                             <div className="flex">
                                                 <h3 className='text-lg font-medium tracking-tight'>{title}</h3>
@@ -403,12 +403,12 @@ export function PropertyDetailsPage() {
                             />
 
                             {currentUnit && <div className="space-y-3 pt-2">
-                                <div className="flex justify-between text-base-content/80">
+                                {numberOfNights > 0 ? <div className="flex justify-between text-base-content/80">
                                     <span className="underline">
-                                        {t("property-details.price-nights", { price: currentUnit.price_per_night, count: numberOfNights })}
+                                        {t("property-details.price-nights", { price: currentUnit.price_per_night / 100, count: numberOfNights })}
                                     </span>
                                     <span className='font-medium'>{currentUnit.price_per_night * numberOfNights / 100}€</span>
-                                </div>
+                                </div> : <span>Selectionnez un nombre de nuits...</span>}
                                 <div className="flex justify-between text-base-content/80">
                                     <span className="underline">{t("property-details.service-fees")}</span>
                                     <span className='font-medium'>{currentUnit.base_fee / 100}€</span>

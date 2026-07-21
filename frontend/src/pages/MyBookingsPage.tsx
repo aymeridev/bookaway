@@ -83,8 +83,7 @@ export function MyBookingsPage() {
                                         />
                                     </figure>
                                     <div className="card-body">
-                                        <div className="sm:w-64 h-48 sm:h-auto relative shrink-0">
-                                        </div>
+                                        <div className="sm:w-64 h-48 sm:h-auto relative shrink-0" />
 
                                         <div className="flex-1 p-6 flex flex-col justify-between space-y-4">
                                             <div className="space-y-2">
@@ -92,6 +91,8 @@ export function MyBookingsPage() {
                                                     <Link
                                                         to={`/property/${booking.property.id}`}
                                                         className="text-xl font-bold text-gray-900 hover:text-blue-600 transition line-clamp-1"
+                                                        viewTransition
+                                                        style={{ '--tag': `property-title-${booking.property.id}` } as React.CSSProperties}
                                                     >
                                                         {booking.property.title}
                                                     </Link>

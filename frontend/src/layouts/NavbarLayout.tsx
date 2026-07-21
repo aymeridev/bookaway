@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router";
+import { Link, NavLink, Outlet, useNavigate, useLocation, ScrollRestoration, Scripts } from "react-router";
 import useAuthStore from "../context/AuthStore";
 import { useEffect, useRef, useState } from "react";
 import { useDarkMode } from "../hooks/useDarkMode";
 import { BuildingsIcon, CalendarIcon, CaretDownIcon, ChatCircleIcon, EyeIcon, GearFineIcon, ListIcon, MoonIcon, SignInIcon, SignOutIcon, SunIcon, UserIcon, XIcon } from "@phosphor-icons/react";
+import { useCurrentUser } from "../services/users";
 
 export function NavbarLayout() {
     const { t } = useTranslation();
@@ -36,6 +37,7 @@ export function NavbarLayout() {
 
     return (
         <div className="flex flex-col h-svh relative">
+            <ScrollRestoration />
             <nav ref={navRef} className="navbar shadow-sm bg-primary">
                 <div className="flex items-center gap-6">
                     <Link to={"/"} className="block h-8 w-32 bg-center bg-contain bg-no-repeat cursor-pointer bg-logo"
@@ -130,7 +132,7 @@ function ProfileButton() {
     const { t } = useTranslation();
     const [showDetails, setShowDetails] = useState(false);
     const navigate = useNavigate();
-    const user = useAuthStore((state) => state.user);
+    const { data: user, isPending } = useCurrentUser();
     const logout = useAuthStore((state) => state.logout);
     const menuRef = useRef<HTMLLIElement>(null);
 
@@ -160,90 +162,94 @@ function ProfileButton() {
 
     return (
         <li ref={menuRef} className="relative list-none">
-            <button
-                onClick={() => setShowDetails(!showDetails)}
-                className={`flex items-center gap-1.5 p-1.5 rounded-xl border border-transparent transition-all cursor-pointer ${showDetails
-                    ? "bg-white/20 text-white border-white/10"
-                    : "hover:bg-white/10 text-white"
-                    }`}
-            >
-                <div
-                    aria-hidden="true"
-                    className="rounded-full size-8 border border-white/20 overflow-hidden bg-white/10 shrink-0"
-                >
-                    <img
-                        src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}`}
-                        alt={user?.name || "Profil"}
-                        className="size-full object-cover"
-                    />
-                </div>
-                <CaretDownIcon className={`size-4 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
-            </button>
-            {showDetails && (
-                <div className="bg-white dark:bg-base-200 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl absolute top-12 right-0 min-w-[240px] z-50 border border-gray-100 dark:border-gray-800 p-2 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800/80 mb-1.5">
-                        <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Connecté en tant que</p>
-                        <p className="text-sm font-bold truncate text-gray-900 dark:text-white mt-0.5">{user?.name}</p>
-                    </div>
-                    <ul className="flex flex-col gap-1 list-none p-0 m-0">
-                        <li className="list-none">
-                            <Link
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
-                                to={"/profile"}
-                                onClick={() => setShowDetails(false)}
-                                viewTransition
-                            >
-                                <UserIcon className="size-4" />
-                                <span>{t('profil.my-profil')}</span>
-                            </Link>
-                        </li>
-                        <li className="list-none">
-                            <Link
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
-                                to={`/user/${user?.id}`}
-                                onClick={() => setShowDetails(false)}
-                                viewTransition
-                            >
-                                <EyeIcon className="size-4" />
-                                <span>{t('profil.public-profil')}</span>
-                            </Link>
-                        </li>
-                        <li className="list-none">
-                            <Link
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
-                                to={"/settings"}
-                                onClick={() => setShowDetails(false)}
-                                viewTransition
-                            >
-                                <GearFineIcon className="size-4" />
-                                <span>{t('profil.settings')}</span>
-                            </Link>
-                        </li>
-                        <li className="list-none">
-                            <button
-                                onClick={() => {
-                                    toggleTheme();
-                                    setShowDetails(false);
-                                }}
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full text-left cursor-pointer"
-                            >
-                                {isDark ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}
-                                <span>Mode {isDark ? "clair" : "sombre"}</span>
-                            </button>
-                        </li>
-                        <div className="h-px bg-gray-100 dark:bg-gray-800/80 my-1" />
-                        <li className="list-none">
-                            <button
-                                className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full text-left cursor-pointer"
-                                onClick={handleLogout}
-                            >
-                                <SignOutIcon className="size-4" />
-                                <span>{t('deconnexion')}</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            )}
+            {isPending ? <span className="loading"></span> :
+                <>
+                    <button
+                        onClick={() => setShowDetails(!showDetails)}
+                        className={`flex items-center gap-1.5 p-1.5 rounded-xl border border-transparent transition-all cursor-pointer ${showDetails
+                            ? "bg-white/20 text-white border-white/10"
+                            : "hover:bg-white/10 text-white"
+                            }`}
+                    >
+                        <div
+                            aria-hidden="true"
+                            className="rounded-full size-8 border border-white/20 overflow-hidden bg-white/10 shrink-0"
+                        >
+                            <img
+                                src={`https://api.dicebear.com/10.x/thumbs/svg?seed=${user?.id}`}
+                                alt={user?.name || "Profil"}
+                                className="size-full object-cover"
+                            />
+                        </div>
+                        <CaretDownIcon className={`size-4 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
+                    </button>
+                    {showDetails &&
+                        <div className="bg-white dark:bg-base-200 text-gray-800 dark:text-gray-100 rounded-2xl shadow-2xl absolute top-12 right-0 min-w-[240px] z-50 border border-gray-100 dark:border-gray-800 p-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                            <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800/80 mb-1.5">
+                                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Connecté en tant que</p>
+                                <p className="text-sm font-bold truncate text-gray-900 dark:text-white mt-0.5">{user?.name}</p>
+                            </div>
+                            <ul className="flex flex-col gap-1 list-none p-0 m-0">
+                                <li className="list-none">
+                                    <Link
+                                        className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                        to={"/profile"}
+                                        onClick={() => setShowDetails(false)}
+                                        viewTransition
+                                    >
+                                        <UserIcon className="size-4" />
+                                        <span>{t('profil.my-profil')}</span>
+                                    </Link>
+                                </li>
+                                <li className="list-none">
+                                    <Link
+                                        className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                        to={`/user/${user?.id}`}
+                                        onClick={() => setShowDetails(false)}
+                                        viewTransition
+                                    >
+                                        <EyeIcon className="size-4" />
+                                        <span>{t('profil.public-profil')}</span>
+                                    </Link>
+                                </li>
+                                <li className="list-none">
+                                    <Link
+                                        className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full"
+                                        to={"/settings"}
+                                        onClick={() => setShowDetails(false)}
+                                        viewTransition
+                                    >
+                                        <GearFineIcon className="size-4" />
+                                        <span>{t('profil.settings')}</span>
+                                    </Link>
+                                </li>
+                                <li className="list-none">
+                                    <button
+                                        onClick={() => {
+                                            toggleTheme();
+                                            setShowDetails(false);
+                                        }}
+                                        className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors w-full text-left cursor-pointer"
+                                    >
+                                        {isDark ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}
+                                        <span>Mode {isDark ? "clair" : "sombre"}</span>
+                                    </button>
+                                </li>
+                                <div className="h-px bg-gray-100 dark:bg-gray-800/80 my-1" />
+                                <li className="list-none">
+                                    <button
+                                        className="p-2.5 rounded-xl flex items-center gap-3 text-sm font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors w-full text-left cursor-pointer"
+                                        onClick={handleLogout}
+                                    >
+                                        <SignOutIcon className="size-4" />
+                                        <span>{t('deconnexion')}</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </>
+            }
         </li>
     );
 }
