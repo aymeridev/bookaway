@@ -3,22 +3,15 @@ import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { Controller, type UseFormReturn } from "react-hook-form";
 import type { PropertyForm } from "../form";
-import { amenitiesIcon } from '../../../amenities';
-import { t } from 'i18next';
+import { amenitiesOptions } from '../../../amenities';
 
 export function AmenitiesStep({ form }: { form: UseFormReturn<PropertyForm, any, PropertyForm> }) {
     const animatedComponents = makeAnimated();
     const { control } = form;
 
-    const amenitiesOptions = Object.keys(amenitiesIcon).map((a: string) => {
-        return {
-            icon: amenitiesIcon[a],
-            value: a,
-            label: t(`amenities.${a}` as any),
-        }
-    });
+
     return <label className="block">
-        <span className="text-gray-700">Équipements</span>
+        <span className="text-gray-700">Équipements/Options</span>
         <Controller
             name="amenities"
             defaultValue={[]}

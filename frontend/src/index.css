@@ -25,8 +25,8 @@
     --font-display: 'Sriracha', cursive;
 }
 
-@variant primary (&[data-primary="true"]);
-@variant dark (&:where(.dark, .dark *));
+@custom-variant primary (&[data-primary="true"]);
+@custom-variant dark (&:where(.dark, .dark *));
 
 
 .text-title-large {

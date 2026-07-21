@@ -1,4 +1,5 @@
 import { AlarmIcon, BathtubIcon, BedIcon, BookIcon, BowlFoodIcon, CameraIcon, CheckerboardIcon, ChefHatIcon, CoffeeIcon, CookingPotIcon, DropIcon, FanIcon, HandSoapIcon, LetterCirclePIcon, OvenIcon, SwimmingPoolIcon, TableIcon, TelevisionIcon, ThermometerColdIcon, ThermometerHotIcon, ThermometerIcon, ToiletIcon, WashingMachineIcon, WifiHighIcon } from "@phosphor-icons/react";
+import { t } from "i18next";
 
 export const amenitiesIcon = {
     "bathub": BathtubIcon,
@@ -27,3 +28,11 @@ export const amenitiesIcon = {
     "public-toilets": ToiletIcon,
     "restaurant": BowlFoodIcon,
 } as Record<string, any>
+
+export const amenitiesOptions = Object.keys(amenitiesIcon).map((a: string) => {
+    return {
+        icon: amenitiesIcon[a],
+        value: a,
+        label: t(`amenities.${a}` as any),
+    }
+});
