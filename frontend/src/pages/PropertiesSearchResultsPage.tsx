@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useRef, useState, type Ref } from "react";
 import { PropertiesMap } from "../PropertiesMap";
 import { SearchBar } from "../components/search_bar/SearchBar";
@@ -8,12 +8,13 @@ import { SearchPropertyCardResult } from "../components/property/SearchPropertyC
 import { MagnifyingGlassIcon, MapTrifoldIcon, SidebarIcon } from "@phosphor-icons/react";
 import { useSearchProperties } from "../services/properties";
 import { validatePropertiesSearchParams } from "../schemas/properties";
+import { objectToSearchParams } from "../api/utils";
 
 
 
 export function PropertiesSearchResultsPage() {
     const { t } = useTranslation();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const params = validatePropertiesSearchParams(searchParams);
     const { from, to } = params;
     const { data: res, isPending, isError, error } = useSearchProperties(params);
@@ -31,9 +32,9 @@ export function PropertiesSearchResultsPage() {
                     parseISO(to),
                     parseISO(from)
                 ),
-                1
+                0
             )
-            : 1;
+            : 0;
 
     const getPropertyRef = (id: number) => {
         return (el: HTMLAnchorElement) => {
@@ -80,9 +81,9 @@ export function PropertiesSearchResultsPage() {
                         </span>
                     </h1>
 
-                    <p className="text-base-content/60">
+                    <span className="text-base-content/60">
                         Nous avons trouvées {res?.total} logements.
-                    </p>
+                    </span>
                 </div>
             </header>
 
@@ -164,11 +165,18 @@ export function PropertiesSearchResultsPage() {
                                 </div>
                             )}
                         </div> */}
+                        {res?.last_page && <div className="join">
+                            {Array.from(Array(res?.last_page).keys()).map((index) => (
+                                <button onClick={() => {
+                                    setSearchParams(objectToSearchParams({ ...params, page: index + 1 }))
+                                }} className={`join-item btn ${res?.current_page === index + 1 && "btn-primary"}`}>{index + 1}</button>
+                            ))}
+                        </div>}
                     </div>
                     {res?.data && mapVisibility && <div className="flex-1">
                         <div className="sticky top-0">
                             <h2 className="text-title-medium">
-                                <MapTrifoldIcon />
+                                <MapTrifoldIcon className="size-8" weight="duotone" />
                                 Carte interactive
                             </h2>
                             <p>Cliquez sur un marqueur pour accéder aux détails du logement.</p>

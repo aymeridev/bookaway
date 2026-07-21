@@ -228,7 +228,7 @@ export function PropertyDetailsPage() {
                                                 ))}
                                             </ul>}
                                             <div className='font-semibold underline'>
-                                                {numberOfNights > 0 ? `${base_fee + (numberOfNights * price_per_night)}€` : `${price_per_night}€ par nuit`}
+                                                {numberOfNights > 0 ? `${(base_fee + (numberOfNights * price_per_night)) / 100}€ au total` : `${price_per_night / 100}€ par nuit`}
                                             </div>
                                         </div>
                                     </Link>
@@ -284,11 +284,11 @@ export function PropertyDetailsPage() {
                                 </div>
                                 {!isOwner && (
                                     (() => {
-                                        const hasAlreadyReviewed = user && property.ratings.some((r: any) => r.author?.id === user.id || r.user_id === user.id);
+                                        const hasAlreadyReviewed = user && property.ratings.some((rating) => rating.author?.id === user.id || rating.user_id === user.id);
                                         return hasAlreadyReviewed ? (
                                             <span className="text-sm text-gray-500 italic">{t("property-details.already-reviewed")}</span>
                                         ) : (
-                                            <button onClick={handleOpenModal}>{t("property-details.give-review")}</button>
+                                            <button className='btn btn-primary' onClick={handleOpenModal}>{t("property-details.give-review")}</button>
                                         );
                                     })()
                                 )}
@@ -296,27 +296,25 @@ export function PropertyDetailsPage() {
                             {property.ratings.length > 0 ? (
                                 <ul className='grid grid-cols-2 gap-4'>
                                     {property.ratings.map((rating) => (
-                                        <li key={rating.id} className='max-w-xs'>
-                                            <div className='card bg-base-100 shadow-md'>
-                                                <div className="card-body">
-                                                    <div className="flex items-center gap-2 justify-between mb-2">
-                                                        <div className="flex items-center gap-2">
-                                                            <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
-                                                            <span className='font-semibold'>{rating.author.name}</span>
-                                                        </div>
-                                                        <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
+                                        <li key={rating.id} className='card bg-base-100 shadow-md'>
+                                            <div className="card-body">
+                                                <div className="flex items-center gap-2 justify-between mb-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
+                                                        <span className='font-semibold'>{rating.author.name}</span>
                                                     </div>
-                                                    {rating.comment ? (
-                                                        <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
-                                                    ) : (
-                                                        <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
-                                                    )}
-                                                    <span className='text-xs text-gray-500 block'>
-                                                        {t("property-details.review-date", {
-                                                            date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
-                                                        })}
-                                                    </span>
+                                                    <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
                                                 </div>
+                                                {rating.comment ? (
+                                                    <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
+                                                ) : (
+                                                    <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
+                                                )}
+                                                <span className='text-xs text-base-content/80 block'>
+                                                    {t("property-details.review-date", {
+                                                        date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
+                                                    })}
+                                                </span>
                                             </div>
                                         </li>
                                     ))}
@@ -330,10 +328,11 @@ export function PropertyDetailsPage() {
                     <dialog
                         ref={dialogRef}
                         onClick={handleBackdropClick}
-                        className="rounded-2xl p-6 shadow-2xl border border-gray-100 max-w-md w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm m-auto"
+                        className="rounded-2xl p-6 shadow-2xl border bg-base-100 border-gray-100 max-w-md w-full backdrop:bg-black/50 backdrop:backdrop-blur-sm m-auto"
                     >
                         <div className="space-y-4">
                             <h3 className="text-xl font-bold text-gray-900">{t("property-details.modal-title")}</h3>
+
                             <form onSubmit={handleRatingSubmit} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">{t("property-details.modal-rating-label")}</label>
@@ -353,28 +352,30 @@ export function PropertyDetailsPage() {
                                         ))}
                                     </div>
                                 </div>
-                                <div>
-                                    <label htmlFor="modal-comment" className="block text-sm font-medium text-gray-700 mb-1">{t("property-details.modal-comment-label")}</label>
+                                <fieldset className="fieldset">
+                                    <legend className='fieldset-legend'>{t("property-details.modal-comment-label")}</legend>
                                     <textarea
                                         id="modal-comment"
                                         value={ratingComment}
                                         onChange={(e) => setRatingComment(e.target.value)}
                                         placeholder={t("property-details.modal-placeholder")}
-                                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-25"
+                                        className='textarea w-full'
                                     />
-                                </div>
+                                </fieldset>
                                 {submitError && (
                                     <p className="text-sm text-red-600 font-medium">{submitError}</p>
                                 )}
-                                <div className="flex justify-end gap-3 pt-2">
+                                <div className="modal-action">
                                     <button
                                         type="button"
+                                        className='btn'
                                         onClick={() => dialogRef.current?.close()}
                                     >
                                         {t("property-details.modal-cancel")}
                                     </button>
                                     <button
                                         type="submit"
+                                        className='btn btn-primary'
                                     >
                                         {t("property-details.modal-submit")}
                                     </button>
@@ -407,16 +408,16 @@ export function PropertyDetailsPage() {
                                     <span className="underline">
                                         {t("property-details.price-nights", { price: currentUnit.price_per_night, count: numberOfNights })}
                                     </span>
-                                    <span className='font-medium'>{currentUnit.price_per_night * numberOfNights}€</span>
+                                    <span className='font-medium'>{currentUnit.price_per_night * numberOfNights / 100}€</span>
                                 </div>
                                 <div className="flex justify-between text-base-content/80">
                                     <span className="underline">{t("property-details.service-fees")}</span>
-                                    <span className='font-medium'>{currentUnit.base_fee}€</span>
+                                    <span className='font-medium'>{currentUnit.base_fee / 100}€</span>
                                 </div>
                                 <hr className="border-gray-100" />
                                 <div className="flex justify-between font-bold text-lg">
                                     <span>{t("property-details.total")}</span>
-                                    <span>{currentUnit.price_per_night * numberOfNights + currentUnit.base_fee}€</span>
+                                    <span>{(currentUnit.price_per_night * numberOfNights + currentUnit.base_fee) / 100}€</span>
                                 </div>
                             </div>}
 
