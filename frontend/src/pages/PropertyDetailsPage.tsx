@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DayPicker } from "react-day-picker";
 import type { DateRange } from "react-day-picker";
@@ -24,8 +24,8 @@ export function PropertyDetailsPage() {
     const dpLocale = isFrench ? fr : dpEnUS;
     const dfLocale = isFrench ? dfFr : dfEnUS;
 
-    const { id } = useParams<{ id: string }>();
-    const { data, isPending, refetch } = usePropertyDetails(id!);
+    const { propertyId, unitId } = useParams<{ propertyId: string; unitId: string }>();
+    const { data, isPending, refetch } = usePropertyDetails(propertyId!);
     const property = data?.data;
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();

@@ -78,7 +78,11 @@ const router = createBrowserRouter([
         Component: MyPropertiesPage,
       },
       {
-        path: "/property/:id",
+        path: "/property/:propertyId",
+        Component: PropertyDetailsPage,
+      },
+      {
+        path: "/property/:propertyId/:unitId",
         Component: PropertyDetailsPage,
       },
       {

@@ -44,7 +44,7 @@ export interface Rating extends Entity {
     stars: number;
     comment?: string;
     user_id: number;
-    author: Omit<User, 'id' | 'name'>
+    author: Pick<User, 'id' | 'name'>
 }
 
 export interface Unit extends Entity {
