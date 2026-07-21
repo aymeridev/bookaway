@@ -9,7 +9,6 @@ import { fr, enUS as dpEnUS } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
 import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
-import useAuthStore from '../context/AuthStore';
 import { fr as dfFr, enUS as dfEnUS } from 'date-fns/locale';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
@@ -27,8 +26,7 @@ export function PropertyDetailsPage() {
     const dfLocale = isFrench ? dfFr : dfEnUS;
 
     const { propertyId, unitId } = useParams<{ propertyId: string; unitId?: string }>();
-    const { data, isPending, refetch } = usePropertyDetails(propertyId!);
-    const property = data?.data;
+    const { data: property, isPending, refetch } = usePropertyDetails(propertyId!);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 

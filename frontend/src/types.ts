@@ -16,6 +16,8 @@ export interface Entity {
 export interface User extends Entity {
     email: string;
     name: string;
+    bookings: Booking[];
+    properties: Property[];
     balance: number;
     email_verified_at: string;
 }

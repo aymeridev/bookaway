@@ -1,23 +1,22 @@
 import { useParams, useNavigate } from "react-router";
-import { useUserProfile, useUserProperties } from "../hooks/apiHooks";
+import { useUserProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import { PropertyCard } from "../components/property/PropertyCard";
 import { ArrowLeftIcon, BuildingIcon, CalendarIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { useUser } from "../services/users";
 
 export function UserPage() {
     const { id } = useParams<{ id: string }>();
-    const { data: user, isLoading: isUserLoading } = useUserProfile(id);
-    const { data: propertiesData, isLoading: isPropertiesLoading } = useUserProperties(id);
-    const properties = propertiesData || [];
+    const { data: user, isLoading: isUserLoading } = useUser(id!);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
 
     const isFrench = i18n.language.startsWith("fr");
     const dfLocale = isFrench ? dfFr : dfEnUS;
 
-    if (isUserLoading || isPropertiesLoading || !user) {
+    if (isUserLoading || !user) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
                 <SpinnerIcon className="w-12 h-12 animate-spin text-primary" />
@@ -81,7 +80,7 @@ export function UserPage() {
                                 </div>
                             </div>
 
-                            {properties.length > 0 && (
+                            {user.properties.length > 0 && (
                                 <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
                                     <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shrink-0">
                                         <BuildingIcon className="size-4" />
@@ -91,7 +90,7 @@ export function UserPage() {
                                             {t("user-page.label-listings")}
                                         </p>
                                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                            {t("user-page.listings-count", { count: properties.length })}
+                                            {t("user-page.listings-count", { count: user.properties.length })}
                                         </p>
                                     </div>
                                 </div>
@@ -108,9 +107,9 @@ export function UserPage() {
                             {t("user-page.user-listings", { name: user.name })}
                         </h2>
 
-                        {properties.length > 0 ? (
+                        {user.properties.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1">
-                                {properties.map((property) => (
+                                {user.properties.map((property) => (
                                     <PropertyCard key={property.id} property={property} numberOfNights={0} />
                                 ))}
                             </div>

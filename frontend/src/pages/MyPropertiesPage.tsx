@@ -1,13 +1,15 @@
 import { Banner } from "../components/Banner";
 import { Link } from "react-router";
-import { useMyProperties } from "../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { PropertyCard } from "../components/property/PropertyCard";
 import { HouseIcon, PlusIcon, SpinnerIcon } from "@phosphor-icons/react";
+import { useUserProperties } from "../services/properties";
+import { useCurrentUser } from "../services/users";
 
 export function MyPropertiesPage() {
     const { t } = useTranslation();
-    const { data: propertiesData, isLoading } = useMyProperties();
+    const { data: user } = useCurrentUser();
+    const { data: propertiesData, isLoading } = useUserProperties(user?.id);
     const properties = propertiesData || [];
     if (isLoading) {
         return (

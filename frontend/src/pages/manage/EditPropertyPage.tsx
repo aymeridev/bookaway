@@ -13,8 +13,7 @@ import { usePropertyDetails } from "../../services/properties";
 
 export function EditPropertyPage() {
     const { id } = useParams<{ id: string }>();
-    const { data, isPending } = usePropertyDetails(id!);
-    const property = data?.data;
+    const { data: property, isPending } = usePropertyDetails(id!);
 
     if (isPending || !property) {
         return (
@@ -39,9 +38,9 @@ function EditPropertyForm({ property }: EditPropertyFormProps) {
             title: property.title || "",
             type: property.type || "",
             description: property.description || "",
-            capacity: String(property.capacity ?? ""),
-            base_fee: String(property.base_fee ?? ""),
-            price_per_night: String(property.price_per_night ?? ""),
+            // capacity: String(property.capacity ?? ""),
+            // base_fee: String(property.base_fee ?? ""),
+            // price_per_night: String(property.price_per_night ?? ""),
             latitude: String(property.latitude ?? ""),
             longitude: String(property.longitude ?? ""),
             images: (property.images || []).map(img => ({

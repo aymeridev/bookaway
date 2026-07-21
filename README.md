@@ -223,7 +223,6 @@ http://localhost:8000/docs/api
 [POST]   /api/properties                    → Créer une propriété
 [PUT]    /api/properties/{id}               → Modifier une propriété
 [DELETE] /api/properties/{id}               → Supprimer une propriété
-[GET]    /api/my-properties                 → Lister les propriétés de l'utilisateur connecté
 [GET]    /api/geocode?q={query}             → Recherche de coordonnées géographiques (proxy Nominatim)
 ```
 

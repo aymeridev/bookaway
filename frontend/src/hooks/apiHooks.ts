@@ -1,10 +1,5 @@
-import { apiGet, useApiGet } from './useApiGet';
-import type { Property, User, Booking, LaravelPaginator } from '../types';
-
-// Fetch details of a user profile (which includes bookings)
-export function useUserProfile(userId: string | number | undefined) {
-    return useApiGet<User & { bookings?: any[] }>(userId ? `/users/${userId}` : null);
-}
+import { useApiGet } from './useApiGet';
+import type { Property, Booking } from '../types';
 
 // Fetch properties owned by a user
 export function useUserProperties(userId: string | number | undefined) {
@@ -14,22 +9,4 @@ export function useUserProperties(userId: string | number | undefined) {
 // Fetch booking details
 export function useBookingDetails(bookingId: string | number | undefined) {
     return useApiGet<Booking>(bookingId ? `/bookings/${bookingId}` : null);
-}
-
-
-// Search for properties based on search params
-export function useSearchProperties(params: URLSearchParams) {
-    const queryString = params.toString();
-    return useApiGet<LaravelPaginator<Property>>(`/properties?${queryString}`);
-}
-
-// Fetch user's properties
-export function useMyProperties() {
-    return useApiGet<Property[]>('/my-properties');
-}
-
-
-// Return all properties in API
-export function usePropertiesCount() {
-    return apiGet("/properties/count")
 }

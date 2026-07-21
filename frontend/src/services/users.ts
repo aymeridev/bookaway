@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import api from "../api/axios"
 import { type User } from "../types"
+import { apiGet } from "../hooks/useApiGet"
 
 
 async function fetchCurrentUser() {
@@ -29,4 +30,18 @@ export function useAddFunds() {
             errorMessage: "erreur!",
         }
     })
+}
+
+
+
+async function fetchUser(propertyId: number | string) {
+    return (await apiGet<User>(`/users/${propertyId.toString()}`)).data;
+}
+
+export function useUser(userId: number | string) {
+    return useQuery({
+        queryKey: ['users', userId],
+        queryFn: () => fetchUser(userId)
+    })
+
 }

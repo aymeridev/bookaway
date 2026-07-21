@@ -33,13 +33,25 @@ export function useSearchProperties(params: PropertiesSearchValues) {
 }
 
 
-function fetchPropertyDetails(propertyId: number | string) {
-    return apiGet<Property>(`/properties/${propertyId.toString()}`);
+async function fetchPropertyDetails(propertyId: number | string) {
+    return (await apiGet<Property>(`/properties/${propertyId.toString()}`)).data;
 }
+
 
 export function usePropertyDetails(propertyId: number | string) {
     return useQuery({
         queryKey: ['property-details', propertyId],
         queryFn: () => fetchPropertyDetails(propertyId)
+    })
+}
+async function fetchUserProperties(propertyId: number | string) {
+    return (await apiGet<Property[]>(`/users/${propertyId.toString()}/properties`)).data;
+}
+
+export function useUserProperties(userId?: number | string) {
+    return useQuery({
+        queryKey: ['properties', userId],
+        queryFn: () => fetchUserProperties(userId!),
+        enabled: () => !!userId
     })
 }

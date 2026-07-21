@@ -28,7 +28,6 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './queryClient.ts'
 import { fetchPropertiesCount } from './services/properties.ts'
 import { HelmetProvider } from 'react-helmet-async';
-import { useCurrentUser } from './services/users.ts'
 import useAuthStore from './context/AuthStore.tsx'
 
 const router = createBrowserRouter([
@@ -85,6 +84,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/property/:id/edit",
+        middleware: [authMiddleware],
         Component: EditPropertyPage,
       },
       {

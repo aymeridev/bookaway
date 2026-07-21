@@ -138,26 +138,6 @@ class PropertyController extends Controller
 
         return response()->json($property);
     }
-    public function userProperties(Request $request)
-    {
-        $properties = $request->user()->properties()
-            ->with([
-                'images' => function ($q) {
-                    $q->orderBy('sort_order', 'asc');
-                },
-                'ratings'
-            ])
-            ->get();
-
-        foreach ($properties as $property) {
-            $property->ratings_avg = $property->ratings->isEmpty()
-                ? null
-                : round($property->ratings->avg('stars'), 1);
-        }
-
-        return response()->json($properties);
-    }
-
     /**
      * Remove the specified resource from storage.
      */
