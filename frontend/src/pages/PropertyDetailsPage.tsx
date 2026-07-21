@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from "react-i18next";
 import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { usePropertyDetails } from '../services/properties';
+import { Helmet } from 'react-helmet-async';
 
 export function PropertyDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -160,6 +161,9 @@ export function PropertyDetailsPage() {
 
     return (
         <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <Helmet>
+                <title>{property.title} - BookAway</title>
+            </Helmet>
             <button
                 className='btn'
                 onClick={() => navigate(-1)}
