@@ -24,7 +24,7 @@ export function PropertyDetailsPage() {
     const dpLocale = isFrench ? fr : dpEnUS;
     const dfLocale = isFrench ? dfFr : dfEnUS;
 
-    const { propertyId, unitId } = useParams<{ propertyId: string; unitId: string }>();
+    const { propertyId, unitId } = useParams<{ propertyId: string; unitId?: string }>();
     const { data, isPending, refetch } = usePropertyDetails(propertyId!);
     const property = data?.data;
     const [searchParams] = useSearchParams();
@@ -194,6 +194,25 @@ export function PropertyDetailsPage() {
                             <p className="text-lg leading-relaxed">
                                 {property.description}
                             </p>
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-200 shadow-md">
+                        <div className="card-body">
+                            <div className="grid gap-4 grid-cols-3">
+                                {property.units.map((unit) => (
+                                    <Link to={`/property/${propertyId}/${unit.id}`} replace={true} className='cursor-pointer shadow-lg bg-base-100 rounded-xl border-base-300 border' viewTransition>
+                                        <h3 className='text-lg font-medium'>{unit.title}</h3>
+                                        <p>{unit.description}</p>
+                                        <ul>
+                                            {unit.amenities.map((amenity) => (
+                                                <span className="badge">{amenity}</span>
+                                            ))}
+                                        </ul>
+                                    </Link>
+
+                                ))}
+                            </div>
                         </div>
                     </div>
 

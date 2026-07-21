@@ -101,6 +101,9 @@ class PropertyController extends Controller
             },
             'bookings',
             'user',
+            'units' => function ($query) {
+                $query->orderBy('title', 'asc');
+            },
             'ratings.author:id,name'
         ])->findOrFail($id);
 
