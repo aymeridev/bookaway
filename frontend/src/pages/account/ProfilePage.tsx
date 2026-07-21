@@ -6,13 +6,14 @@ import { useUserProfile } from "../../hooks/apiHooks";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { ArrowRightIcon, BuildingIcon, CalendarIcon, MailboxIcon, MapPinIcon, TicketIcon, UserIcon } from "@phosphor-icons/react";
+import { useCurrentUser } from "../../services/users";
 
 export function ProfilePage() {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language.startsWith("fr") ? fr : enUS;
 
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    const user = useAuthStore((state) => state.user);
+    const { data: user } = useCurrentUser();
 
     const { data: profileData, isLoading: isProfileLoading } = useUserProfile(user?.id);
     const bookings = profileData?.bookings || [];

@@ -6,10 +6,10 @@ import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { TrashIcon } from "@phosphor-icons/react";
 import { numberFormatter } from "../i18n/config";
-import { useAddFunds } from "../services/users";
+import { useAddFunds, useCurrentUser } from "../services/users";
 
 export function SettingsPage() {
-    const user = useAuthStore((state) => state.user);
+    const { data: user } = useCurrentUser();
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import api from "../../api/axios";
 import { Link, useNavigate } from "react-router";
-import { Card } from "../../components/Card";
 import useAuthStore from "../../context/AuthStore";
 import { useTranslation } from "react-i18next";
 import { SignInIcon } from "@phosphor-icons/react";
+import { useAuthLogin } from "../../services/auth";
+import { queryClient } from "../../queryClient";
 
 export function LoginPage() {
     const [email, setEmail] = useState("");
@@ -13,20 +13,27 @@ export function LoginPage() {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login)
     const { t } = useTranslation();
+    const { isPending, mutate } = useAuthLogin();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError("");
 
         try {
-            const response = await api.post("/login", { email, password });
+            mutate({
+                email, password
+            }, {
+                onSuccess: (res) => {
+                    const token = res.data.token;
+                    queryClient.setQueryData(['users', 'me'], res.data.user);
 
-            const token = response.data.token;
-            const userData = response.data.user;
+                    login(token);
 
-            login(userData, token);
+                    navigate("/", { viewTransition: true });
 
-            navigate("/", { viewTransition: true });
+                }
+            });
+
         } catch {
             setError(t("login-page.error-invalid"));
         }
@@ -38,10 +45,10 @@ export function LoginPage() {
 
             <div className="card bg-base-200 z-10">
                 <div className="card-body">
-                    <div className="alert alert-warning">
+                    <div className="alert flex-col flex alert-warning">
                         <span>Compte de test :</span>
                         <ul>
-                            <li>Email : jean.dupont@bookaway.com</li>
+                            <li>Email : <code>jean.dupont@bookaway.com</code></li>
                             <li>Mot de passe : <code>password</code></li>
                         </ul>
                         <button onClick={() => {
@@ -75,7 +82,8 @@ export function LoginPage() {
 
 
                             <button className="btn btn-primary">
-                                <SignInIcon />
+                                {isPending ? <span className="loading loading-spinner"></span>
+                                    : <SignInIcon />}
                                 {t("login-page.button-submit")}
                             </button>
                             <div className="mt-6 text-center text-sm text-gray-600">

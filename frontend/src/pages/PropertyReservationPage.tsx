@@ -2,12 +2,12 @@ import { useLocation, Link, useNavigate } from "react-router";
 import { differenceInDays, format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import { useState } from "react";
-import useAuthStore from "../context/AuthStore";
 import { Card } from "../components/Card";
 import { useTranslation } from "react-i18next";
 import type { Property, Unit } from "../types";
 import { CreditCardIcon } from "@phosphor-icons/react";
 import { numberFormatter } from "../i18n/config";
+import { useCurrentUser } from "../services/users";
 
 export function PropertyReservationPage() {
     const { t, i18n } = useTranslation();
@@ -16,7 +16,7 @@ export function PropertyReservationPage() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    const user = useAuthStore((state) => state.user);
+    const { data: user } = useCurrentUser();
 
     const { property, dateRange, unit }: { property: Property, dateRange: any, unit: Unit } = location.state || {};
 

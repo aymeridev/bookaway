@@ -28,6 +28,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './queryClient.ts'
 import { fetchPropertiesCount } from './services/properties.ts'
 import { HelmetProvider } from 'react-helmet-async';
+import { useCurrentUser } from './services/users.ts'
 
 const router = createBrowserRouter([
   {
@@ -134,7 +135,7 @@ createRoot(document.getElementById('root')!).render(
 
 
 export function authMiddleware() {
-  const user = useAuthStore.getState().user;
+  const { data: user } = useCurrentUser();
   if (!user) {
     toast.error("Vous devez être connecté pour accéder à cette page");
     throw redirect("/login");

@@ -36,6 +36,11 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
+    }
+
     public function show(string $id)
     {
         $user = User::with(['bookings.property', 'payments', 'ratingsReceived.author:id,name'])->findOrFail($id);

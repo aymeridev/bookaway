@@ -18,6 +18,7 @@ import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, Spin
 import { usePropertyDetails } from '../services/properties';
 import { Helmet } from 'react-helmet-async';
 import { amenitiesIcon } from '../amenities';
+import { useCurrentUser } from '../services/users';
 
 export function PropertyDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -31,7 +32,7 @@ export function PropertyDetailsPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const user = useAuthStore((state) => state.user);
+    const { data: user } = useCurrentUser();
 
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [ratingStars, setRatingStars] = useState<number>(5);
