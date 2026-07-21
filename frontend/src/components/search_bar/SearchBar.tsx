@@ -110,7 +110,7 @@ export function SearchBar({ action = "Lancer la recherche" }: SearchBarProps) {
 
 
             <button type="submit" className="bg-primary text-primary-content rounded-xl md:rounded-full p-4 font-semibold cursor-pointer w-full md:w-auto flex items-center justify-center gap-2 hover:bg-primary-hover active:scale-95 transition-all duration-150">
-                <MagnifyingGlassIcon className="size-6" alt="Rechercher" />
+                <MagnifyingGlassIcon alt="Rechercher" />
                 <span>{action}</span>
             </button>
         </form>

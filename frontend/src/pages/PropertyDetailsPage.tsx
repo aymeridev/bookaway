@@ -9,7 +9,6 @@ import { fr, enUS as dpEnUS } from 'react-day-picker/locale';
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
 import type { GalleryItem, ImageGalleryRef } from "react-image-gallery";
-import { Card } from '../components/Card';
 import useAuthStore from '../context/AuthStore';
 import { fr as dfFr, enUS as dfEnUS } from 'date-fns/locale';
 import api from '../api/axios';
@@ -18,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeftIcon, CheckCircleIcon, InfoIcon, MapTrifoldIcon, PenIcon, SpinnerIcon, StarIcon, UserCircleIcon } from '@phosphor-icons/react';
 import { usePropertyDetails } from '../services/properties';
 import { Helmet } from 'react-helmet-async';
+import { amenitiesIcon } from '../amenities';
 
 export function PropertyDetailsPage() {
     const { t, i18n } = useTranslation();
@@ -37,6 +37,8 @@ export function PropertyDetailsPage() {
     const [ratingStars, setRatingStars] = useState<number>(5);
     const [ratingComment, setRatingComment] = useState<string>('');
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const currentUnit = property?.units.find((u) => u.id.toString() === unitId);
 
     const handleOpenModal = () => {
         if (!user) {
@@ -149,10 +151,6 @@ export function PropertyDetailsPage() {
         ? differenceInDays(range.to, range.from)
         : 0;
 
-    const basePrice = property.base_fee || 0;
-    const pricePerNight = property.price_per_night || 0;
-    const nightsTotal = pricePerNight * numberOfNights;
-    const grandTotal = basePrice + nightsTotal;
 
     const images: GalleryItem[] = property.images ? property.images.map(img => ({
         original: img.url,
@@ -178,6 +176,15 @@ export function PropertyDetailsPage() {
                 {t("property-details.edit-property")}</button>}
 
             <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
+            {property.amenities.map((amenity) => {
+                const Icon = amenitiesIcon[amenity];
+                return (
+                    <span key={amenity} className="badge badge-lg">
+                        {Icon && <Icon />}
+                        {t(`amenities.${amenity}` as any)}
+                    </span>
+                )
+            })}
 
             <div className="flex flex-col lg:flex-row gap-12">
                 <div className="flex-2 space-y-8">
@@ -201,18 +208,27 @@ export function PropertyDetailsPage() {
                         </div>
                     </div>
 
-                    <div className="card bg-base-200 shadow-md">
+                    <div className="card bg-base-200 shadow-md" id='units'>
                         <div className="card-body">
-                            <div className="grid gap-4 grid-cols-3">
-                                {property.units.map((unit) => (
-                                    <Link to={`/property/${propertyId}/${unit.id}`} replace={true} className='cursor-pointer shadow-lg bg-base-100 rounded-xl border-base-300 border' viewTransition>
-                                        <h3 className='text-lg font-medium'>{unit.title}</h3>
-                                        <p>{unit.description}</p>
-                                        <ul>
-                                            {unit.amenities.map((amenity) => (
-                                                <span className="badge">{amenity}</span>
+                            <h2 className='text-title-small'>{property.type === 'camping' ? "Emplacements" : "Chambre"}</h2>
+                            <div className="grid gap-4 grid-cols-2">
+                                {property.units.map(({ id, price_per_night, amenities, capacity, base_fee, title, description }) => (
+                                    <Link key={id} to={`/property/${propertyId}/${id}`} replace={true} className={`cursor-pointer p-2 shadow-lg bg-base-100 rounded-xl border-base-300 border ${unitId == id.toString() ? "bg-primary text-primary-content" : ""}`} viewTransition>
+                                        <div className="flex">
+                                            <h3 className='text-lg font-medium tracking-tight'>{title}</h3>
+                                            <span className="badge">
+                                                x{capacity}
+                                            </span>
+                                        </div>
+                                        {description && <p className='text-current/80 p-1'>{description}</p>}
+                                        {amenities.length > 0 && <ul>
+                                            {amenities.map((amenity) => (
+                                                <span key={amenity} className="badge">{amenity}</span>
                                             ))}
-                                        </ul>
+                                        </ul>}
+                                        {numberOfNights > 0 && <div>
+                                            {base_fee + (numberOfNights * price_per_night)}€
+                                        </div>}
                                     </Link>
 
                                 ))}
@@ -279,25 +295,27 @@ export function PropertyDetailsPage() {
                                 <ul className='grid grid-cols-2 gap-4'>
                                     {property.ratings.map((rating) => (
                                         <li key={rating.id} className='max-w-xs'>
-                                            <Card>
-                                                <div className="flex items-center gap-2 justify-between mb-2">
-                                                    <div className="flex items-center gap-2">
-                                                        <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
-                                                        <span className='font-semibold'>{rating.author.name}</span>
+                                            <div className='card bg-base-100 shadow-md'>
+                                                <div className="card-body">
+                                                    <div className="flex items-center gap-2 justify-between mb-2">
+                                                        <div className="flex items-center gap-2">
+                                                            <div aria-hidden="true" className="rounded-full size-6" style={{ backgroundImage: `url("https://api.dicebear.com/10.x/thumbs/svg?seed=${rating?.author.id}")` }}></div>
+                                                            <span className='font-semibold'>{rating.author.name}</span>
+                                                        </div>
+                                                        <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
                                                     </div>
-                                                    <span className='flex items-center gap-1 text-yellow-500 font-semibold'><StarIcon weight="fill" className="size-4" /> {rating.stars}/5</span>
+                                                    {rating.comment ? (
+                                                        <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
+                                                    ) : (
+                                                        <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
+                                                    )}
+                                                    <span className='text-xs text-gray-500 block'>
+                                                        {t("property-details.review-date", {
+                                                            date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
+                                                        })}
+                                                    </span>
                                                 </div>
-                                                {rating.comment ? (
-                                                    <p className='text-base text-gray-600 mb-2 whitespace-pre-line'>{rating.comment}</p>
-                                                ) : (
-                                                    <p className='text-base text-gray-400 italic mb-2'>{t("property-details.no-comment")}</p>
-                                                )}
-                                                <span className='text-xs text-gray-500 block'>
-                                                    {t("property-details.review-date", {
-                                                        date: formatDate(new Date(rating.created_at), "MMMM yyyy", { locale: dfLocale })
-                                                    })}
-                                                </span>
-                                            </Card>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
@@ -340,7 +358,7 @@ export function PropertyDetailsPage() {
                                         value={ratingComment}
                                         onChange={(e) => setRatingComment(e.target.value)}
                                         placeholder={t("property-details.modal-placeholder")}
-                                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-[100px]"
+                                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none min-h-25"
                                     />
                                 </div>
                                 {submitError && (
@@ -367,12 +385,10 @@ export function PropertyDetailsPage() {
                 {!isOwner && <div className="flex-1">
                     <div className="card shadow-md bg-base-200 sticky top-8">
                         <div className="card-body">
-                            <div className="flex justify-between items-baseline">
-                                <div>
-                                    <span className="text-2xl font-bold">{property.price_per_night}€</span>
-                                    <span className="text-gray-500"> {t("property-details.per-night")}</span>
-                                </div>
-                            </div>
+                            <h3 className='text-title-small'>Réservation</h3>
+                            {property.units.length > 0 && <a className='underline text-lg' href='#units'>Changer d'emplacement</a>}
+
+
                             <DayPicker
                                 mode="range"
                                 selected={range}
@@ -384,23 +400,23 @@ export function PropertyDetailsPage() {
                                 className="react-day-picker"
                             />
 
-                            <div className="space-y-3 pt-2">
+                            {currentUnit && <div className="space-y-3 pt-2">
                                 <div className="flex justify-between text-base-content/80">
                                     <span className="underline">
-                                        {t("property-details.price-nights", { price: property.price_per_night, count: numberOfNights })}
+                                        {t("property-details.price-nights", { price: currentUnit.price_per_night, count: numberOfNights })}
                                     </span>
-                                    <span className='font-medium'>{nightsTotal}€</span>
+                                    <span className='font-medium'>{currentUnit.price_per_night * numberOfNights}€</span>
                                 </div>
                                 <div className="flex justify-between text-base-content/80">
                                     <span className="underline">{t("property-details.service-fees")}</span>
-                                    <span className='font-medium'>{basePrice}€</span>
+                                    <span className='font-medium'>{currentUnit.base_fee}€</span>
                                 </div>
                                 <hr className="border-gray-100" />
                                 <div className="flex justify-between font-bold text-lg">
                                     <span>{t("property-details.total")}</span>
-                                    <span>{grandTotal}€</span>
+                                    <span>{currentUnit.price_per_night * numberOfNights + currentUnit.base_fee}€</span>
                                 </div>
-                            </div>
+                            </div>}
 
                             {!user ? (
                                 <>
@@ -415,11 +431,11 @@ export function PropertyDetailsPage() {
                                         to="/reservation"
                                         state={{
                                             property,
+                                            unit: currentUnit,
                                             dateRange: {
                                                 from: range?.from?.toISOString(),
                                                 to: range?.to?.toISOString()
-                                            },
-                                            totals: { numberOfNights, nightsTotal, basePrice, grandTotal }
+                                            }
                                         }}
                                         viewTransition
                                         onClick={(e) => {

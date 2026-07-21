@@ -1,4 +1,4 @@
-import { AlarmIcon, BathtubIcon, BedIcon, BookIcon, CameraIcon, CheckerboardIcon, ChefHatIcon, CoffeeIcon, CookingPotIcon, DropIcon, FanIcon, HandSoapIcon, LetterCirclePIcon, OvenIcon, SwimmingPoolIcon, TableIcon, TelevisionIcon, ThermometerColdIcon, ThermometerHotIcon, ThermometerIcon, ToiletIcon, WashingMachineIcon, WifiHighIcon } from "@phosphor-icons/react";
+import { AlarmIcon, BathtubIcon, BedIcon, BookIcon, BowlFoodIcon, CameraIcon, CheckerboardIcon, ChefHatIcon, CoffeeIcon, CookingPotIcon, DropIcon, FanIcon, HandSoapIcon, LetterCirclePIcon, OvenIcon, SwimmingPoolIcon, TableIcon, TelevisionIcon, ThermometerColdIcon, ThermometerHotIcon, ThermometerIcon, ToiletIcon, WashingMachineIcon, WifiHighIcon } from "@phosphor-icons/react";
 
 export const amenitiesIcon = {
     "bathub": BathtubIcon,
@@ -24,5 +24,6 @@ export const amenitiesIcon = {
     "camera": CameraIcon,
     "parking": LetterCirclePIcon,
     "pool": SwimmingPoolIcon,
-    "public-toilets": ToiletIcon
+    "public-toilets": ToiletIcon,
+    "restaurant": BowlFoodIcon,
 } as Record<string, any>

@@ -21,15 +21,12 @@ export interface User extends Entity {
 
 export interface Property extends Entity {
     title: string;
-    type: string;
-    capacity: number;
+    type: "camping" | "hotel" | "other";
     description: string;
     amenities: string[];
-    base_fee: number;
     images: PropertyImage[];
     latitude: string;
     longitude: string;
-    price_per_night: number;
     distance?: number;
     bookings?: any[];
     user_id?: number;
