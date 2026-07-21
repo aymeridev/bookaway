@@ -81,7 +81,7 @@ export function ReservationDetailsPage() {
                 <Card className="flex flex-col items-center p-8 bg-red-50 border border-red-200 space-y-4">
                     <WarningIcon className="w-12 h-12 text-red-500" />
                     <p className="text-red-700 font-semibold">{error || t("booking-details.not-found")}</p>
-                    <button className="btn btn-primary" onClick={() => navigate("/my-reservations")}>
+                    <button className="btn btn-primary" onClick={() => navigate("/my-bookings")}>
                         <ArrowLeftIcon className="w-4 h-4" /> {t("booking-details.back-btn")}
                     </button>
                 </Card>
@@ -100,7 +100,7 @@ export function ReservationDetailsPage() {
 
             <main className="max-w-6xl mx-auto p-6 space-y-8">
                 <div className="flex justify-start">
-                    <button className="btn btn-ghost" onClick={() => navigate("/my-reservations")}>
+                    <button className="btn btn-ghost" onClick={() => navigate("/my-bookings")}>
                         <ArrowLeftIcon />
                         {t("booking-details.back-btn")}
                     </button>

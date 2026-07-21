@@ -242,7 +242,7 @@ http://localhost:8000/docs/api
 [POST]   /api/bookings                      → Créer une réservation (avec paiement)
 [PUT]    /api/bookings/{id}                 → Modifier une réservation (statut, annulation...)
 [DELETE] /api/bookings/{id}                 → Supprimer une réservation
-[GET]    /api/my-reservations               → Réservations de l'utilisateur connecté
+[GET]    /api/my-bookings               → Réservations de l'utilisateur connecté
 ```
 
 ### Payments (Paiements)

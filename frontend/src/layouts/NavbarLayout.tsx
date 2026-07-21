@@ -45,7 +45,7 @@ export function NavbarLayout() {
 
                 {isAuthenticated && (
                     <ul className="menu menu-horizontal">
-                        <ListNavLink to={"/my-reservations"}>
+                        <ListNavLink to={"/my-bookings"}>
                             <CalendarIcon />
                             {t("header.reservations")}
                         </ListNavLink>
@@ -93,7 +93,7 @@ export function NavbarLayout() {
                                 <NavLink
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={({ isActive }) => `${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 active:bg-white/20"} py-3 px-4 rounded-xl font-semibold flex gap-3 items-center transition-all duration-200 w-full`}
-                                    to={"/my-reservations"} viewTransition>
+                                    to={"/my-bookings"} viewTransition>
                                     <CalendarIcon />
                                     {t("header.reservations")}
                                 </NavLink>

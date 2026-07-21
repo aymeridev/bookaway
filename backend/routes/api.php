@@ -36,7 +36,7 @@ Route::post('/properties/{property}/images', [PropertyImageController::class, 's
 Route::delete('/properties/{property}/images/{image}', [PropertyImageController::class, 'destroy'])->middleware("auth:sanctum");
 Route::get('/my-properties', [PropertyController::class, 'userProperties'])->middleware('auth:sanctum');
 
-Route::get('/my-reservations', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
+Route::get('/my-bookings', [BookingController::class, 'myReservations'])->middleware('auth:sanctum');
 
 Route::get('/conversations', [ConversationController::class, 'index'])->middleware('auth:sanctum');
 Route::post('/conversations', [ConversationController::class, 'startConversation'])->middleware('auth:sanctum');

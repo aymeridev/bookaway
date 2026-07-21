@@ -25,7 +25,7 @@ export function useSearchProperties(params: URLSearchParams) {
 
 // Fetch user's reservations
 export function useMyReservations() {
-    return useApiGet<Booking[]>('/my-reservations');
+    return useApiGet<Booking[]>('/my-bookings');
 }
 
 // Fetch user's properties
