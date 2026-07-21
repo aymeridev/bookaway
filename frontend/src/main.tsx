@@ -17,7 +17,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { PropertyReservationPage } from './pages/PropertyReservationPage.tsx'
 import { MyPropertiesPage } from './pages/MyPropertiesPage.tsx'
 import { MyBookingsPage } from './pages/MyBookingsPage.tsx'
-import useAuthStore from './context/AuthStore.tsx'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { EditPropertyPage } from './pages/manage/EditPropertyPage.tsx'
 import { SettingsPage } from './pages/SettingsPage.tsx'
 import { UserPage } from './pages/UserPage.tsx'
@@ -29,6 +29,7 @@ import { queryClient } from './queryClient.ts'
 import { fetchPropertiesCount } from './services/properties.ts'
 import { HelmetProvider } from 'react-helmet-async';
 import { useCurrentUser } from './services/users.ts'
+import useAuthStore from './context/AuthStore.tsx'
 
 const router = createBrowserRouter([
   {
@@ -128,6 +129,7 @@ createRoot(document.getElementById('root')!).render(
           <RouterProvider router={router} />
           <Toaster />
         </IconContext.Provider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </HelmetProvider>
   </StrictMode>,
@@ -135,8 +137,8 @@ createRoot(document.getElementById('root')!).render(
 
 
 export function authMiddleware() {
-  const { data: user } = useCurrentUser();
-  if (!user) {
+  const { isAuthenticated } = useAuthStore.getState();
+  if (!isAuthenticated) {
     toast.error("Vous devez être connecté pour accéder à cette page");
     throw redirect("/login");
   }
