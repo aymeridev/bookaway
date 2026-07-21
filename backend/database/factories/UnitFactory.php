@@ -35,8 +35,8 @@ class UnitFactory extends Factory
             return [
                 'title' => 'Emplacement',
                 'description' => 'Bungalow',
-                'base_fee' => fake()->numberBetween(10, 20),
-                'price_per_night' => fake()->numberBetween(15, 30),
+                'base_fee' => fake()->numberBetween(10, 20) * 100,
+                'price_per_night' => fake()->numberBetween(15, 30) * 100,
                 'amenities' => fake()->randomElements(['paid-wifi', "public-toilets", 'parking', 'pool', 'electricity'], 3)
             ];
         });

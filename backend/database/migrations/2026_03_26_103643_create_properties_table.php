@@ -18,10 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->enum("type", PropertyType::cases());
             $table->boolean("published")->default(false);
-            $table->integer("capacity");
             $table->text("description");
-            $table->integer("base_fee");
-            $table->integer("price_per_night");
             $table->json('amenities');
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();

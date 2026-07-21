@@ -22,10 +22,7 @@ class Property extends Model
         'title',
         'user_id',
         'type',
-        'capacity',
         'description',
-        'base_fee',
-        'price_per_night',
         'amenities',
         'latitude',
         'longitude'

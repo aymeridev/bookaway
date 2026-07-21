@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId("property_id")->constrained()->onDelete("cascade");
             $table->integer("capacity");
             $table->text("description");
-            $table->integer("base_fee");
-            $table->integer("price_per_night");
+            $table->unsignedInteger("base_fee");
+            $table->unsignedInteger("price_per_night");
             $table->json('amenities');
             $table->timestamps();
         });

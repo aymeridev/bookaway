@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('card_number');
             $table->string('expiration_date');
             $table->string('cvv');
-            $table->decimal('amount', 8, 2);
+            $table->unsignedInteger('amount');
             $table->string('status')->default('pending');
-            
+
             $table->timestamps();
         });
     }

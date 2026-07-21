@@ -1,10 +1,13 @@
 import { useLocation, Link, useNavigate } from "react-router";
-import { format } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 import { fr as dfFr, enUS as dfEnUS } from "date-fns/locale";
 import { useState } from "react";
 import useAuthStore from "../context/AuthStore";
 import { Card } from "../components/Card";
 import { useTranslation } from "react-i18next";
+import type { Property, Unit } from "../types";
+import { CreditCardIcon } from "@phosphor-icons/react";
+import { numberFormatter } from "../i18n/config";
 
 export function PropertyReservationPage() {
     const { t, i18n } = useTranslation();
@@ -15,7 +18,11 @@ export function PropertyReservationPage() {
     const navigate = useNavigate();
     const user = useAuthStore((state) => state.user);
 
-    const { property, dateRange, totals } = location.state || {};
+    const { property, dateRange, unit }: { property: Property, dateRange: any, unit: Unit } = location.state || {};
+
+    const numberOfNights = dateRange?.from && dateRange?.to
+        ? differenceInDays(dateRange.to, dateRange.from)
+        : 0;
 
     const [cardHolderName, setCardHolderName] = useState("");
     const [cardNumber, setCardNumber] = useState("");
@@ -23,14 +30,18 @@ export function PropertyReservationPage() {
     const [cvv, setCvv] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    if (!property || !dateRange || !dateRange.from || !dateRange.to || !totals) {
+    if (!property || !dateRange || !dateRange.from || !dateRange.to || !numberOfNights) {
         return (
-            <div className="max-w-md mx-auto my-12 text-center p-6 bg-white border rounded-2xl shadow-sm">
-                <h2 className="text-xl font-bold text-gray-800 mb-2">{t("property-reservation.no-booking-title")}</h2>
-                <p className="text-gray-600 mb-6">{t("property-reservation.no-booking-text")}</p>
-                <Link to="/" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold hover:bg-blue-700">
-                    {t("property-reservation.back-home")}
-                </Link>
+            <div className="card bg-base-200 shadow max-w-md m-auto">
+                <div className="card-body">
+                    <h2 className="text-title-small">{t("property-reservation.no-booking-title")}</h2>
+                    <p className="text-base-content/80">{t("property-reservation.no-booking-text")}</p>
+                </div>
+                <div className="card-actions p-2 m-auto">
+                    <Link to="/" className="btn btn-primary">
+                        {t("property-reservation.back-home")}
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -60,7 +71,7 @@ export function PropertyReservationPage() {
             travelers: 1,
             start_date: format(fromDate, "yyyy-MM-dd"),
             end_date: format(toDate, "yyyy-MM-dd"),
-            total_price: totals.grandTotal,
+            total_price: unit.price_per_night * numberOfNights + unit.base_fee,
             card_holder_name: cardHolderName,
             card_number: cardNumber,
             expiration_date: expirationDate,
@@ -123,9 +134,24 @@ export function PropertyReservationPage() {
                             </Link>
                         </div>
                     </Card>
+                    <Card>
+                        <h2 className="text-title-small">
+                            <CreditCardIcon />
+                            Paiement via porte-feuille
+                        </h2>
+
+                        <p>Montant disponible : {numberFormatter.format(1000)}€</p>
+
+                        <form action="">
+                            <button className="btn btn-primary">Utiliser mon porte feuille</button>
+                        </form>
+                    </Card>
 
                     <Card>
-                        <h2 className="text-xl font-semibold text-gray-800">{t("property-reservation.payment")}</h2>
+                        <h2 className="text-title-small">
+                            <CreditCardIcon />
+                            Paiement par Carte Bancaire
+                        </h2>
 
                         <form onSubmit={handlePaymentSubmit} className="space-y-4">
                             <fieldset className="fieldset">
@@ -169,7 +195,7 @@ export function PropertyReservationPage() {
                                         value={cvv}
                                         onChange={(e) => setCvv(e.target.value)}
                                         placeholder="123"
-                                        className="input" />
+                                        className="input w-16" />
                                 </fieldset>
                             </div>
 
@@ -177,39 +203,40 @@ export function PropertyReservationPage() {
                                 disabled={isSubmitting}
                                 className="btn btn-primary"
                             >
-                                {t("property-reservation.confirm-button", { total: totals.grandTotal })}
+                                {t("property-reservation.confirm-button", { total: unit.price_per_night * numberOfNights + unit.base_fee })}
                             </button>
                         </form>
                     </Card>
                 </div>
 
-                <Card className="lg:col-span-5 sticky top-8">
-                    <div className="flex gap-4 pb-6 border-b border-gray-100">
-                        <div className="flex flex-col justify-center">
-                            <h3 className="font-bold text-gray-900 line-clamp-2">{property.title}</h3>
-                            <p className="text-xs text-gray-400 mt-1">{t("property-reservation.verified-property")}</p>
-                        </div>
-                    </div>
+                <div className="card bg-base-200 shadow-lg lg:col-span-5 sticky top-8">
+                    <figure>
+                        <img src={property.images[0].url} alt="" />
+                    </figure>
+                    <div className="card-body">
+                        <h3 className="text-title-small">{property.title}</h3>
 
-                    <div className="space-y-4">
-                        <h4 className="font-semibold text-gray-800">{t("property-reservation.price-details")}</h4>
-                        <div className="flex justify-between text-gray-600 text-sm">
-                            <span>
-                                {t("property-reservation.price-nights", { price: property.price_per_night, count: totals.numberOfNights })}
-                            </span>
-                            <span>{totals.nightsTotal}€</span>
-                        </div>
-                        <div className="flex justify-between text-gray-600 text-sm">
-                            <span>{t("property-reservation.service-fees")}</span>
-                            <span>{totals.basePrice}€</span>
-                        </div>
-                        <hr className="border-gray-100" />
-                        <div className="flex justify-between font-bold text-gray-900 text-lg">
-                            <span>{t("property-reservation.total")}</span>
-                            <span>{totals.grandTotal}€</span>
+
+                        <div className="space-y-4">
+                            <h4 className="font-semibold text-gray-800">{t("property-reservation.price-details")}</h4>
+                            <div className="flex justify-between text-gray-600 text-sm">
+                                <span>
+                                    {t("property-reservation.price-nights", { price: unit.price_per_night, count: numberOfNights })}
+                                </span>
+                                <span>{unit.price_per_night * numberOfNights}€</span>
+                            </div>
+                            <div className="flex justify-between text-gray-600 text-sm">
+                                <span>{t("property-reservation.service-fees")}</span>
+                                <span>{unit.base_fee}€</span>
+                            </div>
+                            <hr className="border-gray-100" />
+                            <div className="flex justify-between font-bold text-gray-900 text-lg">
+                                <span>{t("property-reservation.total")}</span>
+                                <span>{numberFormatter.format(unit.price_per_night * numberOfNights + unit.base_fee)}€</span>
+                            </div>
                         </div>
                     </div>
-                </Card>
+                </div>
             </div>
         </div>
     );

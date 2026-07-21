@@ -18,4 +18,7 @@ i18n.use(initReactI18next).init({
     },
 });
 
+
+export const numberFormatter = new Intl.NumberFormat("fr-FR");
+
 export default i18n;

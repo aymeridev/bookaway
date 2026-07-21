@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Booking;
+use App\Models\Payment;
+use App\Models\Property;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,14 +23,18 @@ class BookingFactory extends Factory
         $startDate = fake()->dateTimeBetween('now', '+1 month');
         $endDate = (clone $startDate)->modify('+' . fake()->numberBetween(1, 10) . ' days');
 
+        $property = Property::factory()->create();
+        $selectedUnit = fake()->randomElement($property->units);
+
         return [
-            'user_id' => \App\Models\User::factory(),
-            'property_id' => \App\Models\Property::factory(),
-            'payment_id' => \App\Models\Payment::factory(),
-            'travelers' => fake()->numberBetween(1, 6),
+            'user_id' => User::factory(),
+            'property_id' => $property->id,
+            'unit_id' => $selectedUnit->id,
+            'payment_id' => Payment::factory(),
+            'travelers' => fake()->numberBetween(1, $selectedUnit->capacity),
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'total_price' => fake()->randomFloat(2, 100, 1000),
+            'total_price' => $selectedUnit->total_price(5),
             'status' => 'confirmed',
         ];
     }

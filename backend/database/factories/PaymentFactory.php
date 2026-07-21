@@ -23,7 +23,7 @@ class PaymentFactory extends Factory
             'card_number' => fake()->creditCardNumber(),
             'expiration_date' => fake()->date('m/y', '+2 years'),
             'cvv' => fake()->numerify('###'),
-            'amount' => fake()->randomFloat(2, 50, 500),
+            'amount' => fake()->numberBetween(10, 20) * 100,
             'status' => 'success',
         ];
     }

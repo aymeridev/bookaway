@@ -23,8 +23,15 @@ class Unit extends Model
         'description',
         'capacity',
         'amenities',
+        'base_fee',
+        'price_per_night',
         'property_id',
     ];
+
+    public function total_price(int $number_of_nights)
+    {
+        return $this->price_per_night * $number_of_nights + $this->base_fee;
+    }
 
     public function property(): BelongsTo
     {

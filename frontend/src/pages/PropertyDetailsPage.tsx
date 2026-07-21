@@ -208,33 +208,35 @@ export function PropertyDetailsPage() {
                         </div>
                     </div>
 
-                    <div className="card bg-base-200 shadow-md" id='units'>
+                    {property.units.length > 1 && <div className="card bg-base-200 shadow-md" id='units'>
                         <div className="card-body">
-                            <h2 className='text-title-small'>{property.type === 'camping' ? "Emplacements" : "Chambre"}</h2>
+                            <h2 className='text-title-small'>{property.type === 'camping' ? "Emplacements disponibles" : "Chambres disponibles"}</h2>
                             <div className="grid gap-4 grid-cols-2">
                                 {property.units.map(({ id, price_per_night, amenities, capacity, base_fee, title, description }) => (
-                                    <Link key={id} to={`/property/${propertyId}/${id}`} replace={true} className={`cursor-pointer p-2 shadow-lg bg-base-100 rounded-xl border-base-300 border ${unitId == id.toString() ? "bg-primary text-primary-content" : ""}`} viewTransition>
-                                        <div className="flex">
-                                            <h3 className='text-lg font-medium tracking-tight'>{title}</h3>
-                                            <span className="badge">
-                                                x{capacity}
-                                            </span>
+                                    <Link key={id} to={`/property/${propertyId}/${id}`} replace={true} className={`card ${unitId == id.toString() ? "bg-primary text-primary-content" : "bg-base-100"}`} viewTransition>
+                                        <div className="card-body">
+                                            <div className="flex">
+                                                <h3 className='text-lg font-medium tracking-tight'>{title}</h3>
+                                                <span className="badge">
+                                                    x{capacity}
+                                                </span>
+                                            </div>
+                                            {description && <p className='text-current/80 p-1'>{description}</p>}
+                                            {amenities.length > 0 && <ul>
+                                                {amenities.map((amenity) => (
+                                                    <span key={amenity} className="badge">{amenity}</span>
+                                                ))}
+                                            </ul>}
+                                            <div className='font-semibold underline'>
+                                                {numberOfNights > 0 ? `${base_fee + (numberOfNights * price_per_night)}€` : `${price_per_night}€ par nuit`}
+                                            </div>
                                         </div>
-                                        {description && <p className='text-current/80 p-1'>{description}</p>}
-                                        {amenities.length > 0 && <ul>
-                                            {amenities.map((amenity) => (
-                                                <span key={amenity} className="badge">{amenity}</span>
-                                            ))}
-                                        </ul>}
-                                        {numberOfNights > 0 && <div>
-                                            {base_fee + (numberOfNights * price_per_night)}€
-                                        </div>}
                                     </Link>
 
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </div>}
 
                     {property.user && (
                         <div className="card bg-base-200 shadow-md">

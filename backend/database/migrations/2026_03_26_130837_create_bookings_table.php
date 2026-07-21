@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('travelers');
             $table->date('start_date');
             $table->date('end_date');
-            $table->decimal('total_price', 10, 2);
+            $table->unsignedInteger('total_price');
             $table->string('status')->default('confirmed');
 
             $table->timestamps();
